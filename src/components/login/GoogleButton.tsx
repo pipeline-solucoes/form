@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, styled, Typography, Box, TypographyVariant } from '@mui/material';
+import React, { ReactElement } from 'react';
+import { Button, styled, Typography, Box, TypographyVariant, SvgIconProps } from '@mui/material';
 import { ColorProps } from '@/types/ColorProps';
 import { BorderProps } from '@/types/BorderProps';
 import { LayoutProps } from '@/types/LayoutProps';
@@ -64,10 +64,23 @@ const ButtonFormStyled = styled(Button, {
   })
 );
 
+const AreaTexto = styled('div')(() => ({     
+    display: 'flex',
+    flexDirection: 'column',    
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    width: '100%',
+    gap: '16px',
+    textAlign: 'left',    
+    padding: '0',
+    margin: '0',    
+  }));
+
 
 interface GoogleButtonProps extends 
   ColorProps, BorderProps, LayoutProps, TextProps {
 
+  icon: () => ReactElement<HTMLImageElement> | ReactElement<SvgIconProps>;
   text: string;
   variant?: TypographyVariant;
   endpoint: string;
@@ -92,6 +105,7 @@ interface GoogleButtonProps extends
  * (ex: autenticação com Google). Durante o clique, o botão entra em estado
  * de loading e, caso ocorra algum erro, exibe uma mensagem abaixo do botão.
  *
+ * @param {ReactElement<HTMLImageElement> | ReactElement<SvgIconProps>} icon Icone exibido dentro do botão.
  * @param {string} text Texto exibido dentro do botão.
  * @param {TypographyVariant} [variant='body1'] Variante do Typography usada no texto do botão.
  * @param {string} endpoint URL para a qual o usuário será redirecionado ao clicar no botão.
@@ -129,6 +143,7 @@ interface GoogleButtonProps extends
  * ```
  */
 const GoogleButton: React.FC<GoogleButtonProps> = ({
+  icon,
   text,
   variant = 'body1',
   endpoint,
@@ -175,7 +190,10 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({
       >
         {loading 
           ? 'Carregando...' 
-          : <Typography variant={variant}>{text}</Typography> }
+          : <AreaTexto>
+              { icon() }
+              <Typography variant={variant}>{text}</Typography>
+            </AreaTexto> }
       </ButtonFormStyled>
 
       {errorMsg && (

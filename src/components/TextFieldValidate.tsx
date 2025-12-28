@@ -14,8 +14,10 @@ interface TextFieldValidateProps
   value?: string;
 
   background?: string;
+  backgroundDisabled?: string;
   colorText?: string;
   colorFocused?: string;
+  colorDisabled?: string; 
   borderRadius?: string;
   boxShadow?: string;
   borderColor?: string;
@@ -45,13 +47,13 @@ interface TextFieldValidateProps
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) =>
-    !['background', 'colorText', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'padding'].includes(prop as string),
+    !['background', 'colorText', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'backgroundDisabled', 'colorDisabled', 'padding'].includes(prop as string),
 })<
   Pick<
     TextFieldValidateProps,
-    'background' | 'colorText' | 'borderRadius' | 'boxShadow' | 'borderColor' | 'colorFocused' | 'padding'
+    'background' | 'colorText' | 'borderRadius' | 'boxShadow' | 'borderColor' | 'colorFocused' | 'backgroundDisabled' | 'colorDisabled' | 'padding'
   >
->(({ background, colorText, borderRadius, boxShadow, borderColor, colorFocused, padding }) => ({
+>(({ background, backgroundDisabled, colorText, borderRadius, boxShadow, borderColor, colorFocused, colorDisabled, padding }) => ({
 
   background: background,
   color: colorText,
@@ -78,6 +80,10 @@ const StyledTextField = styled(TextField, {
 
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     borderColor: colorFocused,
+  },
+   "&.Mui-disabled": {
+    backgroundColor: backgroundDisabled,
+    color: colorDisabled,
   },
 }));
 
@@ -126,8 +132,10 @@ const computeError = (
  * @param {boolean} [disabled=false] Define se o campo está desabilitado.
  *
  * @param {string} [background='#fff'] Cor de fundo do campo.
+ * @param {string} [backgroundDisabled='#E5E7EB'] Cor de fundo do campo quando o campo está desabilitado.
  * @param {string} [colorText='#000'] Cor do texto e do label.
  * @param {string} [colorFocused='#1976d2'] Cor da borda quando o campo está focado.
+ * @param {string} [colorDisabled='#9CA3AF'] Cor do texto e do label quando o campo está focado.
  * @param {string} [borderColor='#ccc'] Cor da borda no estado normal e hover.
  * @param {string} [borderRadius='0'] Raio da borda do campo.
  * @param {string} [boxShadow='none'] Sombra aplicada ao campo.
@@ -178,8 +186,10 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   id,
   label,
   background = '#fff',
+  backgroundDisabled = "#E5E7EB",
   colorText = '#000',
   colorFocused = '#1976d2',
+  colorDisabled = "#9CA3AF",
   borderRadius = '0',
   boxShadow = 'none',
   borderColor = '#ccc',
@@ -254,8 +264,10 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       onChange={onChange}
       onBlur={handleBlur}
       background={background}
+      backgroundDisabled={backgroundDisabled}
       colorText={colorText}
       colorFocused={colorFocused}
+      colorDisabled={colorDisabled}
       borderRadius={borderRadius}
       boxShadow={boxShadow}
       borderColor={borderColor}
