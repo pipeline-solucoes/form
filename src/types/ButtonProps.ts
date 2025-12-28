@@ -7,8 +7,8 @@ export interface ButtonProps {
 
   backgroundButton?: string;
   backgroundHoverButton?: string;
-  colorTextButton?: string;
-  colorTextHoverButton?: string;  
+  colorButton?: string;
+  colorHoverButton?: string;  
 
   borderRadiusButton?: string;
   borderButton?: string;  
@@ -25,8 +25,8 @@ export const BUTTON_STYLE_FORWARD_PROPS = [
   "variantButton",
   "backgroundButton",
   "backgroundHoverButton",
-  "colorTextButton",
-  "colorTextHoverButton", 
+  "colorButton",
+  "colorHoverButton", 
   "borderRadiusButton",
   "borderButton",
   "boxShadowButton",

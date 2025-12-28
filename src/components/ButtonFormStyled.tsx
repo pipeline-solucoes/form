@@ -7,8 +7,8 @@ export const ButtonFormStyled = styled(Button, {
   ({
     backgroundButton,
     backgroundHoverButton,
-    colorTextButton,
-    colorTextHoverButton,
+    colorButton,
+    colorHoverButton,
     borderRadiusButton,
     borderButton,
     boxShadowButton,
@@ -17,7 +17,7 @@ export const ButtonFormStyled = styled(Button, {
     paddingButton,
     marginButton,
   }) => ({
-    color: colorTextButton,
+    color: colorButton,
     background: backgroundButton,
     borderRadius: borderRadiusButton,
     textTransform: "none",
@@ -32,7 +32,7 @@ export const ButtonFormStyled = styled(Button, {
 
     "&:hover": {
       background: backgroundHoverButton,
-      color: colorTextHoverButton,
+      color: colorHoverButton,
     },
   })
 );

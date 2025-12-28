@@ -63,7 +63,7 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
   borderRadius?: string;
 
   backgroundField?: string;
-  colorTextField?: string;
+  colorField?: string;
   colorFocusedField?: string;
   borderRadiusField?: string;
   boxShadowField?: string;
@@ -74,8 +74,8 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
   variantButton?: TypographyVariant;
   backgroundButton?: string;
   backgroundHoverButton?: string;
-  colorTextButton?: string;
-  colorTextHoverButton?: string;  
+  colorButton?: string;
+  colorHoverButton?: string;  
   borderRadiusButton?: string;
   borderButton?: string;  
   boxShadowButton?: string;
@@ -113,7 +113,7 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
  * @param {string} [borderRadius='0px'] Borda arredondada do container externo.
  *
  * @param {string} [backgroundField='transparent'] Cor/estilo de fundo do campo de e-mail.
- * @param {string} [colorTextField='#000'] Cor do texto do campo de e-mail.
+ * @param {string} [colorField='#000'] Cor do texto do campo de e-mail.
  * @param {string} [borderRadiusField='0px'] Borda arredondada do campo de e-mail.
  * @param {string} [boxShadowField='none'] Sombra do campo de e-mail.
  * @param {string} [borderColorField='#ccc'] Cor da borda do campo de e-mail.
@@ -123,8 +123,8 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
  * @param {TypographyVariant} [variantButton='body1'] Variant do Typography usado dentro do botão.
  * @param {string} [backgroundButton='transparent'] Cor/estilo de fundo do botão.
  * @param {string} [backgroundHoverButton='transparent'] Cor/estilo de fundo do botão no hover.
- * @param {string} [colorTextButton='#000'] Cor do texto do botão.
- * @param {string} [colorTextHoverButton='#000'] Cor do texto do botão no hover.
+ * @param {string} [colorButton='#000'] Cor do texto do botão.
+ * @param {string} [colorHoverButton='#000'] Cor do texto do botão no hover.
  * @param {string} [borderRadiusButton='0'] Borda arredondada do botão.
  * @param {string} [borderButton='none'] Borda do botão.
  * @param {string} [boxShadowButton='none'] Sombra do botão.
@@ -164,8 +164,8 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
  *       variantButton="button"
  *       backgroundButton="#1976d2"
  *       backgroundHoverButton="#1565c0"
- *       colorTextButton="#fff"
- *       colorTextHoverButton="#fff"
+ *       colorButton="#fff"
+ *       colorHoverButton="#fff"
  *       borderRadiusButton="10px"
  *       widthButton="100%"
  *       color_message_sucess="green"
@@ -199,7 +199,7 @@ const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
   borderRadius = '0px',
  
   backgroundField='transparent',
-  colorTextField='#000',  
+  colorField='#000',  
   borderRadiusField='0px',
   boxShadowField='none',
   borderColorField="#ccc",
@@ -209,8 +209,8 @@ const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
   variantButton = "body1",
   backgroundButton = 'transparent',
   backgroundHoverButton= 'transparent',
-  colorTextButton= '#000',
-  colorTextHoverButton= '#000',
+  colorButton= '#000',
+  colorHoverButton= '#000',
   borderRadiusButton='0',
   borderButton='none',
   boxShadowButton='none',
@@ -278,7 +278,7 @@ const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
           label="Email"
           placeholder="Email"
           background={backgroundField}
-          colorText={colorTextField}
+          color={colorField}
           borderRadius={borderRadiusField}
           borderColor={borderColorField}
           boxShadow={boxShadowField}
@@ -294,8 +294,8 @@ const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
         <ButtonFormStyled
           backgroundButton={backgroundButton}
           backgroundHoverButton={backgroundHoverButton}
-          colorTextButton={colorTextButton}
-          colorTextHoverButton={colorTextHoverButton}
+          colorButton={colorButton}
+          colorHoverButton={colorHoverButton}
           borderRadiusButton={borderRadiusButton}
           borderButton={borderButton}
           boxShadowButton={boxShadowButton}

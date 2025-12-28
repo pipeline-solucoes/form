@@ -1,6 +1,6 @@
 export interface FieldProps { 
   backgroundField?: string;
-  colorTextField?: string;
+  colorField?: string;
   colorFocusedField?: string;
   borderRadiusField?: string;
   boxShadowField?: string;

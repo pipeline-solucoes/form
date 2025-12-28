@@ -15,7 +15,7 @@ interface TextFieldValidateProps
 
   background?: string;
   backgroundDisabled?: string;
-  colorText?: string;
+  color?: string;
   colorFocused?: string;
   colorDisabled?: string; 
   borderRadius?: string;
@@ -47,12 +47,17 @@ interface TextFieldValidateProps
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) =>
-    !['background', 'colorText', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'backgroundDisabled', 'colorDisabled', 'padding'].includes(prop as string),
-})<
-  Pick<
-    TextFieldValidateProps,
-    'background' | 'colorText' | 'borderRadius' | 'boxShadow' | 'borderColor' | 'colorFocused' | 'backgroundDisabled' | 'colorDisabled' | 'padding'
-  >
+    !['background', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'backgroundDisabled', 'colorDisabled', 'padding'].includes(prop as string),
+})<{
+  background?: string;
+  backgroundDisabled?: string;
+  colorText?: string;
+  colorFocused?: string;
+  colorDisabled?: string; 
+  borderRadius?: string;
+  boxShadow?: string;
+  borderColor?: string;
+  padding?: string; }
 >(({ background, backgroundDisabled, colorText, borderRadius, boxShadow, borderColor, colorFocused, colorDisabled, padding }) => ({
 
   background: background,
@@ -133,7 +138,7 @@ const computeError = (
  *
  * @param {string} [background='#fff'] Cor de fundo do campo.
  * @param {string} [backgroundDisabled='#E5E7EB'] Cor de fundo do campo quando o campo está desabilitado.
- * @param {string} [colorText='#000'] Cor do texto e do label.
+ * @param {string} [color='#000'] Cor do texto e do label.
  * @param {string} [colorFocused='#1976d2'] Cor da borda quando o campo está focado.
  * @param {string} [colorDisabled='#9CA3AF'] Cor do texto e do label quando o campo está focado.
  * @param {string} [borderColor='#ccc'] Cor da borda no estado normal e hover.
@@ -187,7 +192,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   label,
   background = '#fff',
   backgroundDisabled = "#E5E7EB",
-  colorText = '#000',
+  color = '#000',
   colorFocused = '#1976d2',
   colorDisabled = "#9CA3AF",
   borderRadius = '0',
@@ -265,7 +270,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       onBlur={handleBlur}
       background={background}
       backgroundDisabled={backgroundDisabled}
-      colorText={colorText}
+      colorText={color}
       colorFocused={colorFocused}
       colorDisabled={colorDisabled}
       borderRadius={borderRadius}

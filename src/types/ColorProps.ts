@@ -2,8 +2,8 @@ export interface ColorProps {
   background?: string;
   backgroundHover?: string;
   backgroundDisabled?: string;
-  colorText?: string;
-  colorTextHover?: string;
+  color?: string;
+  colorHover?: string;
   colorFocused?: string;  
   colorDisabled?: string;  
 }

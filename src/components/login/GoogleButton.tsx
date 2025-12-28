@@ -84,11 +84,13 @@ interface GoogleButtonProps extends
   text: string;
   variant?: TypographyVariant;
   endpoint: string;
+
   messageError?: string;
   errorColor?: string;
 
   // Estilo solicitado
   background?: string;
+  color?: string;
 
   width?: string;
   height?: string;
@@ -155,6 +157,7 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({
   padding = '8px 24px',
   margin = '0',
   background = "transparent",
+  color="#000",
   border = 'none',
   borderRadius,  
 }) => {
@@ -192,14 +195,14 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({
           ? 'Carregando...' 
           : <AreaTexto>
               { icon() }
-              <Typography variant={variant}>{text}</Typography>
+              <Typography variant={variant} color={color}>{text}</Typography>
             </AreaTexto> }
       </ButtonFormStyled>
 
       {errorMsg && (
         <Typography
           role="alert"
-          variant="body2"
+          variant="body1"
           sx={{ mt: 1 }}
           color={errorColor}
         >
