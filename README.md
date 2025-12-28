@@ -14,15 +14,26 @@ A biblioteca inclui os seguintes componentes:
   Componente de botão que redireciona o usuário para um endpoint externo (ex: autenticação com Google). 
   Durante o clique, o botão entra em estado de loading e, caso ocorra algum erro, exibe uma mensagem abaixo do botão.
 
+- **LoginForm**
+  Componente de formulário de login com suporte a autenticação via Google e login por email/senha.
+  Inclui validação básica de email, exibição de mensagens de erro/sucesso retornadas pelo handler `onClick` e 
+  customização visual via props (container, campos, botão e links).
+
 - **PasswordRecoveryForm**
   Componente de formulário para recuperação de senha via e-mail.
-  Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.     
+  Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.    
+
+- **TextFieldPassword**
+  Componente de campo de senha baseado no TextField do Material UI, com botão para alternar entre mostrar/ocultar a senha. O componente:
+  - Retorna somente a senha digitada via `onPasswordChange`
+  - Valida obrigatório + formato (regex) e exibe mensagens de erro automaticamente
+  - Dispara um "evento" de validação via `onValidationChange`
 
 - **TextFieldValidate**  
   Componente de campo de texto com validação, baseado no TextField do Material UI.
   Permite personalização visual via `styled` e suporte a validações comuns (obrigatório, tamanho mínimo, regex) e validação customizada.   
 
-- **TopSnackbar**
+- **NotificationSnackbar**
   Componente que exibe uma notificação no topo da tela utilizando o Snackbar e Alert do Material UI.  
 ---
 
@@ -45,20 +56,6 @@ npm install @pipelinesolucoes/form
 ou
 yarn add @pipelinesolucoes/form
 
-```
-
-## 🚀 Uso básico
-
-```
-import { Actionform } from "@pipelinesolucoes/form";
-
-export function Example() {
-  return (
-    <Actionform variant="contained" color="primary">
-      Ação
-    </Actionform>
-  );
-}
 ```
 
 ## 🧩 Uso em Design Systems
