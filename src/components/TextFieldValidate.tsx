@@ -81,7 +81,7 @@ const StyledTextField = styled(TextField, {
     colorDisabled,
     padding,
   }) => {
-    const field = theme.pipesol?.form?.field;
+    const field = theme.pipesol?.forms?.field;
 
     // props -> tokens -> fallback
     const bg = background ?? field?.background ?? "transparent";

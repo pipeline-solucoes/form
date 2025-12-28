@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const src = path.resolve("src/types/pipesol-form.d.ts");
+const src = path.resolve("src/types/pipesol-forms.d.ts");
 const outDir = path.resolve("dist");
 const dst = path.resolve(outDir, "mui-theme.d.ts");
 

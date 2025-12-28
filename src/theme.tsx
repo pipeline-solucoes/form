@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   
   pipesol: {
-    form:{
+    forms:{
       notification: {
       background: '#fff',     
       },

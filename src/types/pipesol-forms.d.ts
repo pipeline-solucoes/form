@@ -21,13 +21,13 @@ export interface PipeSolFormTokens {
 declare module "@mui/material/styles" {
   interface Theme {
     pipesol?: {
-      form?: PipeSolFormTokens;
+      forms?: PipeSolFormTokens;
     };
   }
 
   interface ThemeOptions {
     pipesol?: {
-      form?: PipeSolFormTokens;
+      forms?: PipeSolFormTokens;
     };
   }
 }
