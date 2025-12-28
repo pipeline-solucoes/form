@@ -50,15 +50,6 @@ const DivLink = styled("div", {
   padding: '0',
   flex: '1',
   color: text_color,
-
-  // Tipografia
-  fontFamily: theme.typography.fontFamily,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  fontSize: theme.typography.body1?.fontSize,
-  margin: theme.typography.body1?.margin,
 }));
 
 interface SignUpFormProps {

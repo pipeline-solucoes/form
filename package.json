@@ -20,12 +20,18 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.js"
+    },
+    "./mui-theme": {
+      "types": "./dist/mui-theme.d.ts",
+      "import": "./dist/mui-theme.js",
+      "require": "./dist/mui-theme.js"
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-theme-dts.cjs",
     "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },

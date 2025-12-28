@@ -29,14 +29,7 @@ export const TextFieldStyled = styled(TextField, {
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: error ? text_color_error : 'transparent', // Borda em vermelho em caso de erro
   },
-  
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.body1?.fontSize,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  margin: theme.typography.body1?.margin,
+
   width: width,
 }));
 
@@ -72,14 +65,6 @@ export const TextFieldFixedSizeStyled = styled(TextField, {
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: error ? text_color_error : 'transparent', // Borda em vermelho em caso de erro
   },
-
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.body1?.fontSize,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  margin: theme.typography.body1?.margin,
 }));
 
 
@@ -112,14 +97,6 @@ export const ButtonFormStyled = styled(Button, {
   height: height,
   border: (border_color == "transparent" ? "none" : `1px solid ${border_color}`),
   margin: margin,
-  
-  // Tipografia
-  fontFamily: theme.typography.fontFamily,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  fontSize: theme.typography.body1?.fontSize,  
 
   // Hover state (opcional)
   '&:hover': {
@@ -142,13 +119,5 @@ export const LinkFormStyled = styled(Button, {
   cursor: 'pointer',
   padding: '0',
   boxShadow: 'none',
-  margin: margin,
-    
-  // Tipografia
-  fontFamily: theme.typography.fontFamily,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  fontSize: (font_size ? font_size : theme.typography.body1?.fontSize),  
+  margin: margin,   
 }));

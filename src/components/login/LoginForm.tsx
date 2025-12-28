@@ -37,16 +37,6 @@ const DivTitulo = styled('div')(() => ({
   justifyContent: 'center'
 }));
 
-const GoogleIconStyle = styled(GoogleIcon, {
-  shouldForwardProp: (prop) =>
-    !['color_icon'].includes(prop as string),
-})<{ color_icon: string;}>
-(({ color_icon }) => ({
-   
-  color: color_icon, 
-  marginRight: '16px'
-}));  
-
 const DivLink = styled("div", {
   shouldForwardProp: (prop) =>
     !['text_color', 'align'].includes(prop as string),
@@ -60,16 +50,7 @@ const DivLink = styled("div", {
   width: '100%',  
   padding: '0',
   flex: '1',
-  color: text_color,
-
-  // Tipografia
-  fontFamily: theme.typography.fontFamily,
-  fontWeight: theme.typography.body1?.fontWeight,
-  fontStyle: theme.typography.body1?.fontStyle,
-  lineHeight: theme.typography.body1?.lineHeight,
-  letterSpacing: theme.typography.body1?.letterSpacing,
-  fontSize: theme.typography.body1?.fontSize,
-  margin: theme.typography.body1?.margin,
+  color: text_color, 
 }));
 
 

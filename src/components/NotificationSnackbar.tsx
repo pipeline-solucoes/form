@@ -2,7 +2,7 @@
 
 import { ColorProps } from "../types/ColorProps";
 import { TextProps } from "../types/TextProps";
-import { Snackbar, Alert, AlertColor, Typography, TypographyVariant, SnackbarOrigin } from "@mui/material";
+import { Snackbar, Alert, AlertColor, Typography, TypographyVariant, SnackbarOrigin, useTheme } from "@mui/material";
 
 export interface NotificationSnackbarProps extends TextProps, ColorProps {
   background?: string;
@@ -65,6 +65,15 @@ const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({
   anchorOrigin = { vertical: 'top', horizontal: 'center' },
   onClose,
 }) => {
+
+  const theme = useTheme();
+
+  // 1) prop -> 2) token -> 3) fallback
+  const resolvedBackground =
+    background ??
+    theme.pipesol?.form?.notification?.background ??
+    "#ffffff";
+
   return (
     <Snackbar
       open={open}
@@ -72,7 +81,7 @@ const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({
       onClose={onClose}
       anchorOrigin={anchorOrigin}
     >
-      <Alert onClose={onClose} severity={severity} variant="filled" sx={{ color: background }}>
+      <Alert onClose={onClose} severity={severity} variant="filled" sx={{ color: resolvedBackground }}>
         <Typography variant={variant} component="span">{text}</Typography>
       </Alert>
     </Snackbar>

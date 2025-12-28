@@ -6,14 +6,7 @@ const Text = styled('div', {
     !['text_color'].includes(prop as string),
 })<{text_color: string}>(({ theme, text_color }) => ({
 
-  color: text_color,   
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.caption?.fontSize,
-  fontWeight: theme.typography.caption?.fontWeight,
-  fontStyle: theme.typography.caption?.fontStyle,
-  lineHeight: theme.typography.caption?.lineHeight,
-  letterSpacing: theme.typography.caption?.letterSpacing,
-  margin: theme.typography.caption?.margin,
+  color: text_color,  
 }));
 
 const LinkStyled = styled('a', {
@@ -30,12 +23,6 @@ const LinkStyled = styled('a', {
   padding: '0',
   margin: '0',
   color: text_color,   
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.caption?.fontSize,
-  fontWeight: theme.typography.caption?.fontWeight,
-  fontStyle: theme.typography.caption?.fontStyle,
-  lineHeight: theme.typography.caption?.lineHeight,
-  letterSpacing: theme.typography.caption?.letterSpacing,  
 }));
 
 export interface RecaptchaMessageProps {

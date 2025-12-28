@@ -193,10 +193,10 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({
       >
         {loading 
           ? 'Carregando...' 
-          : <AreaTexto>
-              { icon() }
-              <Typography variant={variant} color={color}>{text}</Typography>
-            </AreaTexto> }
+          : ( <AreaTexto>
+               { icon() }
+               <Typography variant={variant} color={color}>{text}</Typography>
+              </AreaTexto>)}
       </ButtonFormStyled>
 
       {errorMsg && (

@@ -47,50 +47,113 @@ interface TextFieldValidateProps
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) =>
-    !['background', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'backgroundDisabled', 'colorDisabled', 'padding'].includes(prop as string),
+    ![
+      "background",
+      "borderRadius",
+      "boxShadow",
+      "borderColor",
+      "colorFocused",
+      "backgroundDisabled",
+      "colorDisabled",
+      "padding",
+      "colorText",
+    ].includes(prop as string),
 })<{
   background?: string;
   backgroundDisabled?: string;
   colorText?: string;
   colorFocused?: string;
-  colorDisabled?: string; 
+  colorDisabled?: string;
   borderRadius?: string;
   boxShadow?: string;
   borderColor?: string;
-  padding?: string; }
->(({ background, backgroundDisabled, colorText, borderRadius, boxShadow, borderColor, colorFocused, colorDisabled, padding }) => ({
+  padding?: string;
+}>(
+  ({
+    theme,
+    background,
+    backgroundDisabled,
+    colorText,
+    borderRadius,
+    boxShadow,
+    borderColor,
+    colorFocused,
+    colorDisabled,
+    padding,
+  }) => {
+    const field = theme.pipesol?.form?.field;
 
-  background: background,
-  color: colorText,
-  borderRadius: borderRadius,
-  boxShadow: boxShadow,
+    // props -> tokens -> fallback
+    const bg = background ?? field?.background ?? "transparent";
+    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? bg;
+    const txt = colorText ?? field?.color ?? theme.palette.text.primary;
+    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? theme.palette.text.disabled;
 
-  '& .MuiInputBase-root': {
-    color: colorText,
-    background: background,
-    borderRadius: borderRadius,
-    boxShadow: boxShadow,
-    padding: padding,
-  },
-  '& .MuiInputLabel-root': {
-    color: colorText,
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: borderColor,
-  },
+    const br = borderRadius ?? field?.borderRadius ?? "8px";
+    const sh = boxShadow ?? field?.boxShadow ?? "none";
+    const bd = borderColor ?? field?.borderColor ?? theme.palette.divider;
+    const bdFocused = colorFocused ?? field?.colorFocused ?? theme.palette.primary.main;
 
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: borderColor,
-  },
+    const pad = padding ?? field?.padding; // pode deixar undefined se quiser respeitar o default do MUI
 
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: colorFocused,
-  },
-   "&.Mui-disabled": {
-    backgroundColor: backgroundDisabled,
-    color: colorDisabled,
-  },
-}));
+    return {
+      // (opcional) pode manter, mas o mais importante é estilizar os slots internos:
+      background: bg,
+      borderRadius: br,
+      boxShadow: sh,
+
+      "& .MuiInputBase-root": {
+        color: txt,
+      },
+
+      "& .MuiOutlinedInput-root": {
+        background: bg,
+        borderRadius: br,
+        boxShadow: sh,
+
+        ...(pad ? { padding: pad } : {}),
+
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: bd,
+        },
+
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: bd,
+        },
+
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: bdFocused,
+        },
+
+        "&.Mui-disabled": {
+          background: bgDisabled,
+          color: txtDisabled,
+
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: bd,
+          },
+        },
+
+        // texto digitado quando disabled
+        "& input.Mui-disabled": {
+          WebkitTextFillColor: txtDisabled,
+        },
+      },
+
+      "& .MuiInputLabel-root": {
+        color: txt,
+      },
+
+      "& .MuiInputLabel-root.Mui-focused": {
+        color: bdFocused,
+      },
+
+      "& .MuiInputLabel-root.Mui-disabled": {
+        color: txtDisabled,
+      },
+    };
+  }
+);
 
 const computeError = (
   value: string,
