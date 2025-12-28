@@ -1,6 +1,17 @@
 {
-  "name": "pipesol-formulario",
-  "version": "1.0.4-beta.14",
+  "name": "@pipelinesolucoes/form",
+  "version": "1.0.0-beta.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pipeline-solucoes/form.git"
+  },
+  "homepage": "https://github.com/pipeline-solucoes/form#readme",
+  "bugs": {
+    "url": "https://github.com/pipeline-solucoes/form/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,8 +29,7 @@
     "prepare": "npm run build",
     "start": "next start",
     "lint": "next lint",
-    "release-beta": "npm run build && npm publish --tag beta",
-    "release": "npm run build && npm publish"
+    "release-beta": "npm run build && npm publish --tag beta"
   },
   "dependencies": {
     "react-google-recaptcha": "^3.1.0"
@@ -37,7 +47,6 @@
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.1",
-
     "@eslint/eslintrc": "^3",
     "@mui/icons-material": "^7.3.0",
     "@mui/material": "^7.3.0",
@@ -49,7 +58,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "framer-motion": "^12.9.4",
-    "next": "^15.2.3",    
+    "next": "^16.0.7",   
     "typescript": "^5"
   }
 }
