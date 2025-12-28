@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
 import { Button, styled, Typography, Box, TypographyVariant, SvgIconProps } from '@mui/material';
-import { ColorProps } from '@/types/ColorProps';
-import { BorderProps } from '@/types/BorderProps';
-import { LayoutProps } from '@/types/LayoutProps';
-import { TextProps } from '@/types/TextProps';
+import { ColorProps } from '../../types/ColorProps';
+import { BorderProps } from '../../types/BorderProps';
+import { LayoutProps } from '../../types/LayoutProps';
+import { TextProps } from '../../types/TextProps';
 
 
 const ButtonFormStyled = styled(Button, {
@@ -66,11 +66,11 @@ const ButtonFormStyled = styled(Button, {
 
 const AreaTexto = styled('div')(() => ({     
     display: 'flex',
-    flexDirection: 'column',    
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    flexDirection: 'row',    
+    alignItems: 'center',
+    justifyContent: 'center',    
     width: '100%',
-    gap: '16px',
+    gap: '8px',
     textAlign: 'left',    
     padding: '0',
     margin: '0',    
