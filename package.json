@@ -1,6 +1,6 @@
 {
   "name": "@pipelinesolucoes/form",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/pipeline-solucoes/form.git"
@@ -26,10 +26,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
-    "start": "next start",
-    "lint": "next lint",
-    "release-beta": "npm run build && npm publish --tag beta"
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "react-google-recaptcha": "^3.1.0"

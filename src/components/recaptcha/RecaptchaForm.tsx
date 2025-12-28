@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import RecaptchaInvisible, { RecaptchaInvisibleRef } from './RecaptchaInvisible';
-import { ButtonFormStyled, TextFieldFixedSizeStyled, TextFieldStyled } from './FormStyled';
+import { ButtonFormStyled, TextFieldFixedSizeStyled, TextFieldStyled } from '../FormStyled';
 import RecaptchaMessage from './RecaptchaMessage';
 
 

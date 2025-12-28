@@ -1,6 +1,6 @@
 # @pipelinesolucoes/form
 
-Biblioteca de **componentes de botão para React**, desenvolvida para **padronização visual**, **reutilização** e **escalabilidade** em aplicações modernas e design systems.
+Biblioteca de **componentes de formulario para React**, desenvolvida para **padronização visual**, **reutilização** e **escalabilidade** em aplicações modernas e design systems.
 
 Este pacote faz parte do ecossistema de componentes da **Pipeline Soluções**.
 
@@ -10,9 +10,17 @@ Este pacote faz parte do ecossistema de componentes da **Pipeline Soluções**.
 
 A biblioteca inclui os seguintes componentes:
 
-- **Actionform**  
-  Botão de ação estilizado, baseado no tema e com tipografia configurável via `variant`.
+- **GoogleButton**  
+  Componente de botão que redireciona o usuário para um endpoint externo (ex: autenticação com Google). 
+  Durante o clique, o botão entra em estado de loading e, caso ocorra algum erro, exibe uma mensagem abaixo do botão.
 
+- **PasswordRecoveryForm**
+  Componente de formulário para recuperação de senha via e-mail.
+  Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.     
+
+- **TextFieldValidate**  
+  Componente de campo de texto com validação, baseado no TextField do Material UI.
+  Permite personalização visual via `styled` e suporte a validações comuns (obrigatório, tamanho mínimo, regex) e validação customizada.   
 ---
 
 ## ✨ Características

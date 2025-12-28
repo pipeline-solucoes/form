@@ -3,7 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Divider, IconButton, InputAdornment, SvgIconProps, Typography } from '@mui/material';
-import { ButtonFormStyled, LinkFormStyled, TextFieldStyled } from './FormStyled';
+import { ButtonFormStyled, LinkFormStyled, TextFieldStyled } from '../FormStyled';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 

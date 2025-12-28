@@ -2,21 +2,26 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import { BorderProps } from '../types/BorderProps';
+import { ColorProps } from '../types/ColorProps';
+import { LayoutProps } from '../types/LayoutProps';
 
-
-interface TextFieldValidateProps {
+interface TextFieldValidateProps 
+  extends BorderProps, ColorProps, LayoutProps {
   id?: string;
   label?: string;
+  placeholder?: string;
+  value?: string;
+
   background?: string;
   colorText?: string;
+  colorFocused?: string;
   borderRadius?: string;
   boxShadow?: string;
   borderColor?: string;
-  placeholder?: string;
+  padding?: string; 
+  
   disabled?: boolean;
-  value?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 
   // Multiline
   multiline?: boolean;
@@ -24,51 +29,55 @@ interface TextFieldValidateProps {
 
   // Validação
   required?: boolean;
-  requiredMessage?: string;
-  minLength?: number;
+  requiredMessage?: string;  
   pattern?: RegExp | string;
   patternMessage?: string;
   validate?: (value: string) => string | null | undefined;
   showErrorOn?: 'change' | 'blur';
 
-  // Outros
+  // Length
+  minLength?: number;
   maxLength?: number;
+
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) =>
-    !['background', 'colorText', 'borderRadius', 'boxShadow', 'borderColor'].includes(prop as string),
+    !['background', 'colorText', 'borderRadius', 'boxShadow', 'borderColor', 'colorFocused', 'padding'].includes(prop as string),
 })<
   Pick<
     TextFieldValidateProps,
-    'background' | 'colorText' | 'borderRadius' | 'boxShadow' | 'borderColor'
+    'background' | 'colorText' | 'borderRadius' | 'boxShadow' | 'borderColor' | 'colorFocused' | 'padding'
   >
->(({ background, colorText, borderRadius, boxShadow, borderColor }) => ({
-  background: background || '#fff',
-  color: colorText || '#000',
-  borderRadius: borderRadius || '6px',
-  boxShadow: boxShadow || 'none',
+>(({ background, colorText, borderRadius, boxShadow, borderColor, colorFocused, padding }) => ({
+
+  background: background,
+  color: colorText,
+  borderRadius: borderRadius,
+  boxShadow: boxShadow,
 
   '& .MuiInputBase-root': {
-    color: colorText || '#000',
-    background: background || '#fff',
-    borderRadius: borderRadius || '6px',
-    boxShadow: boxShadow || 'none',
-    padding: '4px 8px',
+    color: colorText,
+    background: background,
+    borderRadius: borderRadius,
+    boxShadow: boxShadow,
+    padding: padding,
   },
   '& .MuiInputLabel-root': {
-    color: colorText || '#000',
+    color: colorText,
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: borderColor || '#ccc',
+    borderColor: borderColor,
   },
 
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: borderColor || '#888',
+    borderColor: borderColor,
   },
 
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#1976d2',
+    borderColor: colorFocused,
   },
 }));
 
@@ -103,96 +112,77 @@ const computeError = (
   return null;
 };
 
-
 /**
- * TextFieldValidate Component
+ * Componente de campo de texto com validação, baseado no TextField do Material UI.
+ * Permite personalização visual via `styled` e suporte a validações comuns
+ * (obrigatório, tamanho mínimo, regex) e validação customizada.
  *
- * Um campo de texto personalizável baseado no Material UI (MUI 6+), com suporte a:
- * - Estilização via `styled` (background, cor do texto, bordas, sombra).
- * - Estados e acessibilidade do MUI (`label`, `disabled`, `helperText`, `error`).
- * - Modo multilinha (`multiline`, `rows`).
- * - Validações simples (obrigatório, tamanho mínimo, `pattern`) e validação customizada (`validate`).
- * - Controle de exibição de erro durante a digitação ou após perder o foco (`showErrorOn`).
- * - Limite máximo de caracteres via `maxLength` (aplicado ao input).
- * - Suporte a um `onBlur` externo para lógicas adicionais (ex: busca de CEP).
+ * O erro pode ser exibido durante a digitação ou apenas após o campo perder o foco.
  *
- * ### Parâmetros (props)
- * - `id?: string` — Id do campo (passado para o DOM/MUI). **Default:** `undefined`
- * - `label?: string` — Rótulo exibido acima do campo (Label do MUI). **Default:** `undefined`
- * - `background?: string` — Cor de fundo do campo. **Default:** `"#fff"`
- * - `colorText?: string` — Cor do texto. **Default:** `"#000"`
- * - `borderRadius?: string` — Raio de borda. **Default:** `"6px"`
- * - `boxShadow?: string` — Sombra do campo. **Default:** `"none"`
- * - `borderColor?: string` — Cor da borda do campo (estado base e hover). **Default:** `"#ccc"`
- * - `placeholder?: string` — Placeholder exibido quando o campo está vazio. **Default:** `""`
- * - `disabled?: boolean` — Desabilita o campo (estado disabled). **Default:** `false`
- * - `value?: string` — Valor atual do campo (controlado). **Default:** `""`
- * - `onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void` — Função chamada ao alterar o valor. **Default:** `undefined`
- * - `onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void` — Função chamada ao perder o foco, após a lógica interna marcar o campo como “tocado”. **Default:** `undefined`
+ * @param {string} [id] Id do campo (replicado no input do MUI).
+ * @param {string} [label] Rótulo exibido acima do campo.
+ * @param {string} [placeholder] Placeholder exibido quando o campo está vazio.
+ * @param {string} [value=''] Valor atual do campo (modo controlado).
+ * @param {boolean} [disabled=false] Define se o campo está desabilitado.
  *
- * **Multiline**
- * - `multiline?: boolean` — Define se o campo é multilinha. **Default:** `false`
- * - `rows?: number` — Número de linhas quando `multiline` está ativo. **Default:** `3`
+ * @param {string} [background='#fff'] Cor de fundo do campo.
+ * @param {string} [colorText='#000'] Cor do texto e do label.
+ * @param {string} [colorFocused='#1976d2'] Cor da borda quando o campo está focado.
+ * @param {string} [borderColor='#ccc'] Cor da borda no estado normal e hover.
+ * @param {string} [borderRadius='0'] Raio da borda do campo.
+ * @param {string} [boxShadow='none'] Sombra aplicada ao campo.
+ * @param {string} [padding='4px 8px'] Espaçamento interno do input.
  *
- * **Validação**
- * - `required?: boolean` — Indica se o preenchimento é obrigatório. **Default:** `false`
- * - `requiredMessage?: string` — Mensagem quando obrigatório não atendido. **Default:** `"Campo obrigatório"`
- * - `minLength?: number` — Tamanho mínimo (caracteres). **Default:** `undefined`
- * - `pattern?: RegExp | string` — Expressão regular para validar o formato. **Default:** `undefined`
- * - `patternMessage?: string` — Mensagem quando o `pattern` não é atendido. **Default:** `"Formato inválido"`
- * - `validate?: (value: string) => string | null | undefined` — Validação customizada; retorne string com a mensagem de erro, ou `null/undefined` se válido. **Default:** `undefined`
- * - `showErrorOn?: 'change' | 'blur'` — Quando exibir erros: durante a digitação (`"change"`) ou ao perder o foco (`"blur"`). **Default:** `"blur"`
+ * @param {boolean} [multiline=false] Define se o campo é multilinha.
+ * @param {number} [rows=3] Número de linhas quando `multiline` está ativo.
  *
- * **Outros**
- * - `maxLength?: number` — Limite máximo de caracteres permitido (não valida; apenas limita o input). **Default:** `undefined`
+ * @param {boolean} [required=false] Indica se o campo é obrigatório.
+ * @param {string} [requiredMessage='Campo obrigatório'] Mensagem exibida quando o campo obrigatório está vazio.
+ * @param {number} [minLength] Número mínimo de caracteres.
+ * @param {RegExp | string} [pattern] Expressão regular para validação do valor.
+ * @param {string} [patternMessage='Formato inválido'] Mensagem exibida quando o pattern não é atendido.
+ * @param {(value: string) => string | null | undefined} [validate] Função de validação customizada.
+ * @param {'change' | 'blur'} [showErrorOn='blur'] Momento em que o erro deve ser exibido.
  *
- * ### Exemplo (uso com CEP e onBlur)
+ * @param {number} [maxLength] Limite máximo de caracteres permitido no input.
+ * @param {(event: React.ChangeEvent<HTMLInputElement>) => void} [onChange] Callback disparado ao alterar o valor.
+ * @param {(event: React.FocusEvent<HTMLInputElement>) => void} [onBlur] Callback disparado ao perder o foco.
+ *
+ * @example
  * ```tsx
  * import React from 'react';
- * import TextFieldValidate from './TextFieldValidate';
+ * import TextFieldValidate from '@/components/TextFieldValidate';
  *
- * const CepExample: React.FC = () => {
- *   const [cep, setCep] = React.useState('');
- *
- *   const handleCepBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
- *     const raw = event.target.value || '';
- *     const onlyDigits = raw.replace(/\D/g, '');
- *
- *     if (onlyDigits.length === 8) {
- *       // Exemplo de chamada de API (ViaCEP)
- *       // const response = await fetch(`https://viacep.com.br/ws/${onlyDigits}/json/`);
- *       // const data = await response.json();
- *       // ...preencher outros campos do formulário...
- *       console.log('CEP para buscar:', onlyDigits);
- *     }
- *   };
+ * const Example = () => {
+ *   const [email, setEmail] = React.useState('');
  *
  *   return (
  *     <TextFieldValidate
- *       id="cep-input"
- *       label="CEP"
- *       placeholder="Digite o CEP"
- *       value={cep}
- *       onChange={(e) => setCep(e.target.value)}
- *       onBlur={handleCepBlur}
- *       pattern={/^\d{5}-?\d{3}$/}
- *       patternMessage="CEP inválido"
+ *       label="E-mail"
+ *       placeholder="Digite seu e-mail"
+ *       value={email}
+ *       onChange={(e) => setEmail(e.target.value)}
  *       required
+ *       pattern={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
+ *       patternMessage="E-mail inválido"
  *       showErrorOn="blur"
- *       maxLength={9}
+ *       maxLength={120}
+ *       borderRadius="6px"
  *     />
  *   );
  * };
  * ```
  */
+ 
 const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   id,
   label,
-  background,
+  background = '#fff',
   colorText = '#000',
-  borderRadius,
-  boxShadow,
-  borderColor,
+  colorFocused = '#1976d2',
+  borderRadius = '0',
+  boxShadow = 'none',
+  borderColor = '#ccc',
   placeholder,
   disabled = false,
   value = '',
@@ -208,6 +198,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   validate,
   showErrorOn = 'blur',
   maxLength,
+  padding = '4px 8px'
 }) => {
   const [touched, setTouched] = React.useState(false);
 
@@ -264,9 +255,11 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       onBlur={handleBlur}
       background={background}
       colorText={colorText}
+      colorFocused={colorFocused}
       borderRadius={borderRadius}
       boxShadow={boxShadow}
       borderColor={borderColor}
+      padding={padding}
       disabled={disabled}
       multiline={multiline}
       required={required}
