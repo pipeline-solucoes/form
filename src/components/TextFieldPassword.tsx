@@ -128,7 +128,7 @@ const StyledTextField = styled(TextField, {
     colorDisabled,
     padding,
   }) => {
-    const field = theme.pipesol?.forms?.field;
+    const field = theme.pipelinesolucoes?.forms?.field;
 
     const bg = background ?? field?.background ?? 'transparent';
     const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? bg;
@@ -146,13 +146,13 @@ const StyledTextField = styled(TextField, {
       background: bg,
       borderRadius: br,
       boxShadow: sh,
+      paddingRight: '16px',
 
       '& .MuiInputBase-root': {
         color: txt,
       },
 
-      '& .MuiOutlinedInput-root': {
-        background: bg,
+      '& .MuiOutlinedInput-root': {        
         borderRadius: br,
         boxShadow: sh,
 

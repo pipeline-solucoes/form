@@ -1,6 +1,7 @@
 {
   "name": "@pipelinesolucoes/form",
-  "version": "1.0.0-beta.7",
+  "version": "1.2.0-beta.0",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "https://github.com/pipeline-solucoes/form.git"
@@ -31,11 +32,12 @@
     }
   },
   "scripts": {
-    "build": "tsc && node scripts/copy-theme-dts.cjs",
+    "build": "tsc",
     "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@pipelinesolucoes/theme": "^1.0.1",
     "react-google-recaptcha": "^3.1.0"
   },
   "peerDependencies": {
@@ -60,8 +62,8 @@
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/react-input-mask": "^3.0.6",
     "eslint": "^9",
-    "eslint-config-next": "15.1.6",    
-    "next": "^16.0.7",   
+    "eslint-config-next": "15.1.6",
+    "next": "^16.0.7",
     "typescript": "^5"
   }
 }

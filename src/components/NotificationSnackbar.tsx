@@ -71,7 +71,7 @@ const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({
   // 1) prop -> 2) token -> 3) fallback
   const resolvedBackground =
     background ??
-    theme.pipesol?.forms?.notification?.background ??
+    theme.pipelinesolucoes?.forms?.notification?.background ??
     "#ffffff";
 
   return (

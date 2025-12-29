@@ -81,7 +81,7 @@ const StyledTextField = styled(TextField, {
     colorDisabled,
     padding,
   }) => {
-    const field = theme.pipesol?.forms?.field;
+    const field = theme.pipelinesolucoes?.forms?.field;
 
     // props -> tokens -> fallback
     const bg = background ?? field?.background ?? "transparent";
@@ -106,8 +106,7 @@ const StyledTextField = styled(TextField, {
         color: txt,
       },
 
-      "& .MuiOutlinedInput-root": {
-        background: bg,
+      "& .MuiOutlinedInput-root": {        
         borderRadius: br,
         boxShadow: sh,
 

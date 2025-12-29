@@ -1,14 +1,13 @@
-import { createTheme } from '@mui/material/styles';
+import { ThemeOptions } from '@mui/material/styles';
+import { PipelineSolucoesFormTokens } from '@pipelinesolucoes/theme';
 
 // Definindo o tema personalizado
-const theme = createTheme({
-  
-  pipesol: {
-    forms:{
-      notification: {
+const forms: PipelineSolucoesFormTokens = {    
+    notification: {
       background: '#fff',     
-      },
-      field: {
+    },
+    
+    field: {
         background: '#fff', 
         backgroundDisabled: "#9CA3AF",
         color: "#000",
@@ -18,9 +17,12 @@ const theme = createTheme({
         boxShadow: "none",
         borderColor: "#ccc",
         padding: "4px 8px",
-      }    
-    }
-  }  
-});
+    }      
+};
 
-export { theme };
+
+export const formThemeOptions: ThemeOptions = {
+  pipelinesolucoes: {
+    forms,
+  },
+};

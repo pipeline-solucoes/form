@@ -54,7 +54,7 @@ interface RecuperarSenhaSubmitResult {
   message: string;
 }
 
-interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps, FieldProps {
+interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   subTitulo?: () => React.ReactElement;
@@ -191,7 +191,7 @@ interface PasswordRecoveryFormProps extends ButtonProps, ColorProps, BorderProps
  * };
  * ```
  */
-const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
+const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   Icon,
   titulo,
   subTitulo,  
@@ -324,5 +324,5 @@ const PasswordRecoveryForm: React.FC<PasswordRecoveryFormProps> = ({
   );
 };
 
-PasswordRecoveryForm.displayName = 'PasswordRecoveryForm';
-export default PasswordRecoveryForm;
+FormPasswordRecovery.displayName = 'FormPasswordRecovery';
+export default FormPasswordRecovery;

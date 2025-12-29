@@ -55,10 +55,21 @@ const DivLink = styled('div', {
   color: text_color,
 }));
 
+const DivCampos = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  width: '100%',
+  margin: '0',
+  padding: '0',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
 /**
  * Retorno do onClick/onSubmit do componente pai.
  * - success: define se a ação foi bem sucedida
- * - message: mensagem para exibir no próprio LoginForm
+ * - message: mensagem para exibir no próprio FormLogin
  * - color: cor opcional para a mensagem (caso queira sobrescrever as cores padrão)
  */
 export interface ClickResult {
@@ -67,7 +78,7 @@ export interface ClickResult {
   color?: string;
 }
 
-export interface LoginFormProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
+export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   googleButton: () => React.ReactElement;
@@ -172,13 +183,13 @@ export interface LoginFormProps extends ColorProps, BorderProps, ButtonProps, Fi
  *
  * @example
  * ```tsx
- * import LoginForm from '@/components/LoginForm';
+ * import FormLogin from '@/components/FormLogin';
  * import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
  * import { Button } from '@mui/material';
  *
  * export default function Example() {
  *   return (
- *     <LoginForm
+ *     <FormLogin
  *       urlRecuperarConta="/recuperar"
  *       urlCriarConta="/cadastro"
  *       Icon={LockOutlinedIcon}
@@ -214,7 +225,7 @@ export interface LoginFormProps extends ColorProps, BorderProps, ButtonProps, Fi
  * ```
  */
 
-const LoginForm: React.FC<LoginFormProps> = ({
+const FormLogin: React.FC<FormLoginProps> = ({
   urlRecuperarConta,
   urlCriarConta,
 
@@ -337,52 +348,53 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
         <Divider sx={{ borderColor: color_separador }}>ou</Divider>
 
-        <TextFieldValidate
-          id="email"
-          label="Email"
-          placeholder="Email"
-          background={backgroundField}
-          color={colorField}
-          borderRadius={borderRadiusField}
-          borderColor={borderColorField}
-          boxShadow={boxShadowField}
-          padding={paddingField}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required={true}
-          requiredMessage="Campo obrigatório"
-          validate={validateEmailMessage}
-          showErrorOn="blur"
-        />
-
-        <DivPassword>
-          <TextFieldPassword
-            id="password"
-            label="Senha"
-            placeholder="Senha"
-            required={true}
+        <DivCampos>
+          <TextFieldValidate
+            id="email"
+            label="Email"
+            placeholder="Email"
             background={backgroundField}
             color={colorField}
             borderRadius={borderRadiusField}
             borderColor={borderColorField}
             boxShadow={boxShadowField}
             padding={paddingField}
-            value={password}
-            onPasswordChange={(p) => setPassword(p)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required={true}
+            requiredMessage="Campo obrigatório"
+            validate={validateEmailMessage}
+            showErrorOn="blur"
           />
+          <DivPassword>
+            <TextFieldPassword
+              id="password"
+              label="Senha"
+              placeholder="Senha"
+              required={true}
+              background={backgroundField}
+              color={colorField}
+              borderRadius={borderRadiusField}
+              borderColor={borderColorField}
+              boxShadow={boxShadowField}
+              padding={paddingField}
+              value={password}
+              onPasswordChange={(p) => setPassword(p)}
+            />
 
-          <DivLink text_color={color} align="flex-start">
-            <LinkFormStyled
-              href={urlRecuperarConta}
-              width="auto"
-              height="auto"
-              text_color={color_link}
-              font_size="0.8rem"
-            >
-              Esqueceu sua senha?
-            </LinkFormStyled>
-          </DivLink>
-        </DivPassword>
+            <DivLink text_color={color} align="flex-start">
+              <LinkFormStyled
+                href={urlRecuperarConta}
+                width="auto"
+                height="auto"
+                text_color={color_link}
+                font_size="0.8rem"
+              >
+                Esqueceu sua senha?
+              </LinkFormStyled>
+            </DivLink>
+          </DivPassword>
+        </DivCampos>
 
         <ButtonFormStyled
           backgroundButton={backgroundButton}
@@ -427,4 +439,4 @@ const LoginForm: React.FC<LoginFormProps> = ({
   );
 };
 
-export default LoginForm;
+export default FormLogin;
