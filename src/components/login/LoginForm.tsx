@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import { styled, TypographyVariant } from '@mui/material/styles';
 import { Box, Divider, SvgIconProps, Typography } from '@mui/material';
 import { LinkFormStyled } from '../FormStyled';
-import { ButtonProps } from '@/types/ButtonProps';
+import { ButtonProps } from '../../types/ButtonProps';
 import { ButtonFormStyled } from '../ButtonFormStyled';
 import { FieldProps } from '@/types/FieldProps';
-import { validateEmailMessage } from '@/utils/validateEmail';
+import { validateEmailMessage } from '../../utils/validateEmail';
 import TextFieldValidate from '../TextFieldValidate';
 import TextFieldPassword from '../TextFieldPassword';
-import { ColorProps } from '@/types/ColorProps';
-import { BorderProps } from '@/types/BorderProps';
+import { ColorProps } from '../../types/ColorProps';
+import { BorderProps } from '../../types/BorderProps';
 
 const FormContainer = styled('div')(() => ({
   display: 'flex',
