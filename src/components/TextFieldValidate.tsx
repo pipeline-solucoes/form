@@ -2,12 +2,11 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import { BorderProps } from '../types/BorderProps';
-import { ColorProps } from '../types/ColorProps';
-import { LayoutProps } from '../types/LayoutProps';
+import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 
 interface TextFieldValidateProps 
   extends BorderProps, ColorProps, LayoutProps {
+  
   id?: string;
   label?: string;
   placeholder?: string;
@@ -21,26 +20,26 @@ interface TextFieldValidateProps
   borderRadius?: string;
   boxShadow?: string;
   borderColor?: string;
-  padding?: string; 
-  
+  padding?: string;   
+  margin?: string; 
   disabled?: boolean;
-
-  // Multiline
-  multiline?: boolean;
-  rows?: number;
 
   // Validação
   required?: boolean;
   requiredMessage?: string;  
   pattern?: RegExp | string;
   patternMessage?: string;
-  validate?: (value: string) => string | null | undefined;
   showErrorOn?: 'change' | 'blur';
 
   // Length
   minLength?: number;
   maxLength?: number;
 
+  // Multiline
+  multiline?: boolean;
+  rows?: number;
+
+  validate?: (value: string) => string | null | undefined;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
@@ -68,6 +67,7 @@ const StyledTextField = styled(TextField, {
   boxShadow?: string;
   borderColor?: string;
   padding?: string;
+  margin?: string;
 }>(
   ({
     theme,
@@ -80,21 +80,23 @@ const StyledTextField = styled(TextField, {
     colorFocused,
     colorDisabled,
     padding,
+    margin
   }) => {
     const field = theme.pipelinesolucoes?.forms?.field;
 
     // props -> tokens -> fallback
-    const bg = background ?? field?.background ?? "transparent";
-    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? bg;
-    const txt = colorText ?? field?.color ?? theme.palette.text.primary;
-    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? theme.palette.text.disabled;
+    const bg = background ?? field?.background ?? '#fff';
+    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? "#E5E7EB";
+    const txt = colorText ?? field?.color ?? '#000';
+    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? "#9CA3AF";
 
-    const br = borderRadius ?? field?.borderRadius ?? "8px";
+    const br = borderRadius ?? field?.borderRadius ?? "0";
     const sh = boxShadow ?? field?.boxShadow ?? "none";
-    const bd = borderColor ?? field?.borderColor ?? theme.palette.divider;
-    const bdFocused = colorFocused ?? field?.colorFocused ?? theme.palette.primary.main;
+    const bd = borderColor ?? field?.borderColor ?? '#ccc';
+    const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
 
-    const pad = padding ?? field?.padding; // pode deixar undefined se quiser respeitar o default do MUI
+    const pad = padding ?? field?.padding ?? '4px 8px'; // pode deixar undefined se quiser respeitar o default do MUI
+    const mg = margin ?? field?.margin ?? '0'; 
 
     return {
       // (opcional) pode manter, mas o mais importante é estilizar os slots internos:
@@ -252,14 +254,14 @@ const computeError = (
 const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   id,
   label,
-  background = '#fff',
-  backgroundDisabled = "#E5E7EB",
-  color = '#000',
-  colorFocused = '#1976d2',
-  colorDisabled = "#9CA3AF",
-  borderRadius = '0',
-  boxShadow = 'none',
-  borderColor = '#ccc',
+  background,
+  backgroundDisabled,
+  color,
+  colorFocused,
+  colorDisabled,
+  borderRadius,
+  boxShadow,
+  borderColor,
   placeholder,
   disabled = false,
   value = '',
@@ -275,7 +277,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   validate,
   showErrorOn = 'blur',
   maxLength,
-  padding = '4px 8px'
+  padding
 }) => {
   const [touched, setTouched] = React.useState(false);
 

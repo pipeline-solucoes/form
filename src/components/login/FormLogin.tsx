@@ -1,17 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { styled, TypographyVariant } from '@mui/material/styles';
+import { styled, TypographyVariant, useTheme } from '@mui/material/styles';
 import { Box, Divider, SvgIconProps, Typography } from '@mui/material';
-import { LinkFormStyled } from '../FormStyled';
 import { ButtonProps } from '../../types/ButtonProps';
-import { ButtonFormStyled } from '../ButtonFormStyled';
+import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '@/types/FieldProps';
 import { validateEmailMessage } from '../../utils/validateEmail';
 import TextFieldValidate from '../TextFieldValidate';
 import TextFieldPassword from '../TextFieldPassword';
-import { ColorProps } from '../../types/ColorProps';
-import { BorderProps } from '../../types/BorderProps';
+import { LinkFormStyled } from '../style/LinkFormStyled';
+import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 
 const FormContainer = styled('div')(() => ({
   display: 'flex',
@@ -44,7 +43,7 @@ const DivTitulo = styled('div')(() => ({
 
 const DivLink = styled('div', {
   shouldForwardProp: (prop) => !['text_color', 'align'].includes(prop as string),
-})<{ text_color: string; align: string }>(({ text_color, align }) => ({
+})<{ text_color?: string; align: string }>(({ text_color, align }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
@@ -52,7 +51,7 @@ const DivLink = styled('div', {
   width: '100%',
   padding: '0',
   flex: '1',
-  color: text_color,
+  color: text_color ?? "#000",
 }));
 
 const DivCampos = styled('div')(() => ({
@@ -79,39 +78,14 @@ export interface ClickResult {
 }
 
 export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
+
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   googleButton: () => React.ReactElement;
 
-  color: string;
-  background?: string;
-  borderRadius?: string;
-  border?: string;
-  boxShadow?: string;
-
-  backgroundField?: string;
-  colorField?: string;
-  colorFocusedField?: string;
-  borderRadiusField?: string;
-  boxShadowField?: string;
-  borderColorField?: string;
-  paddingField?: string;
-
   textButton?: string;
   variantButton?: TypographyVariant;
-  backgroundButton?: string;
-  backgroundHoverButton?: string;
-  colorButton?: string;
-  colorHoverButton?: string;
-  borderRadiusButton?: string;
-  borderButton?: string;
-  boxShadowButton?: string;
-  widthButton?: string;
-  heightButton?: string;
-  paddingButton?: string;
-  marginButton?: string;
 
-  /** Cores padrão para mensagem (caso o pai não retorne color no ClickResult) */
   color_message_sucess: string;
   color_message_erro: string;
 
@@ -122,10 +96,6 @@ export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, Fi
   urlCriarConta: string;
   children?: React.ReactNode;
 
-  /**
-   * Evento disparado ao clicar no botão principal.
-   * O componente pai devolve a mensagem e o sucesso/erro.
-   */
   onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
 }
 
@@ -140,7 +110,6 @@ export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, Fi
  * @param {() => React.ReactElement} [titulo] Função que retorna o conteúdo do título exibido no topo do formulário.
  * @param {() => React.ReactElement} googleButton Função que retorna o botão de login com Google. Obrigatório.
  *
- * @param {string} color Cor usada em alguns textos/containers auxiliares (ex.: wrapper dos links). Obrigatório.
  * @param {string} [background='transparent'] Cor de fundo do container principal.
  * @param {string} [borderRadius='0'] Raio da borda do container principal.
  * @param {string} [border='none'] Borda do container principal.
@@ -233,31 +202,32 @@ const FormLogin: React.FC<FormLoginProps> = ({
   titulo,
   googleButton,
 
-  color,
-  background = 'transparent',
-  borderRadius = '0',
-  border='none',
-  boxShadow='none',
+  background,
+  borderRadius,
+  border,
+  boxShadow,
 
-  backgroundField = 'transparent',
-  colorField = '#000',
-  borderRadiusField = '0px',
-  boxShadowField = 'none',
-  borderColorField = '#ccc',
-  paddingField = '4px 8px',
+  backgroundField,
+  colorField,
+  borderRadiusField,
+  boxShadowField,
+  borderColorField,
+  paddingField,
+  marginField,
 
   textButton = 'Enviar',
   variantButton = 'body1',
-  backgroundButton = 'transparent',
-  backgroundHoverButton = 'transparent',
-  colorButton = '#000',
-  colorHoverButton = '#000',
-  borderRadiusButton = '0',
+
+  backgroundButton,
+  backgroundHoverButton,
+  colorButton,
+  colorHoverButton,
+  borderRadiusButton,
   borderButton = 'none',
-  boxShadowButton = 'none',
+  boxShadowButton,
   widthButton = 'auto',
   heightButton = 'auto',
-  paddingButton = '4px 24px',
+  paddingButton,
   marginButton = '0',
 
   color_message_sucess,
@@ -268,6 +238,9 @@ const FormLogin: React.FC<FormLoginProps> = ({
   onClick,
   children,
 }) => {
+
+  const theme = useTheme();
+
   const [mensagemApi, setMensagemApi] = useState('');
   const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
 
@@ -325,6 +298,27 @@ const FormLogin: React.FC<FormLoginProps> = ({
     }
   };
 
+  const bContainer = background ?? theme?.pipelinesolucoes?.forms?.login?.background ?? 'transparent';
+  const brContainer = borderRadius ?? theme?.pipelinesolucoes?.forms?.login?.borderRadius ?? '0';
+  const bdContainer= border ?? theme?.pipelinesolucoes?.forms?.login?.border ?? '0';
+  const bsContainer= boxShadow ?? theme?.pipelinesolucoes?.forms?.login?.boxShadow ?? 'none';
+
+  const bField = backgroundField ?? theme?.pipelinesolucoes?.forms?.login?.field?.background ?? undefined;
+  const cField = colorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.color ?? undefined;
+  const brField = borderRadiusField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderRadius ?? undefined;
+  const bsField = boxShadowField ?? theme?.pipelinesolucoes?.forms?.login?.field?.boxShadow ?? undefined;
+  const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
+  const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
+  const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
+
+  const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
+  const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
+  const cButton = colorButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.color ?? undefined;
+  const cHoverButton = colorHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.colorHover ?? undefined;
+  const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
+  const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
+  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
+  
   return (
     <Box
       display="flex"
@@ -332,9 +326,9 @@ const FormLogin: React.FC<FormLoginProps> = ({
       justifyContent="center"
       gap="24px"
       flex={1}
-      sx={{ padding: '24px', borderRadius: borderRadius, 
-            background: background, border: border, 
-            boxShadow: boxShadow }}
+      sx={{ padding: '24px', borderRadius: brContainer, 
+            background: bContainer, border: bdContainer, 
+            boxShadow: bsContainer }}
     >
       {(Icon || titulo) && (
         <DivTitulo>
@@ -353,12 +347,13 @@ const FormLogin: React.FC<FormLoginProps> = ({
             id="email"
             label="Email"
             placeholder="Email"
-            background={backgroundField}
-            color={colorField}
-            borderRadius={borderRadiusField}
-            borderColor={borderColorField}
-            boxShadow={boxShadowField}
-            padding={paddingField}
+            background={bField}
+            color={cField}
+            borderRadius={brField}
+            borderColor={bcField}
+            boxShadow={bsField}
+            padding={pField}
+            margin={mgField}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required={true}
@@ -372,17 +367,18 @@ const FormLogin: React.FC<FormLoginProps> = ({
               label="Senha"
               placeholder="Senha"
               required={true}
-              background={backgroundField}
-              color={colorField}
-              borderRadius={borderRadiusField}
-              borderColor={borderColorField}
-              boxShadow={boxShadowField}
-              padding={paddingField}
+              background={bField}
+              color={cField}
+              borderRadius={brField}
+              borderColor={bcField}
+              boxShadow={bsField}
+              padding={pField}
+              margin={mgField}
               value={password}
               onPasswordChange={(p) => setPassword(p)}
             />
 
-            <DivLink text_color={color} align="flex-start">
+            <DivLink align="flex-start">
               <LinkFormStyled
                 href={urlRecuperarConta}
                 width="auto"
@@ -397,16 +393,16 @@ const FormLogin: React.FC<FormLoginProps> = ({
         </DivCampos>
 
         <ButtonFormStyled
-          backgroundButton={backgroundButton}
-          backgroundHoverButton={backgroundHoverButton}
-          colorButton={colorButton}
-          colorHoverButton={colorHoverButton}
-          borderRadiusButton={borderRadiusButton}
+          backgroundButton={bgButton}
+          backgroundHoverButton={bgHoverButton}
+          colorButton={cButton}
+          colorHoverButton={cHoverButton}
+          borderRadiusButton={brButton}
           borderButton={borderButton}
-          boxShadowButton={boxShadowButton}
+          boxShadowButton={bsButton}
           widthButton={widthButton}
           heightButton={heightButton}
-          paddingButton={paddingButton}
+          paddingButton={pButton}
           marginButton={marginButton}
           disabled={isLoading}
           onClick={handleClick}
@@ -420,11 +416,12 @@ const FormLogin: React.FC<FormLoginProps> = ({
           )}
         </ButtonFormStyled>
 
-        <DivLink text_color={color} align="center">
+        <DivLink align="center">
           <LinkFormStyled href={urlCriarConta} width="auto" height="100%" text_color={color_link} margin="0">
             Criar conta
           </LinkFormStyled>
         </DivLink>
+
       </FormContainer>
 
       {/* Mensagem retornada do onClick do pai */}

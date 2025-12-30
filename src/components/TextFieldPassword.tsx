@@ -7,9 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
-import { BorderProps } from '@/types/BorderProps';
-import { ColorProps } from '@/types/ColorProps';
-import { LayoutProps } from '@/types/LayoutProps';
+import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 
 type ValidationStatus = 'idle' | 'required' | 'invalid' | 'valid';
 
@@ -24,11 +22,6 @@ interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
   id?: string;
   label?: string;
   placeholder?: string;
-
-  /**
-   * Valor controlado do campo (opcional).
-   * Se você não passar `value`, o componente funciona de forma "semi-controlada" internamente.
-   */
   value?: string;
 
   background?: string;
@@ -42,38 +35,11 @@ interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
   padding?: string;
   disabled?: boolean;
 
-  /**
-   * Se true, valida obrigatório.
-   * @default true
-   */
   required?: boolean;
-
-  /**
-   * Regra de formato (regex) para validar a senha.
-   * @default /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
-   */
-  passwordPattern?: RegExp;
-
-  /**
-   * Mensagem quando o campo é obrigatório e está vazio.
-   * @default 'Senha obrigatória'
-   */
   requiredMessage?: string;
-
-  /**
-   * Mensagem quando a senha não atende o padrão.
-   * @default 'Senha inválida'
-   */
-  invalidMessage?: string;
-
-  /**
-   * Quando validar:
-   * - 'blur': valida ao sair do campo
-   * - 'change': valida a cada digitação
-   * - 'both': valida nos dois
-   * @default 'blur'
-   */
-  validateOn?: 'blur' | 'change' | 'both';
+  pattern?: RegExp;
+  patternMessage?: string;  
+  showErrorOn?: 'blur' | 'change' | 'both';
 
   /**
    * Retorna somente a senha digitada (string).
@@ -130,17 +96,18 @@ const StyledTextField = styled(TextField, {
   }) => {
     const field = theme.pipelinesolucoes?.forms?.field;
 
-    const bg = background ?? field?.background ?? 'transparent';
-    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? bg;
-    const txt = colorText ?? field?.color ?? theme.palette.text.primary;
-    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? theme.palette.text.disabled;
+    // props -> tokens -> fallback
+    const bg = background ?? field?.background ?? '#fff';
+    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? "#E5E7EB";
+    const txt = colorText ?? field?.color ?? '#000';
+    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? "#9CA3AF";
 
-    const br = borderRadius ?? field?.borderRadius ?? '8px';
-    const sh = boxShadow ?? field?.boxShadow ?? 'none';
-    const bd = borderColor ?? field?.borderColor ?? theme.palette.divider;
-    const bdFocused = colorFocused ?? field?.colorFocused ?? theme.palette.primary.main;
+    const br = borderRadius ?? field?.borderRadius ?? "0";
+    const sh = boxShadow ?? field?.boxShadow ?? "none";
+    const bd = borderColor ?? field?.borderColor ?? '#ccc';
+    const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
 
-    const pad = padding ?? field?.padding;
+    const pad = padding ?? field?.padding ?? '4px 8px'; // pode deixar undefined se quiser respeitar o default do MUI
 
     return {
       background: bg,
@@ -250,21 +217,21 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   onValidationChange,
 
   required = true,
-  passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+  pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
   requiredMessage = 'Senha obrigatória',
-  invalidMessage = 'Senha inválida',
-  validateOn = 'blur',
+  patternMessage = 'Senha inválida',
+  showErrorOn = 'blur',
 
-  background = '#fff',
-  backgroundDisabled = '#E5E7EB',
-  color = '#000',
-  colorFocused = '#1976d2',
-  colorDisabled = '#9CA3AF',
-  borderRadius = '0',
-  boxShadow = 'none',
-  borderColor = '#ccc',
+  background,
+  backgroundDisabled,
+  color,
+  colorFocused,
+  colorDisabled,
+  borderRadius,
+  boxShadow,
+  borderColor,
   disabled = false,
-  padding = '4px 8px',
+  padding,
 
   onChange,
   onBlur,
@@ -288,8 +255,8 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
         return { isValid: false, status: 'required', message: requiredMessage, value: nextValue };
       }
 
-      if (trimmed.length > 0 && passwordPattern && !passwordPattern.test(trimmed)) {
-        return { isValid: false, status: 'invalid', message: invalidMessage, value: nextValue };
+      if (trimmed.length > 0 && pattern && !pattern.test(trimmed)) {
+        return { isValid: false, status: 'invalid', message: patternMessage, value: nextValue };
       }
 
       // se não é required e está vazio, consideramos "idle" (sem erro)
@@ -299,7 +266,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
 
       return { isValid: true, status: 'valid', message: '', value: nextValue };
     },
-    [invalidMessage, passwordPattern, required, requiredMessage]
+    [patternMessage, pattern, required, requiredMessage]
   );
 
   const emitValidation = React.useCallback(
@@ -315,8 +282,8 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
     computeValidation(currentValue)
   );
 
-  const shouldValidateOnChange = validateOn === 'change' || validateOn === 'both';
-  const shouldValidateOnBlur = validateOn === 'blur' || validateOn === 'both';
+  const shouldValidateOnChange = showErrorOn === 'change' || showErrorOn === 'both';
+  const shouldValidateOnBlur = showErrorOn === 'blur' || showErrorOn === 'both';
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nextValue = event.target.value;

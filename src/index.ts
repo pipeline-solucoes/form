@@ -10,10 +10,5 @@ export { default as NotificationSnackbar } from './components/NotificationSnackb
 export { default as TextFieldValidate } from './components/TextFieldValidate';
 export { default as TextFieldPassword } from './components/TextFieldPassword';
 
-export type { BorderProps } from "./types/BorderProps";
-export type { ColorProps } from "./types/ColorProps";
-export type { LayoutProps } from "./types/LayoutProps";
-export type { TextProps } from "./types/TextProps";
-
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';

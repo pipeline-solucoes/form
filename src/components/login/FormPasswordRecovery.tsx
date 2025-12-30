@@ -1,15 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { styled, TypographyVariant } from '@mui/material/styles';
+import { styled, TypographyVariant, useTheme } from '@mui/material/styles';
 import { Box, SvgIconProps, Typography } from '@mui/material';
 import TextFieldValidate from '../TextFieldValidate';
 import { validateEmail, validateEmailMessage } from '../../utils/validateEmail';
 import { ButtonProps } from '../../types/ButtonProps';
-import { ButtonFormStyled } from '../ButtonFormStyled';
-import { ColorProps } from '../../types/ColorProps';
-import { BorderProps } from '../../types/BorderProps';
+import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '../../types/FieldProps';
+import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 
 const FormContainer = styled('div')(() => ({
   display: 'flex',
@@ -34,11 +33,12 @@ const DivTitulo = styled('div')(() => ({
 }));
 
 const StyledRoot = styled(Box, {
-  shouldForwardProp: (prop) => !['background', 'border_radius'].includes(prop as string),
+  shouldForwardProp: (prop) => !['background', 'border_radius', 'box_shadow'].includes(prop as string),
 })<{
   background?: string;
   border_radius?: string;
-}>(({ background, border_radius }) => ({
+  box_shadow?: string;
+}>(({ background, border_radius, box_shadow }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -46,6 +46,7 @@ const StyledRoot = styled(Box, {
   flex: 1,
   padding: '24px',
   borderRadius: border_radius ?? '0px',
+  boxShadow: box_shadow,
   background: background ?? 'transparent',
 }));
 
@@ -58,31 +59,9 @@ interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   subTitulo?: () => React.ReactElement;
-  
-  background?: string;
-  borderRadius?: string;
-
-  backgroundField?: string;
-  colorField?: string;
-  colorFocusedField?: string;
-  borderRadiusField?: string;
-  boxShadowField?: string;
-  borderColorField?: string;
-  paddingField?: string; 
 
   textButton?: string;
   variantButton?: TypographyVariant;
-  backgroundButton?: string;
-  backgroundHoverButton?: string;
-  colorButton?: string;
-  colorHoverButton?: string;  
-  borderRadiusButton?: string;
-  borderButton?: string;  
-  boxShadowButton?: string;
-  widthButton?: string;  
-  heightButton?: string;
-  paddingButton?: string;
-  marginButton?: string;
 
   color_message_sucess: string;
   color_message_erro: string;
@@ -97,7 +76,6 @@ interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps
    * Callback opcional com o resultado final do submit.
    */
   onResult?: (success: boolean) => void;
-
   children?: React.ReactNode;
 }
 
@@ -195,29 +173,34 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   Icon,
   titulo,
   subTitulo,  
+  
   background = 'transparent',
-  borderRadius = '0px',
- 
-  backgroundField='transparent',
-  colorField='#000',  
-  borderRadiusField='0px',
-  boxShadowField='none',
-  borderColorField="#ccc",
-  paddingField='4px 8px',
+  borderRadius = '0',
+  border='none',
+  boxShadow='none',
 
-  textButton = "Enviar",
-  variantButton = "body1",
-  backgroundButton = 'transparent',
-  backgroundHoverButton= 'transparent',
-  colorButton= '#000',
-  colorHoverButton= '#000',
-  borderRadiusButton='0',
-  borderButton='none',
-  boxShadowButton='none',
-  widthButton='auto',
-  heightButton='auto',
-  paddingButton='4px 24px',
-  marginButton='0',
+  backgroundField,
+  colorField,
+  borderRadiusField,
+  boxShadowField,
+  borderColorField,
+  paddingField,
+  marginField,
+
+  textButton = 'Enviar',
+  variantButton = 'body1',
+
+  backgroundButton,
+  backgroundHoverButton,
+  colorButton,
+  colorHoverButton,
+  borderRadiusButton,
+  borderButton = 'none',
+  boxShadowButton,
+  widthButton = 'auto',
+  heightButton = 'auto',
+  paddingButton,
+  marginButton = '0',
 
   color_message_sucess,
   color_message_erro,
@@ -225,6 +208,9 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   onResult,
   children,
 }) => {
+
+  const theme = useTheme();
+
   const [mensagemApi, setMensagemApi] = useState('');
   const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
   const [email, setEmail] = useState('');
@@ -262,8 +248,29 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
     }
   };
 
+  const bContainer = background ?? theme?.pipelinesolucoes?.forms?.login?.background ?? 'transparent';
+  const brContainer = borderRadius ?? theme?.pipelinesolucoes?.forms?.login?.borderRadius ?? '0';
+  const bdContainer= border ?? theme?.pipelinesolucoes?.forms?.login?.border ?? '0';
+  const bsContainer= boxShadow ?? theme?.pipelinesolucoes?.forms?.login?.boxShadow ?? 'none';
+
+  const bField = backgroundField ?? theme?.pipelinesolucoes?.forms?.login?.field?.background ?? undefined;
+  const cField = colorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.color ?? undefined;
+  const brField = borderRadiusField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderRadius ?? undefined;
+  const bsField = boxShadowField ?? theme?.pipelinesolucoes?.forms?.login?.field?.boxShadow ?? undefined;
+  const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
+  const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
+  const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
+
+  const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
+  const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
+  const cButton = colorButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.color ?? undefined;
+  const cHoverButton = colorHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.colorHover ?? undefined;
+  const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
+  const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
+  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
+
   return (
-    <StyledRoot background={background} border_radius={borderRadius}>
+    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
       {(Icon || titulo) && (
         <DivTitulo>
           {Icon && <Icon />}
@@ -277,12 +284,13 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
           id="email"
           label="Email"
           placeholder="Email"
-          background={backgroundField}
-          color={colorField}
-          borderRadius={borderRadiusField}
-          borderColor={borderColorField}
-          boxShadow={boxShadowField}
-          padding={paddingField}
+          background={bField}
+          color={cField}
+          borderRadius={brField}
+          borderColor={bcField}
+          boxShadow={bsField}
+          padding={pField}
+          margin={mgField}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required={true}
@@ -292,16 +300,16 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
         />
 
         <ButtonFormStyled
-          backgroundButton={backgroundButton}
-          backgroundHoverButton={backgroundHoverButton}
-          colorButton={colorButton}
-          colorHoverButton={colorHoverButton}
-          borderRadiusButton={borderRadiusButton}
+          backgroundButton={bgButton}
+          backgroundHoverButton={bgHoverButton}
+          colorButton={cButton}
+          colorHoverButton={cHoverButton}
+          borderRadiusButton={brButton}
           borderButton={borderButton}
-          boxShadowButton={boxShadowButton}
+          boxShadowButton={bsButton}
           widthButton={widthButton}
           heightButton={heightButton}
-          paddingButton={paddingButton}
+          paddingButton={pButton}
           marginButton={marginButton}
           disabled={isLoading}
           onClick={handleClick}

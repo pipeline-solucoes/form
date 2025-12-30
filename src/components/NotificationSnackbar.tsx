@@ -1,8 +1,8 @@
 "use client";
 
-import { ColorProps } from "../types/ColorProps";
-import { TextProps } from "../types/TextProps";
+
 import { Snackbar, Alert, AlertColor, Typography, TypographyVariant, SnackbarOrigin, useTheme } from "@mui/material";
+import { ColorProps, TextProps } from "@pipelinesolucoes/theme";
 
 export interface NotificationSnackbarProps extends TextProps, ColorProps {
   background?: string;
@@ -57,7 +57,7 @@ export interface NotificationSnackbarProps extends TextProps, ColorProps {
  * ```
  */
 const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({
-  background='#fff',
+  background,
   open,
   text,
   variant='body1',

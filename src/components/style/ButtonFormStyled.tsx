@@ -1,4 +1,4 @@
-import { ButtonProps, BUTTON_STYLE_FORWARD_PROPS } from "../types/ButtonProps";
+import { ButtonProps, BUTTON_STYLE_FORWARD_PROPS } from "../../types/ButtonProps";
 import { Button, styled } from "@mui/material";
 
 export const ButtonFormStyled = styled(Button, {  
@@ -17,22 +17,22 @@ export const ButtonFormStyled = styled(Button, {
     paddingButton,
     marginButton,
   }) => ({
-    color: colorButton,
-    background: backgroundButton,
-    borderRadius: borderRadiusButton,
+    color: colorButton ?? '#000',
+    background: backgroundButton ?? 'transparent',
+    borderRadius: borderRadiusButton ?? '0',
     textTransform: "none",
     cursor: "pointer",
 
-    padding: paddingButton,
-    boxShadow: boxShadowButton,
+    padding: paddingButton ?? '4px 24px',
+    boxShadow: boxShadowButton ?? 'none',
     width: widthButton,
     height: heightButton,
     border: borderButton,
     margin: marginButton,
 
     "&:hover": {
-      background: backgroundHoverButton,
-      color: colorHoverButton,
+      background: backgroundHoverButton ?? 'transparent',
+      color: colorHoverButton ?? '#000',
     },
   })
 );

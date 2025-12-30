@@ -1,9 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Button, styled, Typography, Box, TypographyVariant, SvgIconProps } from '@mui/material';
-import { ColorProps } from '../../types/ColorProps';
-import { BorderProps } from '../../types/BorderProps';
-import { LayoutProps } from '../../types/LayoutProps';
-import { TextProps } from '../../types/TextProps';
+import { BorderProps, ColorProps, LayoutProps, TextProps } from '@pipelinesolucoes/theme';
 
 
 const ButtonFormStyled = styled(Button, {
