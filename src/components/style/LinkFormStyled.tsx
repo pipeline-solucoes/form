@@ -3,10 +3,10 @@ import { Button, styled } from "@mui/material";
 export const LinkFormStyled = styled(Button, {
   shouldForwardProp: (prop) =>
     !['width', 'height', 'text_color', 'margin', 'font_size'].includes(prop as string),
-})<{ width?: string; height?: string; text_color: string; margin?: string; font_size?: string}>
+})<{ width?: string; height?: string; text_color?: string; margin?: string; font_size?: string}>
 (({ width='auto', height='auto', text_color, margin = 0 }) => ({
   
-  color: text_color, 
+  color: text_color ?? '#000', 
   width: width,
   height: height, 
   textTransform: 'none',

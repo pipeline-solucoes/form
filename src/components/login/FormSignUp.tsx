@@ -24,8 +24,8 @@ export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, F
   color_message_sucess: string;
   color_message_erro: string;
 
-  colorLink: string;
-  divider: string;
+  colorLink?: string;
+  divider?: string;
 
   urlLogin: string;
   children?: React.ReactNode;

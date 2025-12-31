@@ -40,8 +40,8 @@ export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, Fi
   color_message_sucess: string;
   color_message_erro: string;
 
-  colorLink: string;
-  divider: string;
+  colorLink?: string;
+  divider?: string;
   
   children?: React.ReactNode;
 
@@ -50,7 +50,7 @@ export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, Fi
 
 
 const FormLogin: React.FC<FormLoginProps> = ({
-  
+
   urlCriarConta,
   urlRecuperarConta,
     
