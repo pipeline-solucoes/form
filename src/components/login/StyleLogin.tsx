@@ -46,13 +46,14 @@ export const DivLink = styled('div', {
 
 export const StyledRoot = styled(Box, {
   shouldForwardProp: (prop) => 
-    !['background', 'border_radius', 'box_shadow', 'border'].includes(prop as string),
+    !['background', 'border_radius', 'box_shadow', 'border', 'maxWidth'].includes(prop as string),
 })<{
   background: string;
   border_radius: string;
   box_shadow: string;
   border: string;
-}>(({ background, border_radius, box_shadow, border }) => ({
+  maxWidth?: string;
+}>(({ background, border_radius, box_shadow, border, maxWidth="100%" }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -63,4 +64,5 @@ export const StyledRoot = styled(Box, {
   boxShadow: box_shadow,
   background: background,
   border: border,
+  maxWidth: maxWidth
 }));

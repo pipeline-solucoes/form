@@ -8,7 +8,7 @@ import { validateEmail, validateEmailMessage } from '../../utils/validateEmail';
 import { ButtonProps } from '../../types/ButtonProps';
 import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '../../types/FieldProps';
-import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
+import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { DivTitulo, StyledRoot } from './StyleLogin';
 import { ClickResult } from './ClickResult';
 
@@ -43,6 +43,8 @@ import { ClickResult } from './ClickResult';
  *
  * @param {string} [boxShadow] Sombra do container principal.
  * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.
+ * 
+ * @param {string} [maxWidth] Largura Máxima do container principal do formulário.
  *
  * @param {string} [backgroundField] Cor de fundo do campo de email.
  * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
@@ -134,7 +136,7 @@ const FormContainer = styled('div')(() => ({
 }));
 
 
-interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps {
+interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps, LayoutProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   subTitulo?: () => React.ReactElement;
@@ -156,6 +158,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   borderRadius,
   border,
   boxShadow,
+  maxWidth,
 
   backgroundField,
   colorField,
@@ -252,7 +255,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
 
   return (
 
-    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
+    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer} maxWidth={maxWidth}>
       {(Icon || titulo) && (
         <DivTitulo>
           {Icon && <Icon />}

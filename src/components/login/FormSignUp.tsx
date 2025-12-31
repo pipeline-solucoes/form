@@ -9,7 +9,7 @@ import { validateEmailMessage } from '../../utils/validateEmail';
 import TextFieldValidate from '../TextFieldValidate';
 import TextFieldPassword from '../TextFieldPassword';
 import { LinkFormStyled } from '../style/LinkFormStyled';
-import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
+import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
 import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
@@ -44,6 +44,8 @@ import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './Styl
  * @param {string} [boxShadow] Sombra do container principal.
  * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
  *
+ * @param {string} [maxWidth] Largura Máxima do container principal do formulário.
+ * 
  * @param {string} [backgroundField] Cor de fundo dos campos de formulário.
  * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
  *
@@ -136,7 +138,7 @@ import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './Styl
  * ```
  */
 
-export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
+export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps, LayoutProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
   googleButton: () => React.ReactElement;  
@@ -165,6 +167,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   borderRadius,
   border,
   boxShadow,
+  maxWidth,
 
   backgroundField,
   colorField,
@@ -290,7 +293,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   
 
   return (
-    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
+    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer} maxWidth={maxWidth}>
       {(Icon || titulo) && (
         <DivTitulo>
           {Icon && <Icon />}
