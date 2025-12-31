@@ -325,7 +325,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required={true}
-            requiredMessage="Campo obrigatório"
+            requiredMessage="email obrigatório"
             validate={validateEmailMessage}
             showErrorOn="blur"
           />

@@ -218,7 +218,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   required = true,
   pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
   requiredMessage = 'Senha obrigatória',
-  patternMessage = 'Senha inválida',
+  patternMessage = 'A senha deve ter no mínimo 8 caracteres, com ao menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
   showErrorOn = 'blur',
 
   background,

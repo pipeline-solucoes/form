@@ -108,6 +108,10 @@ import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './Styl
  * @param {string} [divider] Cor do divisor visual entre login social e formulário.
  * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
  *
+ * @param {RegExp} [passwordPattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/] Regex para validar formato da senha válida.
+ * 
+ * @param {RegExp} [patternPasswordMessage='A senha deve ter no mínimo 8 caracteres, com ao menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'] Mensagem de senha invalida.
+ * 
  * @example
  * ```tsx
  * import { FormSignUp } from '@/components/FormSignUp';
@@ -143,10 +147,9 @@ export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, F
   urlLogin: string;
   children?: React.ReactNode;
 
-  /**
-   * Evento disparado ao clicar no botão principal.
-   * O componente pai devolve a mensagem e o sucesso/erro.
-   */
+  patternPassword?: RegExp;
+  patternPasswordMessage?: string; 
+
   onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
 }
 
@@ -188,6 +191,9 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
 
   colorLink,
   divider,
+
+  patternPassword,
+  patternPasswordMessage,
 
   onClick,
   children,
@@ -311,7 +317,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required={true}
-            requiredMessage="Campo obrigatório"
+            requiredMessage="email obrigatório"
             validate={validateEmailMessage}
             showErrorOn="blur"
           />
@@ -328,6 +334,8 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
             boxShadow={bsField}
             padding={pField}
             value={password}
+            pattern={patternPassword}
+            patternMessage={patternPasswordMessage}
             onPasswordChange={(p) => setPassword(p)}
           />
                     

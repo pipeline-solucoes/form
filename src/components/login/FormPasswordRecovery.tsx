@@ -276,7 +276,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required={true}
-          requiredMessage="Campo obrigatório"
+          requiredMessage="email obrigatório"
           validate={validateEmailMessage}
           showErrorOn="blur"
         />
