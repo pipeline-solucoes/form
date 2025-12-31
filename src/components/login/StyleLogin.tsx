@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
 export const FormContainer = styled('div')(() => ({
   display: 'flex',
@@ -42,4 +42,25 @@ export const DivLink = styled('div', {
   padding: '0',
   flex: '1',
   color: text_color ?? "#000",
+}));
+
+export const StyledRoot = styled(Box, {
+  shouldForwardProp: (prop) => 
+    !['background', 'border_radius', 'box_shadow', 'border'].includes(prop as string),
+})<{
+  background: string;
+  border_radius: string;
+  box_shadow: string;
+  border: string;
+}>(({ background, border_radius, box_shadow, border }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: '24px',
+  flex: 1,
+  padding: '24px',
+  borderRadius: border_radius ?? '0px',
+  boxShadow: box_shadow,
+  background: background,
+  border: border,
 }));

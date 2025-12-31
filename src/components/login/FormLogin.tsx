@@ -12,7 +12,7 @@ import TextFieldPassword from '../TextFieldPassword';
 import { LinkFormStyled } from '../style/LinkFormStyled';
 import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
-import { DivCampos, DivLink, DivTitulo, FormContainer } from './StyleLogin';
+import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
 
 const DivPassword = styled('div')(() => ({
@@ -181,16 +181,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
   const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
   
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      gap="24px"
-      flex={1}
-      sx={{ padding: '24px', borderRadius: brContainer, 
-            background: bContainer, border: bdContainer, 
-            boxShadow: bsContainer }}
-    >
+    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
       {(Icon || titulo) && (
         <DivTitulo>
           {Icon && <Icon />}
@@ -287,7 +278,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
       )}
 
       {children}
-    </Box>
+    </StyledRoot>
   );
 };
 

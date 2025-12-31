@@ -109,17 +109,16 @@ const StyledTextField = styled(TextField, {
 
     const pad = padding ?? field?.padding ?? '4px 8px'; // pode deixar undefined se quiser respeitar o default do MUI
 
-    return {
-      background: bg,
+    return {      
       borderRadius: br,
-      boxShadow: sh,
-      paddingRight: '16px',
+      boxShadow: sh,      
 
       '& .MuiInputBase-root': {
         color: txt,
       },
 
-      '& .MuiOutlinedInput-root': {        
+      '& .MuiOutlinedInput-root': { 
+        background: bg,       
         borderRadius: br,
         boxShadow: sh,
 

@@ -12,7 +12,7 @@ import TextFieldPassword from '../TextFieldPassword';
 import { LinkFormStyled } from '../style/LinkFormStyled';
 import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
-import { DivCampos, DivLink, DivTitulo, FormContainer } from './StyleLogin';
+import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
 
 export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
@@ -170,16 +170,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      gap="24px"
-      flex={1}
-      sx={{ padding: '24px', borderRadius: brContainer, 
-            background: bContainer, border: bdContainer, 
-            boxShadow: bsContainer }}
-    >
+    <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
       {(Icon || titulo) && (
         <DivTitulo>
           {Icon && <Icon />}
@@ -267,9 +258,10 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
           )}
         </ButtonFormStyled>
 
-        <DivLink>
+        <DivLink>          
+          <Typography variant={variantButton} component='span' color={cField}>Já tem uma conta?</Typography>
           <LinkFormStyled href={urlLogin} text_color={cLink}>
-            <Typography variant={variantButton} component='span'>Entrar</Typography>
+            <Typography variant={variantButton} component='span' marginLeft="4px">Entrar</Typography>
           </LinkFormStyled>
         </DivLink>
 
@@ -283,7 +275,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
       )}
 
       {children}
-    </Box>
+    </StyledRoot>
   );
 };
 

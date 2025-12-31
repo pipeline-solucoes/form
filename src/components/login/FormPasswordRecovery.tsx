@@ -9,6 +9,7 @@ import { ButtonProps } from '../../types/ButtonProps';
 import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '../../types/FieldProps';
 import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
+import { DivTitulo, StyledRoot } from './StyleLogin';
 
 const FormContainer = styled('div')(() => ({
   display: 'flex',
@@ -21,34 +22,6 @@ const FormContainer = styled('div')(() => ({
   justifyContent: 'center',
 }));
 
-const DivTitulo = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '8px',
-  width: '100%',
-  margin: '0',
-  padding: '0',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledRoot = styled(Box, {
-  shouldForwardProp: (prop) => !['background', 'border_radius', 'box_shadow'].includes(prop as string),
-})<{
-  background?: string;
-  border_radius?: string;
-  box_shadow?: string;
-}>(({ background, border_radius, box_shadow }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  gap: '24px',
-  flex: 1,
-  padding: '24px',
-  borderRadius: border_radius ?? '0px',
-  boxShadow: box_shadow,
-  background: background ?? 'transparent',
-}));
 
 interface RecuperarSenhaSubmitResult {
   success: boolean;
@@ -79,96 +52,7 @@ interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps
   children?: React.ReactNode;
 }
 
-/**
- * Componente de formulário para recuperação de senha via e-mail.
- * Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.
- *
- * @param {React.ElementType<SvgIconProps>} [Icon] Ícone do Material UI exibido no topo do formulário.
- * @param {() => React.ReactElement} [titulo] Função que renderiza o título (ex.: <Typography />).
- * @param {() => React.ReactElement} [subTitulo] Função que renderiza o subtítulo (ex.: <Typography />).
- *
- * @param {string} [background='transparent'] Cor/estilo de fundo do container externo.
- * @param {string} [borderRadius='0px'] Borda arredondada do container externo.
- *
- * @param {string} [backgroundField='transparent'] Cor/estilo de fundo do campo de e-mail.
- * @param {string} [colorField='#000'] Cor do texto do campo de e-mail.
- * @param {string} [borderRadiusField='0px'] Borda arredondada do campo de e-mail.
- * @param {string} [boxShadowField='none'] Sombra do campo de e-mail.
- * @param {string} [borderColorField='#ccc'] Cor da borda do campo de e-mail.
- * @param {string} [paddingField='4px 8px'] Espaçamento interno do campo de e-mail.
- *
- * @param {string} [textButton='Enviar'] Texto exibido no botão quando não está carregando.
- * @param {TypographyVariant} [variantButton='body1'] Variant do Typography usado dentro do botão.
- * @param {string} [backgroundButton='transparent'] Cor/estilo de fundo do botão.
- * @param {string} [backgroundHoverButton='transparent'] Cor/estilo de fundo do botão no hover.
- * @param {string} [colorButton='#000'] Cor do texto do botão.
- * @param {string} [colorHoverButton='#000'] Cor do texto do botão no hover.
- * @param {string} [borderRadiusButton='0'] Borda arredondada do botão.
- * @param {string} [borderButton='none'] Borda do botão.
- * @param {string} [boxShadowButton='none'] Sombra do botão.
- * @param {string} [widthButton='auto'] Largura do botão.
- * @param {string} [heightButton='auto'] Altura do botão.
- * @param {string} [paddingButton='4px 24px'] Espaçamento interno do botão.
- * @param {string} [marginButton='0'] Margem externa do botão.
- *
- * @param {string} color_message_sucess Cor aplicada na mensagem quando o submit retorna sucesso.
- * @param {string} color_message_erro Cor aplicada na mensagem quando o submit retorna erro ou validação falha.
- *
- * @param {(email: string) => Promise<{ success: boolean; message: string }>} onSubmit
- * Callback assíncrono obrigatório chamado após validação do e-mail. Deve retornar `{ success, message }`.
- *
- * @param {(success: boolean) => void} [onResult]
- * Callback opcional disparado com o resultado final (true/false) após o submit (ou validação falhar).
- *
- * @param {React.ReactNode} [children] Conteúdo extra renderizado abaixo do formulário (ex.: links, textos auxiliares).
- *
- * @example
- * ```tsx
- * import RecuperarSenhaForm from '@/components/RecuperarSenhaForm';
- * import { Typography } from '@mui/material';
- *
- * const Page = () => {
- *   return (
- *     <RecuperarSenhaForm
- *       titulo={() => <Typography variant="h5">Recuperar senha</Typography>}
- *       subTitulo={() => <Typography variant="body2">Digite seu e-mail para receber o link.</Typography>}
- *       background="#fff"
- *       borderRadius="12px"
- *       backgroundField="#fafafa"
- *       borderRadiusField="8px"
- *       borderColorField="#e0e0e0"
- *       paddingField="10px 12px"
- *       textButton="Enviar link"
- *       variantButton="button"
- *       backgroundButton="#1976d2"
- *       backgroundHoverButton="#1565c0"
- *       colorButton="#fff"
- *       colorHoverButton="#fff"
- *       borderRadiusButton="10px"
- *       widthButton="100%"
- *       color_message_sucess="green"
- *       color_message_erro="red"
- *       onSubmit={async (email) => {
- *         const response = await fetch('/api/recover', {
- *           method: 'POST',
- *           headers: { 'Content-Type': 'application/json' },
- *           body: JSON.stringify({ email }),
- *         });
- *
- *         if (!response.ok) {
- *           return { success: false, message: 'Falha ao enviar o e-mail. Tente novamente.' };
- *         }
- *
- *         return { success: true, message: 'Se o e-mail existir, enviaremos um link de recuperação.' };
- *       }}
- *       onResult={(success) => console.log('Resultado:', success)}
- *     >
- *       <Typography variant="caption">Verifique também sua caixa de spam.</Typography>
- *     </RecuperarSenhaForm>
- *   );
- * };
- * ```
- */
+
 const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   Icon,
   titulo,
@@ -271,6 +155,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
 
   return (
+
     <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
       {(Icon || titulo) && (
         <DivTitulo>
@@ -326,6 +211,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
             {mensagemApi}
           </Typography>
         )}
+        
       </FormContainer>
 
       {children}

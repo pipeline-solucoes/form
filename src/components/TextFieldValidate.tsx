@@ -99,8 +99,7 @@ const StyledTextField = styled(TextField, {
     const mg = margin ?? field?.margin ?? '0'; 
 
     return {
-      // (opcional) pode manter, mas o mais importante é estilizar os slots internos:
-      background: bg,
+      // (opcional) pode manter, mas o mais importante é estilizar os slots internos:      
       borderRadius: br,
       boxShadow: sh,
 
@@ -111,6 +110,7 @@ const StyledTextField = styled(TextField, {
       "& .MuiOutlinedInput-root": {        
         borderRadius: br,
         boxShadow: sh,
+        background: bg,
 
         ...(pad ? { padding: pad } : {}),
 
