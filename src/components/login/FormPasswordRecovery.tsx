@@ -12,6 +12,31 @@ import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { DivTitulo, StyledRoot } from './StyleLogin';
 import { ClickResult } from './ClickResult';
 
+const FormContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  width: '100%',
+  margin: 'auto',
+  padding: '0px',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+
+interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps, LayoutProps {
+  Icon?: React.ElementType<SvgIconProps>;
+  titulo?: () => React.ReactElement;
+  subTitulo?: () => React.ReactElement;
+
+  textButton?: string;
+  variantButton?: TypographyVariant;
+
+  onClick: (email: string) => Promise<ClickResult>;
+  children?: React.ReactNode;
+}
+
+
 /**
  * Componente de formulário de recuperação de senha, com suporte a:
  * validação básica de email, exibição de mensagens de sucesso/erro,
@@ -123,31 +148,6 @@ import { ClickResult } from './ClickResult';
  * };
  * ```
  */
-
-const FormContainer = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-  width: '100%',
-  margin: 'auto',
-  padding: '0px',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-
-interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps, LayoutProps {
-  Icon?: React.ElementType<SvgIconProps>;
-  titulo?: () => React.ReactElement;
-  subTitulo?: () => React.ReactElement;
-
-  textButton?: string;
-  variantButton?: TypographyVariant;
-
-  onClick: (email: string) => Promise<ClickResult>;
-  children?: React.ReactNode;
-}
-
 
 const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   Icon,

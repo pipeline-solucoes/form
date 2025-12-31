@@ -11,14 +11,6 @@ import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 
 type ValidationStatus = 'idle' | 'required' | 'invalid' | 'valid';
 
-const VisibilityIconStyle = styled(VisibilityIcon)(({ theme }) => ({  
-  marginLeft: '20px', 
-}));  
-
-const VisibilityOffIconStyle = styled(VisibilityOffIcon)(({ theme }) => ({  
-  marginLeft: '20px',   
-}));  
-
 interface PasswordValidationResult {
   isValid: boolean;
   status: ValidationStatus;
@@ -353,8 +345,9 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
                 onClick={() => setShowPassword((prev) => !prev)}
                 edge="end"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                sx={{margin: '0 16px 0 0'}}
               >
-                {showPassword ? <VisibilityOffIconStyle /> : <VisibilityIconStyle />}
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           ),

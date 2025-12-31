@@ -13,6 +13,24 @@ import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
 import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
+
+export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps, LayoutProps {
+  Icon?: React.ElementType<SvgIconProps>;
+  titulo?: () => React.ReactElement;
+  googleButton: () => React.ReactElement;  
+
+  colorLink?: string;
+  divider?: string;
+
+  urlLogin: string;
+  children?: React.ReactNode;
+
+  patternPassword?: RegExp;
+  patternPasswordMessage?: string; 
+
+  onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
+}
+
 /**
  * Componente de formulário de cadastro (Sign Up) completo, com suporte a:
  * criação de conta via email/senha, confirmação de senha, botão de cadastro social,
@@ -137,24 +155,6 @@ import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './Styl
  * };
  * ```
  */
-
-export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps, LayoutProps {
-  Icon?: React.ElementType<SvgIconProps>;
-  titulo?: () => React.ReactElement;
-  googleButton: () => React.ReactElement;  
-
-  colorLink?: string;
-  divider?: string;
-
-  urlLogin: string;
-  children?: React.ReactNode;
-
-  patternPassword?: RegExp;
-  patternPasswordMessage?: string; 
-
-  onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
-}
-
 
 const FormSignUp: React.FC<FormSignUpProps> = ({
   urlLogin,

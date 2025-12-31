@@ -13,6 +13,36 @@ import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
 import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
+
+const DivPassword = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+  width: '100%',
+  margin: '0',
+  padding: '0',
+}));
+
+
+export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, FieldProps, LayoutProps {  
+  urlRecuperarConta: string;
+  urlCriarConta: string;
+
+  Icon?: React.ElementType<SvgIconProps>;
+  titulo?: () => React.ReactElement;
+  googleButton: () => React.ReactElement;
+
+  textButton?: string;
+  variantButton?: TypographyVariant;  
+
+  colorLink?: string;
+  divider?: string;
+  
+  children?: React.ReactNode;
+
+  onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
+}
+
 /**
  * Componente de formulário de login completo, com suporte a:
  * autenticação por email/senha, botão de login social (ex: Google),
@@ -138,36 +168,6 @@ import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './Styl
  * };
  * ```
  */
-
-const DivPassword = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '8px',
-  width: '100%',
-  margin: '0',
-  padding: '0',
-}));
-
-
-export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, FieldProps, LayoutProps {  
-  urlRecuperarConta: string;
-  urlCriarConta: string;
-
-  Icon?: React.ElementType<SvgIconProps>;
-  titulo?: () => React.ReactElement;
-  googleButton: () => React.ReactElement;
-
-  textButton?: string;
-  variantButton?: TypographyVariant;  
-
-  colorLink?: string;
-  divider?: string;
-  
-  children?: React.ReactNode;
-
-  onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
-}
-
 
 const FormLogin: React.FC<FormLoginProps> = ({
 
