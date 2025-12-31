@@ -11,15 +11,9 @@ import TextFieldValidate from '../TextFieldValidate';
 import TextFieldPassword from '../TextFieldPassword';
 import { LinkFormStyled } from '../style/LinkFormStyled';
 import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
+import { ClickResult } from './ClickResult';
+import { DivCampos, DivLink, DivTitulo, FormContainer } from './StyleLogin';
 
-const FormContainer = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '16px',
-  width: '100%',
-  margin: 'auto',
-  padding: '0px',
-}));
 
 const DivPassword = styled('div')(() => ({
   display: 'flex',
@@ -30,54 +24,11 @@ const DivPassword = styled('div')(() => ({
   padding: '0',
 }));
 
-const DivTitulo = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '8px',
-  width: '100%',
-  margin: '0',
-  padding: '0',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const DivLink = styled('div', {
-  shouldForwardProp: (prop) => !['text_color', 'align'].includes(prop as string),
-})<{ text_color?: string; align: string }>(({ text_color, align }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: align,
-  width: '100%',
-  padding: '0',
-  flex: '1',
-  color: text_color ?? "#000",
-}));
-
-const DivCampos = styled('div')(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '4px',
-  width: '100%',
-  margin: '0',
-  padding: '0',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-/**
- * Retorno do onClick/onSubmit do componente pai.
- * - success: define se a ação foi bem sucedida
- * - message: mensagem para exibir no próprio FormLogin
- * - color: cor opcional para a mensagem (caso queira sobrescrever as cores padrão)
- */
-export interface ClickResult {
-  success: boolean;
-  message: string;
-  color?: string;
-}
 
 export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
+  
+  urlRecuperarConta: string;
+  urlCriarConta: string;
 
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
@@ -89,115 +40,20 @@ export interface FormLoginProps extends ColorProps, BorderProps, ButtonProps, Fi
   color_message_sucess: string;
   color_message_erro: string;
 
-  color_link: string;
-  color_separador: string;
-
-  urlRecuperarConta: string;
-  urlCriarConta: string;
+  colorLink: string;
+  divider: string;
+  
   children?: React.ReactNode;
 
   onClick?: (data: { email: string; password: string }) => Promise<ClickResult> | ClickResult;
 }
 
-/**
- * Componente de formulário de login com suporte a autenticação via Google e login por email/senha.
- * Inclui validação básica de email, exibição de mensagens de erro/sucesso retornadas pelo handler `onClick`
- * e customização visual via props (container, campos, botão e links).
- *
- * @param {string} urlRecuperarConta URL para a página de recuperação de conta/senha. Obrigatório.
- * @param {string} urlCriarConta URL para a página de criação de conta. Obrigatório.
- * @param {React.ElementType<SvgIconProps>} [Icon] Ícone opcional (MUI SvgIcon) exibido no topo do formulário.
- * @param {() => React.ReactElement} [titulo] Função que retorna o conteúdo do título exibido no topo do formulário.
- * @param {() => React.ReactElement} googleButton Função que retorna o botão de login com Google. Obrigatório.
- *
- * @param {string} [background='transparent'] Cor de fundo do container principal.
- * @param {string} [borderRadius='0'] Raio da borda do container principal.
- * @param {string} [border='none'] Borda do container principal.
- * @param {string} [boxShadow='none'] Sombra do container principal.
- *
- * @param {string} [backgroundField='transparent'] Fundo dos campos (email/senha).
- * @param {string} [colorField='#000'] Cor do texto dos campos (email/senha).
- * @param {string} [colorFocusedField] Cor do estado focado do campo (se suportado pelos campos internos).
- * @param {string} [borderRadiusField='0px'] Raio da borda dos campos.
- * @param {string} [boxShadowField='none'] Sombra dos campos.
- * @param {string} [borderColorField='#ccc'] Cor da borda dos campos.
- * @param {string} [paddingField='4px 8px'] Espaçamento interno dos campos.
- *
- * @param {string} [textButton='Enviar'] Texto do botão principal.
- * @param {TypographyVariant} [variantButton='body1'] Variante do Typography usada no texto do botão.
- * @param {string} [backgroundButton='transparent'] Fundo do botão principal.
- * @param {string} [backgroundHoverButton='transparent'] Fundo do botão no hover.
- * @param {string} [colorButton='#000'] Cor do texto do botão.
- * @param {string} [colorHoverButton='#000'] Cor do texto do botão no hover.
- * @param {string} [borderRadiusButton='0'] Raio da borda do botão.
- * @param {string} [borderButton='none'] Borda do botão.
- * @param {string} [boxShadowButton='none'] Sombra do botão.
- * @param {string} [widthButton='auto'] Largura do botão.
- * @param {string} [heightButton='auto'] Altura do botão.
- * @param {string} [paddingButton='4px 24px'] Padding do botão.
- * @param {string} [marginButton='0'] Margem do botão.
- *
- * @param {string} color_message_sucess Cor padrão para mensagem de sucesso (caso `onClick` não retorne `color`). Obrigatório.
- * @param {string} color_message_erro Cor padrão para mensagem de erro (caso `onClick` não retorne `color`). Obrigatório.
- * @param {string} color_link Cor aplicada nos links "Esqueceu sua senha?" e "Criar conta". Obrigatório.
- * @param {string} color_separador Cor da linha separadora (Divider). Obrigatório.
- *
- * @param {(data: { email: string; password: string }) => Promise<ClickResult> | ClickResult} [onClick]
- * Handler chamado ao submeter o formulário. Recebe `{ email, password }` e deve retornar um `ClickResult`.
- * - Se `success` for `true`, exibe `message` com `color_message_sucess` (ou `result.color` se fornecida)
- * - Se `success` for `false`, exibe `message` com `color_message_erro` (ou `result.color` se fornecida)
- * Se não for informado, o componente exibirá a mensagem: "Nenhuma ação foi configurada para o botão.".
- *
- * @param {React.ReactNode} [children] Conteúdo extra renderizado ao final do container (abaixo da mensagem).
- *
- * @example
- * ```tsx
- * import FormLogin from '@/components/FormLogin';
- * import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
- * import { Button } from '@mui/material';
- *
- * export default function Example() {
- *   return (
- *     <FormLogin
- *       urlRecuperarConta="/recuperar"
- *       urlCriarConta="/cadastro"
- *       Icon={LockOutlinedIcon}
- *       titulo={() => <h2>Entrar</h2>}
- *       googleButton={() => <Button variant="outlined">Continuar com Google</Button>}
- *       color="#111"
- *       background="#fff"
- *       borderRadius="12px"
- *       boxShadow="0 10px 30px rgba(0,0,0,0.08)"
- *       backgroundField="#fafafa"
- *       borderColorField="#e0e0e0"
- *       paddingField="10px 12px"
- *       textButton="Acessar"
- *       backgroundButton="#111"
- *       backgroundHoverButton="#000"
- *       colorButton="#fff"
- *       colorHoverButton="#fff"
- *       borderRadiusButton="10px"
- *       paddingButton="10px 16px"
- *       color_message_sucess="#1b5e20"
- *       color_message_erro="#b71c1c"
- *       color_link="#1976d2"
- *       color_separador="#e0e0e0"
- *       onClick={async ({ email, password }) => {
- *         if (email === 'teste@exemplo.com' && password === '123') {
- *           return { success: true, message: 'Login realizado com sucesso!' };
- *         }
- *         return { success: false, message: 'Email ou senha inválidos.' };
- *       }}
- *     />
- *   );
- * }
- * ```
- */
 
 const FormLogin: React.FC<FormLoginProps> = ({
-  urlRecuperarConta,
+  
   urlCriarConta,
-
+  urlRecuperarConta,
+    
   Icon,
   titulo,
   googleButton,
@@ -232,8 +88,10 @@ const FormLogin: React.FC<FormLoginProps> = ({
 
   color_message_sucess,
   color_message_erro,
-  color_link,
-  color_separador,
+
+  colorLink,
+  
+  divider,
 
   onClick,
   children,
@@ -318,6 +176,9 @@ const FormLogin: React.FC<FormLoginProps> = ({
   const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
   const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
   const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
+
+  const cdivider =  divider ?? theme?.pipelinesolucoes?.forms?.login?.divider ?? undefined;
+  const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
   
   return (
     <Box
@@ -340,7 +201,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
       <FormContainer>
         {googleButton && googleButton()}
 
-        <Divider sx={{ borderColor: color_separador }}>ou</Divider>
+        <Divider sx={{ borderColor: cdivider }}>ou</Divider>
 
         <DivCampos>
           <TextFieldValidate
@@ -379,14 +240,8 @@ const FormLogin: React.FC<FormLoginProps> = ({
             />
 
             <DivLink align="flex-start">
-              <LinkFormStyled
-                href={urlRecuperarConta}
-                width="auto"
-                height="auto"
-                text_color={color_link}
-                font_size="0.8rem"
-              >
-                Esqueceu sua senha?
+              <LinkFormStyled href={urlRecuperarConta} text_color={cLink}>
+                <Typography variant={variantButton} component='span' sx={{fontSize: "0.8rem"}}>Esqueceu sua senha?</Typography>                 
               </LinkFormStyled>
             </DivLink>
           </DivPassword>
@@ -416,9 +271,9 @@ const FormLogin: React.FC<FormLoginProps> = ({
           )}
         </ButtonFormStyled>
 
-        <DivLink align="center">
-          <LinkFormStyled href={urlCriarConta} width="auto" height="100%" text_color={color_link} margin="0">
-            Criar conta
+        <DivLink>
+          <LinkFormStyled href={urlCriarConta} text_color={cLink}>
+            <Typography variant={variantButton} component='span'>Criar conta</Typography>            
           </LinkFormStyled>
         </DivLink>
 

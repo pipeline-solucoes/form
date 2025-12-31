@@ -174,10 +174,10 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   titulo,
   subTitulo,  
   
-  background = 'transparent',
-  borderRadius = '0',
-  border='none',
-  boxShadow='none',
+  background,
+  borderRadius,
+  border,
+  boxShadow,
 
   backgroundField,
   colorField,
@@ -204,6 +204,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
 
   color_message_sucess,
   color_message_erro,
+  
   onSubmit,
   onResult,
   children,
