@@ -10,6 +10,117 @@ import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '../../types/FieldProps';
 import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 import { DivTitulo, StyledRoot } from './StyleLogin';
+import { ClickResult } from './ClickResult';
+
+/**
+ * Componente de formulário de recuperação de senha, com suporte a:
+ * validação básica de email, exibição de mensagens de sucesso/erro,
+ * estado de carregamento no botão e customização visual via props ou tema.
+ *
+ * @param {React.ElementType<SvgIconProps>} [Icon] Ícone exibido no topo do formulário.
+ *
+ * @param {() => React.ReactElement} [titulo] Função que retorna o título do formulário.
+ *
+ * @param {() => React.ReactElement} [subTitulo] Função que retorna o subtítulo do formulário.
+ *
+ * @param {string} [textButton='Enviar'] Texto exibido no botão principal do formulário.
+ *
+ * @param {TypographyVariant} [variantButton='body1'] Variante tipográfica utilizada no texto do botão.
+ *
+ * @param {(email: string) => Promise<ClickResult>} onClick Callback executado ao submeter o formulário.
+ * Recebe o email digitado e deve retornar um objeto com sucesso e mensagem (e cor opcional).
+ *
+ * @param {React.ReactNode} [children] Conteúdo adicional renderizado abaixo do formulário.
+ *
+ * @param {string} [background] Cor de fundo do container principal do formulário.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
+ *
+ * @param {string | number} [borderRadius] Raio da borda do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.
+ *
+ * @param {string} [border] Borda do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.
+ *
+ * @param {string} [boxShadow] Sombra do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.
+ *
+ * @param {string} [backgroundField] Cor de fundo do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [colorField] Cor do texto do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [borderRadiusField] Raio da borda do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [boxShadowField] Sombra aplicada ao campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [borderColorField] Cor da borda do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [paddingField] Espaçamento interno do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [marginField] Margem externa do campo de email.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [backgroundButton] Cor de fundo do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [backgroundHoverButton] Cor de fundo do botão ao passar o mouse.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [colorButton] Cor do texto do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [colorHoverButton] Cor do texto do botão ao passar o mouse.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [borderRadiusButton] Raio da borda do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [borderButton='none'] Borda do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [boxShadowButton] Sombra aplicada ao botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [widthButton='auto'] Largura do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [heightButton='auto'] Altura do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [paddingButton] Espaçamento interno do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [marginButton='0'] Margem externa do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @example
+ * ```tsx
+ * import { FormPasswordRecovery } from '@/components/FormPasswordRecovery';
+ * import LockResetIcon from '@mui/icons-material/LockReset';
+ *
+ * const Example = () => {
+ *   return (
+ *     <FormPasswordRecovery
+ *       Icon={LockResetIcon}
+ *       titulo={() => <h2>Recuperar senha</h2>}
+ *       subTitulo={() => <p>Informe seu email para receber as instruções.</p>}
+ *       textButton="Enviar link"
+ *       onClick={async (email) => {
+ *         if (email === 'teste@teste.com') {
+ *           return { success: true, message: 'Enviamos um link para seu email!' };
+ *         }
+ *         return { success: false, message: 'Email não encontrado.' };
+ *       }}
+ *     />
+ *   );
+ * };
+ * ```
+ */
 
 const FormContainer = styled('div')(() => ({
   display: 'flex',
@@ -23,11 +134,6 @@ const FormContainer = styled('div')(() => ({
 }));
 
 
-interface RecuperarSenhaSubmitResult {
-  success: boolean;
-  message: string;
-}
-
 interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps, FieldProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
@@ -36,19 +142,7 @@ interface FormPasswordRecoveryProps extends ButtonProps, ColorProps, BorderProps
   textButton?: string;
   variantButton?: TypographyVariant;
 
-  color_message_sucess: string;
-  color_message_erro: string;
-
-  /**
-   * Callback assíncrono obrigatório: deve retornar sempre { success, message }.
-   * A mensagem exibida no componente virá SEMPRE daqui.
-   */
-  onSubmit: (email: string) => Promise<RecuperarSenhaSubmitResult>;
-
-  /**
-   * Callback opcional com o resultado final do submit.
-   */
-  onResult?: (success: boolean) => void;
+  onClick: (email: string) => Promise<ClickResult>;
   children?: React.ReactNode;
 }
 
@@ -85,53 +179,14 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   heightButton = 'auto',
   paddingButton,
   marginButton = '0',
-
-  color_message_sucess,
-  color_message_erro,
   
-  onSubmit,
-  onResult,
+  onClick,  
   children,
 }) => {
 
   const theme = useTheme();
-
-  const [mensagemApi, setMensagemApi] = useState('');
-  const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateEmail(email)) {
-      setCorMensagemApi(color_message_erro);
-      setMensagemApi(
-        'Alguns dos dados fornecidos estão inválidos. Por favor, revise as informações preenchidas e corrija os campos destacados.'
-      );
-      onResult?.(false);
-      return;
-    }
-
-    setIsLoading(true);
-    setMensagemApi('');
-
-    try {
-      const result = await onSubmit(email);
-
-      setMensagemApi(result.message);
-      setCorMensagemApi(result.success ? color_message_sucess : color_message_erro);
-      onResult?.(result.success);
-    } catch {
-      // Mesmo obrigando a mensagem vir do onSubmit, exceções podem acontecer (rede, throw etc.)
-      // Aqui escolhi exibir uma mensagem mínima interna para não deixar a UI muda.
-      setCorMensagemApi(color_message_erro);
-      setMensagemApi('Ocorreu um erro inesperado. Tente novamente.');
-      onResult?.(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const color_message_sucess = theme.palette.success.main;
+  const color_message_erro = theme.palette.error.main;
 
   const bContainer = background ?? theme?.pipelinesolucoes?.forms?.login?.background ?? 'transparent';
   const brContainer = borderRadius ?? theme?.pipelinesolucoes?.forms?.login?.borderRadius ?? '0';
@@ -153,6 +208,47 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
   const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
   const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
+
+  const [mensagemApi, setMensagemApi] = useState('');
+  const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setCorMensagemApi(color_message_erro);
+      setMensagemApi(
+        'Alguns dos dados fornecidos estão inválidos. Por favor, revise as informações preenchidas e corrija os campos destacados.'
+      );      
+      return;
+    }
+
+    setIsLoading(true);
+    setMensagemApi('');
+
+    try {
+      const result = await onClick(email);
+
+      setMensagemApi(result.message);
+      if (result?.success) {
+        setCorMensagemApi(result.color ?? color_message_sucess);
+        setMensagemApi(result.message);
+      } else {
+        setCorMensagemApi(result.color ?? color_message_erro);
+        setMensagemApi(result?.message ?? 'Falha ao realizar a operação.');
+      }      
+
+    } catch {
+      // Mesmo obrigando a mensagem vir do onSubmit, exceções podem acontecer (rede, throw etc.)
+      // Aqui escolhi exibir uma mensagem mínima interna para não deixar a UI muda.
+      setCorMensagemApi(color_message_erro);
+      setMensagemApi('Ocorreu um erro inesperado. Tente novamente.');      
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
 

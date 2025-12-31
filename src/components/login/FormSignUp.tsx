@@ -1,8 +1,7 @@
 'use client';
-
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Divider, SvgIconProps, Typography } from '@mui/material';
+import { Divider, SvgIconProps, Typography } from '@mui/material';
 import { ButtonProps } from '../../types/ButtonProps';
 import { ButtonFormStyled } from '../style/ButtonFormStyled';
 import { FieldProps } from '@/types/FieldProps';
@@ -14,15 +13,129 @@ import { BorderProps, ColorProps } from '@pipelinesolucoes/theme';
 import { ClickResult } from './ClickResult';
 import { DivCampos, DivLink, DivTitulo, FormContainer, StyledRoot } from './StyleLogin';
 
+/**
+ * Componente de formulário de cadastro (Sign Up) completo, com suporte a:
+ * criação de conta via email/senha, confirmação de senha, botão de cadastro social,
+ * validação básica de campos, exibição de mensagens de sucesso/erro
+ * e ampla customização visual via props ou tema.
+ *
+ * @param {string} urlLogin URL para a página de login (usuário já possui conta).
+ *
+ * @param {React.ElementType<SvgIconProps>} [Icon] Ícone exibido no topo do formulário.
+ *
+ * @param {() => React.ReactElement} [titulo] Função que retorna o título do formulário.
+ *
+ * @param {() => React.ReactElement} googleButton Função que renderiza o botão de cadastro social.
+ *
+ * @param {(data: { email: string; password: string }) => Promise<ClickResult> | ClickResult} [onClick]
+ * Callback executado ao submeter o formulário. Deve retornar um objeto com sucesso, mensagem e cor opcional.
+ *
+ * @param {React.ReactNode} [children] Conteúdo adicional renderizado abaixo do formulário.
+ *
+ * @param {string} [background] Cor de fundo do container principal do formulário.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
+ *
+ * @param {string | number} [borderRadius] Raio da borda do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
+ *
+ * @param {string} [border] Borda do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
+ *
+ * @param {string} [boxShadow] Sombra do container principal.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.
+ *
+ * @param {string} [backgroundField] Cor de fundo dos campos de formulário.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [colorField] Cor do texto dos campos de formulário.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [borderRadiusField] Raio da borda dos campos.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [boxShadowField] Sombra aplicada aos campos.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [borderColorField] Cor da borda dos campos.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [paddingField] Espaçamento interno dos campos.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string | number} [marginField] Margem externa dos campos.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.field.
+ *
+ * @param {string} [textButton='Enviar'] Texto exibido no botão principal.
+ *
+ * @param {TypographyVariant} [variantButton='body1'] Variante tipográfica utilizada no texto do botão.
+ *
+ * @param {string} [backgroundButton] Cor de fundo do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [backgroundHoverButton] Cor de fundo do botão ao passar o mouse.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [colorButton] Cor do texto do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [colorHoverButton] Cor do texto do botão ao passar o mouse.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [borderRadiusButton] Raio da borda do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [borderButton='none'] Borda do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [boxShadowButton] Sombra aplicada ao botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [widthButton='auto'] Largura do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [heightButton='auto'] Altura do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [paddingButton] Espaçamento interno do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string | number} [marginButton='0'] Margem externa do botão.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [colorLink] Cor do link de redirecionamento para login.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @param {string} [divider] Cor do divisor visual entre login social e formulário.
+ * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.login.button.
+ *
+ * @example
+ * ```tsx
+ * import { FormSignUp } from '@/components/FormSignUp';
+ * import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+ *
+ * const Example = () => {
+ *   return (
+ *     <FormSignUp
+ *       urlLogin="/login"
+ *       Icon={AccountCircleIcon}
+ *       titulo={() => <h2>Criar conta</h2>}
+ *       googleButton={() => <button>Cadastrar com Google</button>}
+ *       onClick={async ({ email, password }) => {
+ *         if (email && password) {
+ *           return { success: true, message: 'Conta criada com sucesso!' };
+ *         }
+ *         return { success: false, message: 'Erro ao criar conta.' };
+ *       }}
+ *     />
+ *   );
+ * };
+ * ```
+ */
 
 export interface FormSignUpProps extends ColorProps, BorderProps, ButtonProps, FieldProps {
   Icon?: React.ElementType<SvgIconProps>;
   titulo?: () => React.ReactElement;
-  googleButton: () => React.ReactElement;
-
-  /** Cores padrão para mensagem (caso o pai não retorne color no ClickResult) */
-  color_message_sucess: string;
-  color_message_erro: string;
+  googleButton: () => React.ReactElement;  
 
   colorLink?: string;
   divider?: string;
@@ -73,9 +186,6 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   paddingButton,
   marginButton = '0',
 
-  color_message_sucess,
-  color_message_erro,
-
   colorLink,
   divider,
 
@@ -84,6 +194,32 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
 }) => {
 
   const theme = useTheme();
+  const color_message_sucess = theme.palette.success.main;
+  const color_message_erro = theme.palette.error.main;
+
+  const bContainer = background ?? theme?.pipelinesolucoes?.forms?.login?.background ?? 'transparent';
+  const brContainer = borderRadius ?? theme?.pipelinesolucoes?.forms?.login?.borderRadius ?? '0';
+  const bdContainer= border ?? theme?.pipelinesolucoes?.forms?.login?.border ?? '0';
+  const bsContainer= boxShadow ?? theme?.pipelinesolucoes?.forms?.login?.boxShadow ?? 'none';
+
+  const bField = backgroundField ?? theme?.pipelinesolucoes?.forms?.login?.field?.background ?? undefined;
+  const cField = colorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.color ?? undefined;
+  const brField = borderRadiusField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderRadius ?? undefined;
+  const bsField = boxShadowField ?? theme?.pipelinesolucoes?.forms?.login?.field?.boxShadow ?? undefined;
+  const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
+  const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
+  const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
+
+  const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
+  const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
+  const cButton = colorButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.color ?? undefined;
+  const cHoverButton = colorHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.colorHover ?? undefined;
+  const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
+  const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
+  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined;
+  
+  const cdivider =  divider ?? theme?.pipelinesolucoes?.forms?.login?.divider ?? undefined;
+  const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
 
   const [mensagemApi, setMensagemApi] = useState('');
   const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
@@ -145,29 +281,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
     }
   };
 
-  const bContainer = background ?? theme?.pipelinesolucoes?.forms?.login?.background ?? 'transparent';
-  const brContainer = borderRadius ?? theme?.pipelinesolucoes?.forms?.login?.borderRadius ?? '0';
-  const bdContainer= border ?? theme?.pipelinesolucoes?.forms?.login?.border ?? '0';
-  const bsContainer= boxShadow ?? theme?.pipelinesolucoes?.forms?.login?.boxShadow ?? 'none';
-
-  const bField = backgroundField ?? theme?.pipelinesolucoes?.forms?.login?.field?.background ?? undefined;
-  const cField = colorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.color ?? undefined;
-  const brField = borderRadiusField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderRadius ?? undefined;
-  const bsField = boxShadowField ?? theme?.pipelinesolucoes?.forms?.login?.field?.boxShadow ?? undefined;
-  const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
-  const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
-  const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
-
-  const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
-  const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
-  const cButton = colorButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.color ?? undefined;
-  const cHoverButton = colorHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.colorHover ?? undefined;
-  const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
-  const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
-  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined;
   
-  const cdivider =  divider ?? theme?.pipelinesolucoes?.forms?.login?.divider ?? undefined;
-  const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
 
   return (
     <StyledRoot background={bContainer} border_radius={brContainer} box_shadow={bsContainer} border={bdContainer}>
