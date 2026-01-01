@@ -5,7 +5,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, FormHelpe
 import { styled, useTheme } from '@mui/material/styles';
 import { TypographyProps } from '@mui/material/Typography';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
-import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbpadding } from '@/constant';
+import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbpadding } from '../constant';
 
 export interface SelectFieldOption {
   value: string | number;

@@ -3,7 +3,7 @@ import React from 'react';
 import { TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { TextFieldStyled } from '../style/TextFieldStyle';
-import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbpadding } from '@/constant';
+import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbpadding } from '../constant';
 
 interface TextFieldValidateProps 
   extends BorderProps, ColorProps, LayoutProps {
