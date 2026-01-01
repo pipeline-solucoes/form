@@ -191,6 +191,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
   borderColorField,
   paddingField,
   marginField,
+  heightField,  
 
   textButton = 'Enviar',
   variantButton = 'body1',
@@ -230,18 +231,19 @@ const FormLogin: React.FC<FormLoginProps> = ({
   const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
   const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
   const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
-
+  const hgField = heightField ?? theme?.pipelinesolucoes?.forms?.login?.field?.height ?? undefined;   
+    
   const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
   const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
   const cButton = colorButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.color ?? undefined;
   const cHoverButton = colorHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.colorHover ?? undefined;
   const brButton = borderRadiusButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.borderRadius ?? undefined;
   const bsButton = boxShadowButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.boxShadow ?? undefined;  
-  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined; 
-
+  const pButton = paddingButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.padding ?? undefined;
+    
   const cdivider =  divider ?? theme?.pipelinesolucoes?.forms?.login?.divider ?? undefined;
   const cLink = colorLink ?? theme?.pipelinesolucoes?.forms?.login?.link?.color ?? undefined;
-
+  
   const [mensagemApi, setMensagemApi] = useState('');
   const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
 
@@ -318,6 +320,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
             id="email"
             label="Email"
             placeholder="Email"
+            height={hgField}            
             background={bField}
             color={cField}
             borderRadius={brField}
@@ -338,6 +341,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
               label="Senha"
               placeholder="Senha"
               required={true}
+              height={hgField}
               background={bField}
               color={cField}
               borderRadius={brField}
@@ -349,7 +353,7 @@ const FormLogin: React.FC<FormLoginProps> = ({
               onPasswordChange={(p) => setPassword(p)}
             />
 
-            <DivLink align="flex-start">
+            <DivLink align="flex-end">
               <LinkFormStyled href={urlRecuperarConta} text_color={cLink}>
                 <Typography variant={variantButton} component='span' sx={{fontSize: "0.8rem"}}>Esqueceu sua senha?</Typography>                 
               </LinkFormStyled>

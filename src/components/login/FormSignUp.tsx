@@ -176,6 +176,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   borderColorField,
   paddingField,
   marginField,
+  heightField,
 
   textButton = 'Enviar',
   variantButton = 'body1',
@@ -218,6 +219,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
   const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
   const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
   const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
+  const hgField = heightField ?? theme?.pipelinesolucoes?.forms?.login?.field?.height ?? undefined; 
 
   const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
   const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
@@ -311,6 +313,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
             id="email"
             label="Email"
             placeholder="Email"
+            height={hgField}
             background={bField}
             color={cField}
             borderRadius={brField}
@@ -329,6 +332,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
             id="password"
             label="Senha"
             placeholder="Senha"
+            height={hgField}
             required={true}
             background={bField}
             color={cField}
@@ -346,6 +350,7 @@ const FormSignUp: React.FC<FormSignUpProps> = ({
             id="passwordconfirmada"
             label="Confirmar Senha"
             placeholder="Confirmar Senha"
+            height={hgField}
             required={true}
             background={backgroundField}
             color={colorField}

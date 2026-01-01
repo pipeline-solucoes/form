@@ -1,3 +1,4 @@
+import { TypographyVariant } from "@mui/material";
 
 export interface FieldProps { 
 
@@ -16,4 +17,5 @@ export interface FieldProps {
   
   paddingField?: string;     
   marginField?: string; 
+  heightField?: string;  
 }

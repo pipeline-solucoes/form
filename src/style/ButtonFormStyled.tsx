@@ -1,3 +1,4 @@
+import { fbborderRadius, fbboxShadow, fbcolor } from '../constant';
 import { ButtonProps, BUTTON_STYLE_FORWARD_PROPS } from "../types/ButtonProps";
 import { Button, styled } from "@mui/material";
 
@@ -17,14 +18,14 @@ export const ButtonFormStyled = styled(Button, {
     paddingButton,
     marginButton,
   }) => ({
-    color: colorButton ?? '#000',
+    color: colorButton ?? fbcolor,
     background: backgroundButton ?? 'transparent',
-    borderRadius: borderRadiusButton ?? '0',
+    borderRadius: borderRadiusButton ?? fbborderRadius,
     textTransform: "none",
     cursor: "pointer",
 
     padding: paddingButton ?? '4px 24px',
-    boxShadow: boxShadowButton ?? 'none',
+    boxShadow: boxShadowButton ?? fbboxShadow,
     width: widthButton,
     height: heightButton,
     border: borderButton,
@@ -32,7 +33,7 @@ export const ButtonFormStyled = styled(Button, {
 
     "&:hover": {
       background: backgroundHoverButton ?? 'transparent',
-      color: colorHoverButton ?? '#000',
+      color: colorHoverButton ?? fbcolor,
     },
   })
 );

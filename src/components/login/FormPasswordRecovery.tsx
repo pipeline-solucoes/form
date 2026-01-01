@@ -167,6 +167,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   borderColorField,
   paddingField,
   marginField,
+  heightField,
 
   textButton = 'Enviar',
   variantButton = 'body1',
@@ -203,6 +204,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
   const bcField = borderColorField ?? theme?.pipelinesolucoes?.forms?.login?.field?.borderColor ?? undefined;
   const pField = paddingField ?? theme?.pipelinesolucoes?.forms?.login?.field?.padding ?? undefined;
   const mgField = marginField ?? theme?.pipelinesolucoes?.forms?.login?.field?.margin ?? undefined;
+  const hgField = heightField ?? theme?.pipelinesolucoes?.forms?.login?.field?.height ?? undefined; 
 
   const bgButton = backgroundButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.background ?? undefined;
   const bgHoverButton = backgroundHoverButton ?? theme?.pipelinesolucoes?.forms?.login?.button?.backgroundHover ?? undefined;
@@ -269,6 +271,7 @@ const FormPasswordRecovery: React.FC<FormPasswordRecoveryProps> = ({
           id="email"
           label="Email"
           placeholder="Email"
+          height={hgField}
           background={bField}
           color={cField}
           borderRadius={brField}
