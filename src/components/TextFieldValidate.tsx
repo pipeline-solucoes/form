@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { styled, TypographyVariant } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
+import { TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
+import { TextFieldStyled } from '../style/TextFieldStyle';
+import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbpadding } from '@/constant';
 
 interface TextFieldValidateProps 
   extends BorderProps, ColorProps, LayoutProps {
@@ -35,144 +36,6 @@ interface TextFieldValidateProps
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-const StyledTextField = styled(TextField, {
-  shouldForwardProp: (prop) =>
-    ![
-      'background',
-      'borderRadius',
-      'boxShadow',
-      'borderColor',
-      'colorFocused',
-      'backgroundDisabled',
-      'colorDisabled',
-      'padding',
-      'colorText',
-      'textVariant',
-    ].includes(prop as string),
-})<{
-  background?: string;
-  backgroundDisabled?: string;
-  colorText?: string;
-  colorFocused?: string;
-  colorDisabled?: string;
-  borderRadius?: string;
-  boxShadow?: string;
-  borderColor?: string;
-  padding?: string;
-  margin?: string;
-  textVariant?: TypographyVariant;
-}>(
-  ({
-    theme,
-    background,
-    backgroundDisabled,
-    colorText,
-    borderRadius,
-    boxShadow,
-    borderColor,
-    colorFocused,
-    colorDisabled,
-    padding,
-    margin,
-    textVariant,
-  }) => {
-    const field = theme.pipelinesolucoes?.forms?.field;
-
-    // props -> tokens -> fallback
-    const bg = background ?? field?.background ?? '#fff';
-    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? '#E5E7EB';
-    const txt = colorText ?? field?.color ?? '#000';
-    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? '#9CA3AF';
-
-    const br = borderRadius ?? field?.borderRadius ?? '0';
-    const sh = boxShadow ?? field?.boxShadow ?? 'none';
-    const bd = borderColor ?? field?.borderColor ?? '#ccc';
-    const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
-
-    const pad = padding ?? field?.padding ?? '4px 8px';
-    const mg = margin ?? field?.margin ?? '0';
-
-    const typo = textVariant ? theme.typography[textVariant] : undefined;
-
-    return {
-      borderRadius: br,
-      boxShadow: sh,
-
-      '& .MuiInputBase-root': {
-        color: txt,
-      },
-
-      '& .MuiOutlinedInput-root': {
-        borderRadius: br,
-        boxShadow: sh,
-        background: bg,
-
-        ...(pad ? { padding: pad } : {}),
-
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: bd,
-        },
-
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: bd,
-        },
-
-        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: bdFocused,
-        },
-
-        '&.Mui-disabled': {
-          background: bgDisabled,
-          color: txtDisabled,
-
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: bd,
-          },
-        },
-
-        // texto digitado quando disabled
-        '& input.Mui-disabled, & textarea.Mui-disabled': {
-          WebkitTextFillColor: txtDisabled,
-        },
-
-        ...(typo
-        ? {
-            // Texto digitado
-            '& .MuiInputBase-input': {
-              ...typo,
-            },
-
-            // Placeholder (input e textarea)
-            '& input::placeholder': {
-              ...typo,
-              opacity: 0.7,
-            },
-            '& textarea::placeholder': {
-              ...typo,
-              opacity: 0.7,
-            },
-          }
-        : {}),
-      },
-
-      '& .MuiInputLabel-root': {
-        color: txt,
-      },
-
-      '& .MuiInputLabel-root.Mui-focused': {
-        color: bdFocused,
-      },
-
-      '& .MuiInputLabel-root.Mui-disabled': {
-        color: txtDisabled,
-      },
-
-      ...(mg ? { margin: mg } : {}),
-    };
-  },
-);
-
-
 const computeError = (
   value: string,
   {
@@ -204,50 +67,103 @@ const computeError = (
   return null;
 };
 
+
 /**
- * Componente de campo de texto com validação, baseado no TextField do Material UI.
- * Permite personalização visual via `styled` e suporte a validações comuns
- * (obrigatório, tamanho mínimo, regex) e validação customizada.
+ * Campo de texto com suporte a validações comuns e customizadas, construído
+ * sobre o TextField do Material UI e estilizado via Design System da Pipeline.
  *
- * O erro pode ser exibido durante a digitação ou apenas após o campo perder o foco.
+ * Funcionalidades principais:
+ * - Suporte a modo controlado (`value`)
+ * - Validações nativas (obrigatório, tamanho mínimo, regex)
+ * - Validação customizada via função
+ * - Controle de momento de exibição do erro (`change` ou `blur`)
+ * - Suporte a campo multilinha
+ * - Customização visual via props e tokens de theme
  *
- * @param {string} [id] Id do campo (replicado no input do MUI).
- * @param {string} [label] Rótulo exibido acima do campo.
- * @param {string} [placeholder] Placeholder exibido quando o campo está vazio.
- * @param {string} [value=''] Valor atual do campo (modo controlado).
+ * Tokens de estilo (ordem de prioridade):
+ * - `prop` do componente
+ * - `theme.pipelinesolucoes.forms.field`
+ * - Fallback interno (constantes `fb*`)
+ *
+ * Tipografia:
+ * - Suporte à tipografia do Material UI via `textVariant`
+ * - Fallback para `theme.pipelinesolucoes.forms.field.typography`
+ * - Fallback final para `theme.typography.body1`
+ *
+ * @param {string} [id] Identificador do campo, repassado ao input do Material UI.
+ * @param {string} [label] Texto do rótulo exibido acima do campo.
+ * @param {string} [placeholder] Texto exibido quando o campo está vazio.
+ * @param {string} [value] Valor atual do campo (modo controlado).
+ *
  * @param {boolean} [disabled=false] Define se o campo está desabilitado.
- * @param {import('@mui/material/Typography').TypographyProps['variant']} [textVariant='body1'] Variante de tipografia (MUI) aplicada ao texto digitado e ao placeholder.
  *
- * @param {string} [background='#fff'] Cor de fundo do campo.
- * @param {string} [backgroundDisabled='#E5E7EB'] Cor de fundo do campo quando o campo está desabilitado.
- * @param {string} [color='#000'] Cor do texto e do label.
- * @param {string} [colorFocused='#1976d2'] Cor da borda quando o campo está focado.
- * @param {string} [colorDisabled='#9CA3AF'] Cor do texto e do label quando o campo está focado.
- * @param {string} [borderColor='#ccc'] Cor da borda no estado normal e hover.
- * @param {string} [borderRadius='0'] Raio da borda do campo.
- * @param {string} [boxShadow='none'] Sombra aplicada ao campo.
- * @param {string} [padding='4px 8px'] Espaçamento interno do input.
+ * @param {number} [minLength] Número mínimo de caracteres permitidos.
+ * @param {number} [maxLength] Número máximo de caracteres permitidos.
  *
- * @param {boolean} [multiline=false] Define se o campo é multilinha.
- * @param {number} [rows=3] Número de linhas quando `multiline` está ativo.
+ * @param {boolean} [multiline=false] Define se o campo aceita múltiplas linhas.
+ * @param {number} [rows=3] Quantidade de linhas visíveis quando `multiline` está ativo.
  *
+ *
+ * ### Estilo / Aparência
+ * 
+ * @param {import('@mui/material/styles').TypographyVariant} [textVariant] Variante tipográfica do Material UI aplicada ao texto e placeholder.
+ *
+ * @param {string} [background]
+ * Cor de fundo do campo.
+ * Ordem: `background` → `theme.pipelinesolucoes.forms.field.background` → `#fff`.
+ *
+ * @param {string} [backgroundDisabled]
+ * Cor de fundo do campo quando desabilitado.
+ * Ordem: `backgroundDisabled` → `theme.pipelinesolucoes.forms.field.backgroundDisabled` → `#E5E7EB`.
+ *
+ * @param {string} [color]
+ * Cor do texto do campo (texto digitado e label).
+ * Ordem: `color` → `theme.pipelinesolucoes.forms.field.color` → `#000`.
+ *
+ * @param {string} [colorFocused]
+ * Cor aplicada ao estado focado (usada como cor de borda no focus).
+ * Ordem: `colorFocused` → `theme.pipelinesolucoes.forms.field.colorFocused` → `#1976d2`.
+ *
+ * @param {string} [colorDisabled]
+ * Cor do texto do campo quando desabilitado.
+ * Ordem: `colorDisabled` → `theme.pipelinesolucoes.forms.field.colorDisabled` → `#9CA3AF`.
+ *
+ * @param {string} [borderRadius]
+ * Raio da borda do campo.
+ * Ordem: `borderRadius` → `theme.pipelinesolucoes.forms.field.borderRadius` → `"0"`.
+ *
+ * @param {string} [boxShadow]
+ * Sombra do campo.
+ * Ordem: `boxShadow` → `theme.pipelinesolucoes.forms.field.boxShadow` → `"none"`.
+ *
+ * @param {string} [borderColor]
+ * Cor da borda do campo (estado padrão/hover).
+ * Ordem: `borderColor` → `theme.pipelinesolucoes.forms.field.borderColor` → `#ccc`.
+ *
+ * @param {string} [padding]
+ * Espaçamento interno do input (aplicado no texto e textarea).
+ * Ordem: `padding` → `theme.pipelinesolucoes.forms.field.padding` → `"4px 8px"`.
+ * 
+ * ---
+ * ### Validação
+ * 
  * @param {boolean} [required=false] Indica se o campo é obrigatório.
- * @param {string} [requiredMessage='Campo obrigatório'] Mensagem exibida quando o campo obrigatório está vazio.
- * @param {number} [minLength] Número mínimo de caracteres.
- * @param {RegExp | string} [pattern] Expressão regular para validação do valor.
- * @param {string} [patternMessage='Formato inválido'] Mensagem exibida quando o pattern não é atendido.
+ * @param {string} [requiredMessage] Mensagem exibida quando o campo obrigatório está vazio.
+ * @param {RegExp | string} [pattern] Expressão regular utilizada para validação do valor.
+ * @param {string} [patternMessage] Mensagem exibida quando o valor não atende ao pattern.
+ * @param {'change' | 'blur'} [showErrorOn='blur'] Define quando o erro será exibido.
  * @param {(value: string) => string | null | undefined} [validate] Função de validação customizada.
- * @param {'change' | 'blur'} [showErrorOn='blur'] Momento em que o erro deve ser exibido.
- *
- * @param {number} [maxLength] Limite máximo de caracteres permitido no input.
+ * 
+ * ---
+ * ### Eventos
+ * 
  * @param {(event: React.ChangeEvent<HTMLInputElement>) => void} [onChange] Callback disparado ao alterar o valor.
  * @param {(event: React.FocusEvent<HTMLInputElement>) => void} [onBlur] Callback disparado ao perder o foco.
- *
+ * 
+ * ---
+ * 
  * @example
  * ```tsx
- * import React from 'react';
- * import TextFieldValidate from '@/components/TextFieldValidate';
- *
  * const Example = () => {
  *   const [email, setEmail] = React.useState('');
  *
@@ -268,8 +184,7 @@ const computeError = (
  *   );
  * };
  * ```
- */
- 
+ */ 
 const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   id,
   label,
@@ -297,7 +212,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   showErrorOn = 'blur',
   maxLength,
   padding,
-  textVariant = 'body1',
+  textVariant,
 }) => {
   const [touched, setTouched] = React.useState(false);
 
@@ -344,24 +259,42 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
     }
   };
 
+  const theme = useTheme();
+  const field = theme.pipelinesolucoes?.forms?.field;
+
+  const bg = background ?? field?.background ?? fbbackground;
+  const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? fbbackgroundDisabled;
+  const txt = color ?? field?.color ?? fbcolor;
+  const txtDisabled = colorDisabled ?? field?.colorDisabled ?? fbcolorDisabled;
+  const br = borderRadius ?? field?.borderRadius ?? fbborderRadius;
+  const sh = boxShadow ?? field?.boxShadow ?? fbboxShadow;
+  const bd = borderColor ?? field?.borderColor ?? fbborderColor;
+  const bdFocused = colorFocused ?? field?.colorFocused ?? fbcolorFocused;
+  const pad = padding ?? field?.padding ?? fbpadding;
+    
+  const typo =
+    (textVariant && theme.typography[textVariant]) ??
+    field?.typography ??
+    theme.typography.body1;
+
   return (
-    <StyledTextField
+    <TextFieldStyled
       id={id}
       label={label}
       placeholder={placeholder}
       value={value}
-      textVariant={textVariant}
+      typo={typo}
       onChange={onChange}
       onBlur={handleBlur}
-      background={background}
-      backgroundDisabled={backgroundDisabled}
-      colorText={color}
-      colorFocused={colorFocused}
-      colorDisabled={colorDisabled}
-      borderRadius={borderRadius}
-      boxShadow={boxShadow}
-      borderColor={borderColor}
-      padding={padding}
+      background={bg}
+      backgroundDisabled={bgDisabled}
+      colorText={txt}
+      colorFocused={bdFocused}
+      colorDisabled={txtDisabled}
+      borderRadius={br}
+      boxShadow={sh}
+      borderColor={bd}
+      padding={pad}
       disabled={disabled}
       multiline={multiline}
       required={required}

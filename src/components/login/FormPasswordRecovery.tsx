@@ -6,7 +6,7 @@ import { Box, SvgIconProps, Typography } from '@mui/material';
 import TextFieldValidate from '../TextFieldValidate';
 import { validateEmail, validateEmailMessage } from '../../utils/validateEmail';
 import { ButtonProps } from '../../types/ButtonProps';
-import { ButtonFormStyled } from '../style/ButtonFormStyled';
+import { ButtonFormStyled } from '../../style/ButtonFormStyled';
 import { FieldProps } from '../../types/FieldProps';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { DivTitulo, StyledRoot } from './StyleLogin';

@@ -5,6 +5,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, FormHelpe
 import { styled, useTheme } from '@mui/material/styles';
 import { TypographyProps } from '@mui/material/Typography';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
+import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbpadding } from '@/constant';
 
 export interface SelectFieldOption {
   value: string | number;
@@ -58,33 +59,33 @@ const StyledFormControl = styled(FormControl, {
 
   '& .MuiOutlinedInput-root': {
     height: height,
-    background: background,
-    borderRadius: borderRadius,
-    boxShadow: boxShadow,
+    background: background ?? fbbackground,
+    borderRadius: borderRadius ?? fbborderRadius,
+    boxShadow: boxShadow ?? fbboxShadow,
 
     '& fieldset': {
-      borderColor: borderColor ?? '#c4c4c4',
+      borderColor: borderColor ?? fbborderColor,
     },
     '&:hover fieldset': {
-      borderColor: borderColor ?? '#9e9e9e',
+      borderColor: borderColor ?? fbborderColor,
     },
     '&.Mui-focused fieldset': {
-      borderColor: borderColor ?? '#1976d2',
+      borderColor: borderColor ?? fbcolorFocused,
     },
 
     '& .MuiSelect-select': {
-      padding: padding ?? 0,
-      color: colorText,
+      padding: padding ?? fbpadding,
+      color: colorText ?? fbcolor,
       display: 'flex',
       alignItems: 'center',
     },
   },
 
   '& .MuiInputLabel-root': {
-    color: colorText,
+    color: colorText ?? fbcolor,
   },
   '& .MuiInputLabel-root.Mui-focused': {
-    color: colorText,
+    color: colorText ?? fbcolor,
   },
 }));
 
