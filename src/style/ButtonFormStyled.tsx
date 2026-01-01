@@ -1,4 +1,4 @@
-import { ButtonProps, BUTTON_STYLE_FORWARD_PROPS } from "../../types/ButtonProps";
+import { ButtonProps, BUTTON_STYLE_FORWARD_PROPS } from "../types/ButtonProps";
 import { Button, styled } from "@mui/material";
 
 export const ButtonFormStyled = styled(Button, {  
