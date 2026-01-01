@@ -53,8 +53,7 @@ export const TextFieldStyled = styled(TextField, {
       boxShadow,
       ...(padding ? { padding } : {}),
 
-      "& .MuiInputBase-input": {
-        ...(padding ? { padding } : {}),
+      "& .MuiInputBase-input": {        
         ...(typo ?? {}),
       },
 
