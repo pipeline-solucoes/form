@@ -302,7 +302,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       required={required}
       rows={multiline ? rows : undefined}
       fullWidth
-      heigth={hg}
+      height={hg}
       error={Boolean(errorMessage)}
       helperText={errorMessage || ' '}
       slotProps={{

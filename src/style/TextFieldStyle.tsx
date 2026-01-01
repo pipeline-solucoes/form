@@ -28,7 +28,7 @@ export const TextFieldStyled = styled(TextField, {
   borderColor?: string;
   padding?: string;
   typo?: CSSObject | PipelineSolucoesTypographyTokens;
-  heigth?: string;
+  height?: string;
 }>(
   ({
     background,
@@ -41,7 +41,7 @@ export const TextFieldStyled = styled(TextField, {
     borderColor,
     padding,
     typo,
-    heigth
+    height
   }) => ({
     borderRadius,
     boxShadow,
@@ -54,7 +54,7 @@ export const TextFieldStyled = styled(TextField, {
       background,
       borderRadius,
       boxShadow,
-      heigth,      
+      height,      
 
       "& .MuiInputBase-input": {  
         ...(padding ? { padding } : {}),      

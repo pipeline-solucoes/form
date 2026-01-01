@@ -5,7 +5,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, FormHelpe
 import { styled, useTheme } from '@mui/material/styles';
 import { TypographyProps } from '@mui/material/Typography';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
-import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbpadding } from '../constant';
+import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbheigth, fbpadding } from '../constant';
 
 export interface SelectFieldOption {
   value: string | number;
@@ -198,6 +198,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
 
   const pad = padding ?? field?.padding ?? '4px 8px';
   const mg = margin ?? field?.margin ?? '0'; 
+  const hg = height ?? field?.height ?? fbheigth;
 
   return (
     <StyledWrapper width={width} margin={mg}>
@@ -211,7 +212,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         boxShadow={sh}
         borderColor={bd}
         colorText={txt}
-        height={height ?? 'auto'} 
+        height={hg} 
         padding={pad}
       >
 

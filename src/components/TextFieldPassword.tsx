@@ -350,7 +350,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
       borderColor={bd}
 
       padding={pad}
-      heigth={hg}
+      height={hg}
 
       disabled={disabled}
       required={required}
