@@ -8,4 +8,6 @@ export const fbboxShadow = "none";
 export const fbborderColor = '#ccc';
 export const fbcolorFocused = '#1976d2';
 
-export const fbpadding = '4px 8px';
+export const fbpadding = '8px';
+export const fbmargin = '0';
+export const fbheigth = '64px';

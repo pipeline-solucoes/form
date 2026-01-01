@@ -8,7 +8,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { TextFieldStyled } from '../style/TextFieldStyle';
-import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbpadding } from '../constant';
+import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbheigth, fbpadding } from '../constant';
 
 type ValidationStatus = 'idle' | 'required' | 'invalid' | 'valid';
 
@@ -223,6 +223,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   boxShadow,
   borderColor,  
   padding,
+  height,
   textVariant,
 
   onChange,
@@ -326,6 +327,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
     (textVariant && theme.typography[textVariant]) ??
     field?.typography ??
     theme.typography.body1;
+  const hg = height ?? field?.height ?? fbheigth;  
 
   return (
     <TextFieldStyled
@@ -348,6 +350,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
       borderColor={bd}
 
       padding={pad}
+      heigth={hg}
 
       disabled={disabled}
       required={required}

@@ -5,7 +5,7 @@ import { PipelineSolucoesTypographyTokens } from "@pipelinesolucoes/theme";
 export const TextFieldStyled = styled(TextField, {
   shouldForwardProp: (prop) =>
     ![
-      "background",
+      "background",      
       "backgroundDisabled",
       "colorText",
       "colorFocused",
@@ -15,6 +15,7 @@ export const TextFieldStyled = styled(TextField, {
       "borderColor",
       "padding",
       "typo",
+      "heigth",
     ].includes(prop as string),
 })<{
   background?: string;
@@ -27,6 +28,7 @@ export const TextFieldStyled = styled(TextField, {
   borderColor?: string;
   padding?: string;
   typo?: CSSObject | PipelineSolucoesTypographyTokens;
+  heigth?: string;
 }>(
   ({
     background,
@@ -39,6 +41,7 @@ export const TextFieldStyled = styled(TextField, {
     borderColor,
     padding,
     typo,
+    heigth
   }) => ({
     borderRadius,
     boxShadow,
@@ -51,10 +54,10 @@ export const TextFieldStyled = styled(TextField, {
       background,
       borderRadius,
       boxShadow,
-      ...(padding ? { padding } : {}),
+      heigth,      
 
       "& .MuiInputBase-input": {  
-        padding: '0',      
+        ...(padding ? { padding } : {}),      
         ...(typo ?? {}),
       },
 

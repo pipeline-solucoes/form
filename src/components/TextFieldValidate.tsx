@@ -3,7 +3,7 @@ import React from 'react';
 import { TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { TextFieldStyled } from '../style/TextFieldStyle';
-import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbpadding } from '../constant';
+import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbheigth, fbpadding } from '../constant';
 
 interface TextFieldValidateProps 
   extends BorderProps, ColorProps, LayoutProps {
@@ -213,6 +213,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   maxLength,
   padding,
   textVariant,
+  height,
 }) => {
   const [touched, setTouched] = React.useState(false);
 
@@ -271,6 +272,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   const bd = borderColor ?? field?.borderColor ?? fbborderColor;
   const bdFocused = colorFocused ?? field?.colorFocused ?? fbcolorFocused;
   const pad = padding ?? field?.padding ?? fbpadding;
+  const hg = multiline ? undefined : (height ?? field?.height ?? fbheigth);
     
   const typo =
     (textVariant && theme.typography[textVariant]) ??
@@ -300,6 +302,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       required={required}
       rows={multiline ? rows : undefined}
       fullWidth
+      heigth={hg}
       error={Boolean(errorMessage)}
       helperText={errorMessage || ' '}
       slotProps={{
