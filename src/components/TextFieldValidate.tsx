@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, TypographyVariant } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 
@@ -11,17 +11,8 @@ interface TextFieldValidateProps
   label?: string;
   placeholder?: string;
   value?: string;
+  textVariant?: TypographyVariant;
 
-  background?: string;
-  backgroundDisabled?: string;
-  color?: string;
-  colorFocused?: string;
-  colorDisabled?: string; 
-  borderRadius?: string;
-  boxShadow?: string;
-  borderColor?: string;
-  padding?: string;   
-  margin?: string; 
   disabled?: boolean;
 
   // Validação
@@ -47,15 +38,16 @@ interface TextFieldValidateProps
 const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) =>
     ![
-      "background",
-      "borderRadius",
-      "boxShadow",
-      "borderColor",
-      "colorFocused",
-      "backgroundDisabled",
-      "colorDisabled",
-      "padding",
-      "colorText",
+      'background',
+      'borderRadius',
+      'boxShadow',
+      'borderColor',
+      'colorFocused',
+      'backgroundDisabled',
+      'colorDisabled',
+      'padding',
+      'colorText',
+      'textVariant',
     ].includes(prop as string),
 })<{
   background?: string;
@@ -68,6 +60,7 @@ const StyledTextField = styled(TextField, {
   borderColor?: string;
   padding?: string;
   margin?: string;
+  textVariant?: TypographyVariant;
 }>(
   ({
     theme,
@@ -80,81 +73,105 @@ const StyledTextField = styled(TextField, {
     colorFocused,
     colorDisabled,
     padding,
-    margin
+    margin,
+    textVariant,
   }) => {
     const field = theme.pipelinesolucoes?.forms?.field;
 
     // props -> tokens -> fallback
     const bg = background ?? field?.background ?? '#fff';
-    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? "#E5E7EB";
+    const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? '#E5E7EB';
     const txt = colorText ?? field?.color ?? '#000';
-    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? "#9CA3AF";
+    const txtDisabled = colorDisabled ?? field?.colorDisabled ?? '#9CA3AF';
 
-    const br = borderRadius ?? field?.borderRadius ?? "0";
-    const sh = boxShadow ?? field?.boxShadow ?? "none";
+    const br = borderRadius ?? field?.borderRadius ?? '0';
+    const sh = boxShadow ?? field?.boxShadow ?? 'none';
     const bd = borderColor ?? field?.borderColor ?? '#ccc';
     const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
 
-    const pad = padding ?? field?.padding ?? '4px 8px'; // pode deixar undefined se quiser respeitar o default do MUI
-    const mg = margin ?? field?.margin ?? '0'; 
+    const pad = padding ?? field?.padding ?? '4px 8px';
+    const mg = margin ?? field?.margin ?? '0';
+
+    const typo = textVariant ? theme.typography[textVariant] : undefined;
 
     return {
-      // (opcional) pode manter, mas o mais importante é estilizar os slots internos:      
       borderRadius: br,
       boxShadow: sh,
 
-      "& .MuiInputBase-root": {
+      '& .MuiInputBase-root': {
         color: txt,
       },
 
-      "& .MuiOutlinedInput-root": {        
+      '& .MuiOutlinedInput-root': {
         borderRadius: br,
         boxShadow: sh,
         background: bg,
 
         ...(pad ? { padding: pad } : {}),
 
-        "& .MuiOutlinedInput-notchedOutline": {
+        '& .MuiOutlinedInput-notchedOutline': {
           borderColor: bd,
         },
 
-        "&:hover .MuiOutlinedInput-notchedOutline": {
+        '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: bd,
         },
 
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
           borderColor: bdFocused,
         },
 
-        "&.Mui-disabled": {
+        '&.Mui-disabled': {
           background: bgDisabled,
           color: txtDisabled,
 
-          "& .MuiOutlinedInput-notchedOutline": {
+          '& .MuiOutlinedInput-notchedOutline': {
             borderColor: bd,
           },
         },
 
         // texto digitado quando disabled
-        "& input.Mui-disabled": {
+        '& input.Mui-disabled, & textarea.Mui-disabled': {
           WebkitTextFillColor: txtDisabled,
         },
+
+        ...(typo
+        ? {
+            // Texto digitado
+            '& .MuiInputBase-input': {
+              ...typo,
+            },
+
+            // Placeholder (input e textarea)
+            '& input::placeholder': {
+              ...typo,
+              opacity: 0.7,
+            },
+            '& textarea::placeholder': {
+              ...typo,
+              opacity: 0.7,
+            },
+          }
+        : {}),
       },
 
-      "& .MuiInputLabel-root": {
+      '& .MuiInputLabel-root': {
         color: txt,
       },
 
-      "& .MuiInputLabel-root.Mui-focused": {
+      '& .MuiInputLabel-root.Mui-focused': {
         color: bdFocused,
       },
 
-      "& .MuiInputLabel-root.Mui-disabled": {
+      '& .MuiInputLabel-root.Mui-disabled': {
         color: txtDisabled,
       },
+
+      ...(mg ? { margin: mg } : {}),
     };
-  }
+  },
 );
+
 
 const computeError = (
   value: string,
@@ -199,6 +216,7 @@ const computeError = (
  * @param {string} [placeholder] Placeholder exibido quando o campo está vazio.
  * @param {string} [value=''] Valor atual do campo (modo controlado).
  * @param {boolean} [disabled=false] Define se o campo está desabilitado.
+ * @param {import('@mui/material/Typography').TypographyProps['variant']} [textVariant='body1'] Variante de tipografia (MUI) aplicada ao texto digitado e ao placeholder.
  *
  * @param {string} [background='#fff'] Cor de fundo do campo.
  * @param {string} [backgroundDisabled='#E5E7EB'] Cor de fundo do campo quando o campo está desabilitado.
@@ -245,6 +263,7 @@ const computeError = (
  *       showErrorOn="blur"
  *       maxLength={120}
  *       borderRadius="6px"
+ *       textVariant="subtitle2"
  *     />
  *   );
  * };
@@ -270,14 +289,15 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   multiline = false,
   rows = 3,
   required = false,
-  requiredMessage = 'Campo obrigatório',
+  requiredMessage = 'campo obrigatório',
   minLength,
   pattern,
-  patternMessage = 'Formato inválido',
+  patternMessage = 'formato inválido',
   validate,
   showErrorOn = 'blur',
   maxLength,
-  padding
+  padding,
+  textVariant = 'body1',
 }) => {
   const [touched, setTouched] = React.useState(false);
 
@@ -330,6 +350,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       label={label}
       placeholder={placeholder}
       value={value}
+      textVariant={textVariant}
       onChange={onChange}
       onBlur={handleBlur}
       background={background}

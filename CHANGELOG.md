@@ -7,7 +7,8 @@ e este projeto adota [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 ## [1.2.0] - 2025-12-29
 - Implementacao do themeOption base da pipelinesolucoes.
 - Retirada da pasta page.
-- Implementacao do theme nos formularios de login e nos componentes de TextField
+- Implementacao do theme nos formularios de login e nos componentes de TextField.
+- Implementacao do componentes de SelectField.
 
 ## [1.0.0] - 2025-12-28
 - Criação do package

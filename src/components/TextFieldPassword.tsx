@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { styled } from '@mui/material/styles';
+import { styled, TypographyVariant } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 
 type ValidationStatus = 'idle' | 'required' | 'invalid' | 'valid';
@@ -23,6 +23,7 @@ interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
   label?: string;
   placeholder?: string;
   value?: string;
+  textVariant?: TypographyVariant;
 
   background?: string;
   backgroundDisabled?: string;
@@ -70,6 +71,7 @@ const StyledTextField = styled(TextField, {
       'colorDisabled',
       'padding',
       'colorText',
+      'textVariant',
     ].includes(prop as string),
 })<{
   background?: string;
@@ -81,6 +83,7 @@ const StyledTextField = styled(TextField, {
   boxShadow?: string;
   borderColor?: string;
   padding?: string;
+  textVariant?: TypographyVariant;
 }>(
   ({
     theme,
@@ -93,6 +96,7 @@ const StyledTextField = styled(TextField, {
     colorFocused,
     colorDisabled,
     padding,
+    textVariant,
   }) => {
     const field = theme.pipelinesolucoes?.forms?.field;
 
@@ -108,6 +112,7 @@ const StyledTextField = styled(TextField, {
     const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
 
     const pad = padding ?? field?.padding ?? '4px 8px'; // pode deixar undefined se quiser respeitar o default do MUI
+    const typo = textVariant ? theme.typography[textVariant] : undefined;
 
     return {      
       borderRadius: br,
@@ -148,6 +153,26 @@ const StyledTextField = styled(TextField, {
         '& input.Mui-disabled': {
           WebkitTextFillColor: txtDisabled,
         },
+
+         ...(typo
+        ? {
+            // Texto digitado
+            '& .MuiInputBase-input': {
+              ...typo,
+            },
+
+            // Placeholder (input e textarea)
+            '& input::placeholder': {
+              ...typo,
+              opacity: 0.7,
+            },
+            '& textarea::placeholder': {
+              ...typo,
+              opacity: 0.7,
+            },
+          }
+        : {}),
+        
       },
 
       '& .MuiInputLabel-root': {
@@ -176,6 +201,7 @@ const StyledTextField = styled(TextField, {
  * @param {string} [label] Label do campo.
  * @param {string} [placeholder] Placeholder do input.
  * @param {string} [value] Valor controlado do campo.
+ * @param {import('@mui/material/Typography').TypographyProps['variant']} [textVariant='body1'] Variante de tipografia (MUI) aplicada ao texto digitado e ao placeholder.
  * @param {boolean} [required=true] Se true, valida senha obrigatória.
  * @param {RegExp} [passwordPattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/] Regex para validar formato.
  * @param {string} [requiredMessage='Senha obrigatória'] Mensagem para campo vazio.
@@ -231,6 +257,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   borderColor,
   disabled = false,
   padding,
+  textVariant = 'body1',
 
   onChange,
   onBlur,
@@ -320,6 +347,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
     <StyledTextField
       type={showPassword ? 'text' : 'password'}
       id={id}
+      textVariant={textVariant}
       label={label}
       placeholder={placeholder}
       value={currentValue}
