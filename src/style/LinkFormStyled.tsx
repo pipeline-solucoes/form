@@ -1,4 +1,4 @@
-import { fbcolorFocused, fbmargin } from "@/constant";
+import { fbcolorFocused, fbmargin } from "../constant";
 import { Button, styled } from "@mui/material";
 
 export const LinkFormStyled = styled(Button, {
