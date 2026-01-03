@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   },
 
   // Transpila pacotes específicos
-  transpilePackages: ["pipesol-formulario"],
+  transpilePackages: ["form"],
 
   // Configura saída standalone
   output: "standalone",

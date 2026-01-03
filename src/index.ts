@@ -10,6 +10,7 @@ export { default as NotificationSnackbar } from './components/NotificationSnackb
 export { default as TextFieldValidate } from './components/TextFieldValidate';
 export { default as TextFieldPassword } from './components/TextFieldPassword';
 export { default as SelectField } from './components/SelectField';
+export { default as ChipList } from './components/ChipList';
 
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';
