@@ -12,7 +12,7 @@ import TextFieldValidate from '../TextFieldValidate';
 import { validateEmailMessage } from '../../utils/validateEmail';
 import { ButtonFormStyled } from '../../style/ButtonFormStyled';
 import { validateTelefoneMessage } from '../../utils/validateTelefone';
-import { fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbheigth, fbmargin, fbpadding } from '../../constant';
+import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbheigth, fbmargin, fbpadding } from '../../constant';
 
 
 const FormContainer = styled('div')(() => ({
@@ -31,15 +31,15 @@ export interface RecaptchaFormProps extends
  Omit<FieldProps, 'backgroundDisabledField' | 'colorDisabledField'>,
  LayoutProps, 
  ButtonProps {  
-  url: string;
 
-  rowsMessage: number, 
-  
-  message_sucess: string;
+  url?: string;
+  rowsMessage?: number, 
+  message_sucess?: string;
   message_erro?: string;
   token_bearer: string;
   site_key_recaptcha: string;
   children?: React.ReactNode;
+
 }
 
 const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
@@ -84,10 +84,12 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
   heightField,  
   
   rowsMessage = 5,
-  message_sucess,
+  message_sucess="Mensagem enviada com sucesso",
   message_erro,
+
   token_bearer,
   site_key_recaptcha,
+
   children
 }) => {  
 
@@ -205,8 +207,12 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
 
   return (
     <Box display="flex" flexDirection='column' justifyContent="center" gap="24px" flex={1}     
-      sx={{ background: background, padding: padding, margin: margin, 
-      borderRadius: borderRadius, boxShadow: boxShadow, border: border,
+      sx={{ background: background ?? fbbackground, 
+      padding: padding ?? '24px', 
+      margin: margin ?? fbmargin, 
+      borderRadius: borderRadius ?? fbborderRadius, 
+      boxShadow: boxShadow ?? fbboxShadow, 
+      border: border ??  'none',
       width: width, height: height, maxWidth: maxWidth, maxHeight: maxHeight }}>
 
       <FormContainer>
