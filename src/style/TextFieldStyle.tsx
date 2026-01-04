@@ -8,6 +8,7 @@ export const TextFieldStyled = styled(TextField, {
       "background",      
       "backgroundDisabled",
       "colorText",
+      "backgroundFocused",
       "colorFocused",
       "colorDisabled",
       "borderRadius",
@@ -19,6 +20,7 @@ export const TextFieldStyled = styled(TextField, {
     ].includes(prop as string),
 })<{
   background?: string;
+  backgroundFocused?: string;
   backgroundDisabled?: string;
   colorText?: string;
   colorFocused?: string;
@@ -32,6 +34,7 @@ export const TextFieldStyled = styled(TextField, {
 }>(
   ({
     background,
+    backgroundFocused,
     backgroundDisabled,
     colorText,
     colorFocused,

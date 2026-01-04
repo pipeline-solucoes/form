@@ -14,6 +14,8 @@ interface TextFieldValidateProps
   value?: string;
   textVariant?: TypographyVariant;
 
+  backgroundFocused?: string;
+
   disabled?: boolean;
 
   // Validação
@@ -189,6 +191,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   id,
   label,
   background,
+  backgroundFocused,
   backgroundDisabled,
   color,
   colorFocused,
@@ -264,6 +267,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
   const field = theme.pipelinesolucoes?.forms?.field;
 
   const bg = background ?? field?.background ?? fbbackground;
+  const bgFocused = backgroundFocused ?? field?.backgroundFocused ?? bg;
   const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? fbbackgroundDisabled;
   const txt = color ?? field?.color ?? fbcolor;
   const txtDisabled = colorDisabled ?? field?.colorDisabled ?? fbcolorDisabled;
@@ -289,6 +293,7 @@ const TextFieldValidate: React.FC<TextFieldValidateProps> = ({
       onChange={onChange}
       onBlur={handleBlur}
       background={bg}
+      backgroundFocused={bgFocused}
       backgroundDisabled={bgDisabled}
       colorText={txt}
       colorFocused={bdFocused}

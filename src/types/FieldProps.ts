@@ -1,5 +1,3 @@
-import { TypographyVariant } from "@mui/material";
-
 export interface FieldProps { 
 
   backgroundField?: string;

@@ -27,6 +27,7 @@ interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
   textVariant?: TypographyVariant;
 
   background?: string;
+  backgroundFocused?: string;
   backgroundDisabled?: string;
   color?: string;
   colorFocused?: string;
@@ -215,6 +216,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   showErrorOn = 'blur',
 
   background,
+  backgroundFocused,
   backgroundDisabled,
   color,
   colorFocused,
@@ -315,6 +317,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
 
   // props -> tokens -> fallback
   const bg = background ?? field?.background ?? fbbackground;
+  const bgFocused = backgroundFocused ?? field?.backgroundFocused ?? bg;
   const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? fbbackgroundDisabled;
   const txt = color ?? field?.color ?? fbcolor;
   const txtDisabled = colorDisabled ?? field?.colorDisabled ?? fbcolorDisabled;
@@ -339,6 +342,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
       value={currentValue}
 
       background={bg}
+      backgroundFocused={bgFocused}
       backgroundDisabled={bgDisabled}
 
       colorText={txt}      

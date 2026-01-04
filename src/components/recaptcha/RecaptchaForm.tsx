@@ -1,11 +1,18 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import RecaptchaInvisible, { RecaptchaInvisibleRef } from './RecaptchaInvisible';
-import { ButtonFormStyled, TextFieldFixedSizeStyled, TextFieldStyled } from './FormStyled';
 import RecaptchaMessage from './RecaptchaMessage';
+import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
+import { FieldProps } from '../../types/FieldProps';
+import { ButtonProps } from '../../types/ButtonProps';
+import TextFieldValidate from '../TextFieldValidate';
+import { validateEmailMessage } from '../../utils/validateEmail';
+import { ButtonFormStyled } from '../../style/ButtonFormStyled';
+import { validateTelefoneMessage } from '../../utils/validateTelefone';
+import { fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbheigth, fbmargin, fbpadding } from '../../constant';
 
 
 const FormContainer = styled('div')(() => ({
@@ -17,45 +24,77 @@ const FormContainer = styled('div')(() => ({
   padding: '0px',
 }));
 
-interface RecaptchaFormProps {
-  color: string;
-  background?: string;
-  border_radius: string;
-  background_color_field?: string;
-  border_radius_field?: string;
-  color_button: string;
-  background_color_button?: string;
-  border_radius_button?: string;
-  text_button: string;
+
+export interface RecaptchaFormProps extends 
+ Pick<ColorProps, 'background' | 'color'>, 
+ Pick<BorderProps, 'borderRadius' | 'border' | 'boxShadow'>,
+ Omit<FieldProps, 'backgroundDisabledField' | 'colorDisabledField'>,
+ LayoutProps, 
+ ButtonProps {  
+  url: string;
+
+  rowsMessage: number, 
+  
   message_sucess: string;
-  color_message_sucess: string;
   message_erro?: string;
-  color_message_erro: string;
   token_bearer: string;
   site_key_recaptcha: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
+  
+  url = "https://backend-sites-production.up.railway.app/send-email-gmail",
+
+  background,
   color,
-  background = 'transparent',
-  border_radius = '0px',
-  background_color_field = 'transparent',
-  border_radius_field = '0px',
-  color_button,
-  background_color_button = 'transparent',
-  border_radius_button = '0px',
-  text_button,
+  borderRadius,
+  border,  
+  boxShadow,
+  width,
+  maxWidth,
+  height,
+  maxHeight,
+  padding,
+  margin,
+
+  textButton,
+  variantButton,
+  backgroundButton,
+  backgroundHoverButton,
+  colorButton,
+  colorHoverButton,  
+  borderRadiusButton,
+  borderButton,  
+  boxShadowButton,
+  widthButton,  
+  heightButton,
+  paddingButton,
+  marginButton,
+
+  backgroundField,
+  backgroundFocusedField,
+  colorField,  
+  colorFocusedField,
+  borderRadiusField,
+  boxShadowField,
+  borderColorField,
+  paddingField,     
+  marginField, 
+  heightField,  
+  
+  rowsMessage = 5,
   message_sucess,
-  color_message_sucess,
   message_erro,
-  color_message_erro,
   token_bearer,
   site_key_recaptcha,
   children
 }) => {  
-  
 
+  const theme = useTheme();
+  const color_message_sucess = theme.palette.success.main;
+  const color_message_erro = theme.palette.error.main;
+  
   const [mensagemApi, setMensagemApi] = useState('');
   const [corMensagemApi, setCorMensagemApi] = useState(color_message_erro);
   const [nome, setNome] = useState('');
@@ -64,36 +103,9 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
   const [mensagem, setMensagem] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [isLoading, setIsLoading] = useState(false);
-  const telefoneRef = React.useRef<HTMLInputElement>(null);
 
   // Ref para o recaptcha
   const recaptchaRef = useRef<RecaptchaInvisibleRef>(null);
-  const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
-  const validateTelefone = (telefone: string) => /^\d{2}\d{9}$/.test(telefone);
-
-  const handleBlur = (field: string) => {
-    switch (field) {
-      case 'email':
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: !validateEmail(email),
-        }));
-        break;
-      case 'telefone':
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          telefone: !validateTelefone(telefone),
-        }));
-        break;
-      default:
-        // Para campos nome e mensagem
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [field]: !Boolean(field === 'nome' ? nome.trim() : mensagem.trim()),
-        }));
-        break;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,8 +113,8 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
     // Validação dos campos
     const newErrors: { [key: string]: boolean } = {
       nome: !nome.trim(),
-      email: !validateEmail(email),
-      telefone: !validateTelefone(telefone),
+      email: !validateEmailMessage(email),
+      telefone: !validateTelefoneMessage(telefone),
       mensagem: !mensagem.trim(),
     };
     setErrors(newErrors);
@@ -145,7 +157,7 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
       formData.append('mensagem', mensagem);
       formData.append('captcha_token', token); // Enviar token para backend validar
 
-      const response = await fetch('https://backend-sites-production.up.railway.app/send-email-gmail', {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token_bearer}`,
@@ -181,83 +193,130 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
     }
   };
 
+  const bgFocused = backgroundFocusedField ?? backgroundField;
+  const txt = colorField ?? fbcolor;
+  const br = borderRadiusField ?? fbborderRadius;
+  const sh = boxShadowField ?? fbboxShadow;
+  const bd = borderColorField ?? fbborderColor;
+  const bdFocused = colorFocusedField ?? fbcolorFocused;
+  const pad = paddingField ?? fbpadding;
+  const mg = marginField ?? fbmargin;
+  const hg = heightField ?? fbheigth;
+
   return (
-    <Box display="flex" flexDirection='column' justifyContent="center" gap="24px" flex={1} 
-      sx={{ padding: "24px", borderRadius: border_radius, background: background }}>
+    <Box display="flex" flexDirection='column' justifyContent="center" gap="24px" flex={1}     
+      sx={{ background: background, padding: padding, margin: margin, 
+      borderRadius: borderRadius, boxShadow: boxShadow, border: border,
+      width: width, height: height, maxWidth: maxWidth, maxHeight: maxHeight }}>
+
       <FormContainer>
-        <TextFieldStyled
+        
+        <TextFieldValidate
           id="nome"
           label="Nome"
-          placeholder="Nome"
+          placeholder="Nome"  
           value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          onBlur={() => handleBlur('nome')}
-          error={errors.nome}
-          helperText={errors.nome && <span style={{ color: color_message_erro }}>Nome é obrigatório</span>}
-          required
-          background_color={background_color_field}
-          text_color={color}
-          text_color_error={color_message_erro}
-          border_radius={border_radius_field}
+          onChange={(e) => setNome(e.target.value)}                  
+          height={hg}            
+          background={backgroundField}
+          backgroundFocused={bgFocused}
+          colorFocused={bdFocused}
+          color={txt}
+          borderRadius={br}
+          borderColor={bd}
+          boxShadow={sh}
+          padding={pad}
+          margin={mg}          
+          required     
+          requiredMessage="nome obrigatório"             
+          showErrorOn="blur"
         />
-        <TextFieldStyled
+
+        <TextFieldValidate
           id="email"
           label="Email"
-          placeholder="Email"
+          placeholder="Email"          
+          height={hg}            
+          background={backgroundField}
+          backgroundFocused={bgFocused}
+          colorFocused={bdFocused}
+          color={txt}
+          borderRadius={br}
+          borderColor={bd}
+          boxShadow={sh}
+          padding={pad}
+          margin={mg}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => handleBlur('email')}
-          error={errors.email}
-          helperText={errors.email && <span style={{ color: color_message_erro }}>Email inválido</span>}
           required
-          background_color={background_color_field}
-          text_color={color}
-          text_color_error={color_message_erro}
-          border_radius={border_radius_field}
+          requiredMessage="email obrigatório"
+          validate={validateEmailMessage}
+          showErrorOn="blur"
         />
-        <TextFieldStyled
+
+        <TextFieldValidate
           id="telefone"
           label="Telefone"
+          placeholder="Telefone"    
           value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
-          onBlur={() => handleBlur('telefone')}
-          error={errors.telefone}
-          helperText={errors.telefone && <span style={{ color: color_message_erro }}>Telefone inválido</span>}
-          required
-          placeholder="21999999999"
-          background_color={background_color_field}
-          text_color={color}
-          text_color_error={color_message_erro}
-          border_radius={border_radius_field}
-          inputRef={telefoneRef}
+          onChange={(e) => setTelefone(e.target.value)}      
+          height={hg}            
+          background={backgroundField}
+          backgroundFocused={bgFocused}
+          colorFocused={bdFocused}
+          color={txt}
+          borderRadius={br}
+          borderColor={bd}
+          boxShadow={sh}
+          padding={pad}
+          margin={mg}
+          required={true}
+          requiredMessage="telefone obrigatório"
+          validate={validateTelefoneMessage}
+          showErrorOn="blur"
         />
-        <TextFieldFixedSizeStyled
+
+        <TextFieldValidate
           id="mensagem"
           label="Mensagem"
-          placeholder="Mensagem"
-          value={mensagem}
-          onChange={(e) => setMensagem(e.target.value)}
-          onBlur={() => handleBlur('mensagem')}
-          error={errors.mensagem}
-          helperText={errors.mensagem && <span style={{ color: color_message_erro }}>Mensagem é obrigatória</span>}
+          placeholder="Mensagem"  
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          background={backgroundField}
+          backgroundFocused={bgFocused}
+          colorFocused={bdFocused}
+          color={txt}
+          borderRadius={br}
+          borderColor={bd}
+          boxShadow={sh}
+          padding={pad}
+          margin={mg}          
           required
-          multiline
-          background_color={background_color_field}
-          text_color={color}
-          text_color_error={color_message_erro}
-          border_radius={border_radius_field}
+          requiredMessage="mensagem obrigatório"
+          multiline 
+          rows={rowsMessage}                  
+          showErrorOn="blur"
         />
+
         <ButtonFormStyled
-          width="100%"
-          height="100%"
-          onClick={handleSubmit}
-          background_color={background_color_button}
-          text_color={color_button}
-          border_radius={border_radius_button}
+          backgroundButton={backgroundButton}
+          backgroundHoverButton={backgroundHoverButton}
+          colorButton={colorButton}
+          colorHoverButton={colorHoverButton}
+          borderRadiusButton={borderRadiusButton}
+          borderButton={borderButton}
+          boxShadowButton={boxShadowButton}
+          widthButton={widthButton}
+          heightButton={heightButton}
+          paddingButton={paddingButton}
+          marginButton={marginButton}
           disabled={isLoading}
+          onClick={handleSubmit}
+          variantButton={variantButton}
         >
-          {isLoading ? 'Enviando...' : text_button}
+          {isLoading ? 'Enviando...' : textButton }
         </ButtonFormStyled>
+
         {mensagemApi && (
           <Typography variant="body1" component="span" color={corMensagemApi}>
             {mensagemApi}
@@ -269,7 +328,7 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
         {children}
       </Box>
 
-      <RecaptchaMessage color={color}/>
+      <RecaptchaMessage color={color ?? 'black'}/>
 
       {/* reCAPTCHA invisível */}
       <RecaptchaInvisible siteKey={site_key_recaptcha} ref={recaptchaRef} />
