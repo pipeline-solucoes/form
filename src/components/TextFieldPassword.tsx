@@ -8,7 +8,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { TextFieldStyled } from '../style/TextFieldStyle';
-import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbheigth, fbpadding } from '../constant';
+import { fbbackground, fbbackgroundDisabled, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorDisabled, fbcolorFocused, fbheigth, fbmargin, fbpadding } from '../constant';
 
 type ValidationStatus = 'idle' | 'required' | 'invalid' | 'valid';
 
@@ -23,7 +23,7 @@ interface TextFieldPasswordProps
   extends 
     Omit<ColorProps, 'backgroundHover' | 'colorHover'>, 
     Omit<BorderProps, 'border' >, 
-    Pick<LayoutProps, 'height' | 'padding'> {
+    Pick<LayoutProps, 'height' | 'padding' | 'margin'> {
 
   id?: string;
   label?: string;
@@ -216,10 +216,12 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   colorDisabled,
   borderRadius,
   boxShadow,
-  borderColor,  
+  borderColor,    
+  textVariant,
+
   padding,
   height,
-  textVariant,
+  margin,
 
   onChange,
   onBlur,
@@ -319,6 +321,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
   const bd = borderColor ?? field?.borderColor ?? fbborderColor;
   const bdFocused = colorFocused ?? field?.colorFocused ?? fbcolorFocused;
   const pad = padding ?? field?.padding ?? fbpadding;
+  const mg = margin ?? field?.margin ?? fbmargin;
   const typo =
     (textVariant && theme.typography[textVariant]) ??
     field?.typography ??
@@ -348,6 +351,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
 
       padding={pad}
       height={hg}
+      marginField={mg}
 
       disabled={disabled}
       required={required}
