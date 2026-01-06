@@ -19,23 +19,18 @@ interface PasswordValidationResult {
   value: string;
 }
 
-interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
+interface TextFieldPasswordProps  
+  extends 
+    Omit<ColorProps, 'backgroundHover' | 'colorHover'>, 
+    Omit<BorderProps, 'border' >, 
+    Pick<LayoutProps, 'height' | 'padding'> {
+
   id?: string;
   label?: string;
   placeholder?: string;
   value?: string;
   textVariant?: TypographyVariant;
 
-  background?: string;
-  backgroundFocused?: string;
-  backgroundDisabled?: string;
-  color?: string;
-  colorFocused?: string;
-  colorDisabled?: string;
-  borderRadius?: string;
-  boxShadow?: string;
-  borderColor?: string;
-  padding?: string;
   disabled?: boolean;
 
   required?: boolean;
@@ -45,9 +40,7 @@ interface TextFieldPasswordProps extends BorderProps, ColorProps, LayoutProps {
   showErrorOn?: 'blur' | 'change' | 'both';
   
   onPasswordChange?: (password: string) => void;
-
   onValidationChange?: (result: PasswordValidationResult) => void;
-
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
@@ -369,7 +362,7 @@ const TextFieldPassword: React.FC<TextFieldPasswordProps> = ({
                 onClick={() => setShowPassword((prev) => !prev)}
                 edge="end"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                sx={{margin: '0 16px 0 0'}}
+                sx={{margin: '0 4px 0 0'}}
               >
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>

@@ -12,7 +12,12 @@ export interface SelectFieldOption {
   label: string;
 }
 
-interface SelectFieldProps extends BorderProps, ColorProps, LayoutProps {
+interface SelectFieldProps 
+  extends
+    Omit<ColorProps, 'backgroundHover' | 'colorHover'>, 
+    Omit<BorderProps, 'border' >, 
+    Pick<LayoutProps, 'height' | 'padding' | 'width' | 'margin'> {
+
   id?: string;
   label?: string;
   placeholder?: string;

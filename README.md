@@ -31,7 +31,11 @@ A biblioteca inclui os seguintes componentes:
 
 - **TextFieldValidate**  
   Componente de campo de texto com validação, baseado no TextField do Material UI.
-  Permite personalização visual via `styled` e suporte a validações comuns (obrigatório, tamanho mínimo, regex) e validação customizada.   
+  Permite personalização visual via `styled` e suporte a validações comuns (obrigatório, tamanho mínimo, regex) e validação customizada. 
+
+- **TextFieldNumberValidate**  
+   Campo de texto numérico com suporte a validações comuns e customizadas, construído sobre o TextField do Material UI e 
+   estilizado via Design System da Pipeline.
 
 - **NotificationSnackbar**
   Componente que exibe uma notificação no topo da tela utilizando o Snackbar e Alert do Material UI.  
