@@ -1,6 +1,6 @@
 {
   "name": "@pipelinesolucoes/form",
-  "version": "1.2.0-beta.24",
+  "version": "1.2.0-beta.25",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
@@ -35,6 +35,8 @@
     "build": "tsc",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
+    "release-notification-beta": "npm uninstall @pipelinesolucoes/notification && npm install @pipelinesolucoes/notification@beta",
+    "release-notification": "npm uninstall @pipelinesolucoes/notification && npm install @pipelinesolucoes/notification",
     "release-theme-beta": "npm uninstall @pipelinesolucoes/theme && npm install @pipelinesolucoes/theme@beta",
     "release-theme": "npm uninstall @pipelinesolucoes/theme && npm install @pipelinesolucoes/theme"
   },

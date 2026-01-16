@@ -9,6 +9,7 @@ e este projeto adota [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - Retirada da pasta page.
 - Implementacao do theme nos formularios de login e nos componentes de TextField.
 - Implementacao do componentes de SelectField.
+- Implementação do componente TextFieldBirthDateWithAge.
 
 ## [1.0.0] - 2025-12-28
 - Criação do package

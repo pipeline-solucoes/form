@@ -18,7 +18,7 @@
 export const validateEmail = (email: string): boolean => {
   
   if (!email) {
-    return false;
+    return true;
   }
 
   const cleanedEmail = email.trim();
