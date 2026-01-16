@@ -24,7 +24,8 @@ A biblioteca inclui os seguintes componentes:
   Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.    
 
 - **TextFieldPassword**
-  Componente de campo de senha baseado no TextField do Material UI, com botão para alternar entre mostrar/ocultar a senha. O componente:
+  Componente de campo de senha baseado no TextField do Material UI, com botão para alternar entre mostrar/ocultar a senha. 
+  O componente:
   - Retorna somente a senha digitada via `onPasswordChange`
   - Valida obrigatório + formato (regex) e exibe mensagens de erro automaticamente
   - Dispara um "evento" de validação via `onValidationChange`
@@ -36,6 +37,11 @@ A biblioteca inclui os seguintes componentes:
 - **TextFieldNumberValidate**  
    Campo de texto numérico com suporte a validações comuns e customizadas, construído sobre o TextField do Material UI e 
    estilizado via Design System da Pipeline.
+
+- **TextFieldBirthDateWithAge**  
+   Campo de data de nascimento com entrada somente numérica, máscara `dd/mm/yyyy`,
+   validações comuns (required, min/maxLength, pattern) + validação customizada,
+   e cálculo automático de idade exibido na label.  
 
 - **NotificationSnackbar**
   Componente que exibe uma notificação no topo da tela utilizando o Snackbar e Alert do Material UI.  

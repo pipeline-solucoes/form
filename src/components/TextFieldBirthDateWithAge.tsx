@@ -152,13 +152,13 @@ const computeError = (
 /**
  * Campo de data de nascimento com entrada somente numérica, máscara `dd/mm/yyyy`,
  * validações comuns (required, min/maxLength, pattern) + validação customizada,
- * e cálculo automático de idade exibido no helperText.
+ * e cálculo automático de idade exibido na label.
  *
  * Regras:
  * - O usuário digita apenas números.
  * - Ao digitar, o valor é formatado automaticamente como `dd/mm/yyyy`.
- * - Quando a data estiver completa e for válida, a idade é calculada e exibida.
- * - Erros sempre têm prioridade no helperText.
+ * - Quando a data estiver completa e for válida, a idade é calculada e exibida na label.
+ * - Erros sempre têm prioridade no helperText (a label não exibe idade quando há erro).
  *
  * Tokens de estilo (ordem de prioridade):
  * - props do componente
@@ -189,7 +189,6 @@ const computeError = (
  * ```tsx
  * const Example = () => {
  *   const [birthDate, setBirthDate] = React.useState('');
- *   const [age, setAge] = React.useState<number | null>(null);
  *
  *   return (
  *     <TextFieldBirthDateWithAge
@@ -198,8 +197,7 @@ const computeError = (
  *       required
  *       showErrorOn="blur"
  *       onChange={(e) => setBirthDate(e.target.value)}
- *       onAgeChange={(nextAge) => setAge(nextAge)}
- *       validate={(v) => (v.length === 10 && !/^\d{2}\/\d{2}\/\d{4}$/.test(v) ? 'Data inválida' : null)}
+ *       onAgeChange={(age) => console.log('idade', age)}
  *     />
  *   );
  * };
@@ -246,7 +244,6 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
   const formattedValue = React.useMemo(() => formatBirthDate(value), [value]);
 
   const computedAge = React.useMemo(() => {
-    // só calcula quando completo
     if (formattedValue.length !== 10) return null;
     return calculateAgeFromFormatted(formattedValue);
   }, [formattedValue]);
@@ -267,7 +264,6 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
 
     if (baseError) return baseError;
 
-    // Validação adicional: data completa mas inválida (ex.: 31/02/2020 ou data futura)
     if (v.length === 10 && !isValidBirthDate(v)) return 'Data inválida';
     if (v.length === 10 && isValidBirthDate(v) && computedAge === null) return 'Data inválida';
 
@@ -285,6 +281,11 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
     touched,
     computedAge,
   ]);
+
+  const computedLabel =
+    computedAge !== null && !errorMessage
+      ? `${label ?? ''} (${computedAge} anos)`.trim()
+      : label;
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!touched) setTouched(true);
@@ -348,16 +349,12 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
     field?.typography ??
     theme.typography.body1;
 
-  const helperText = errorMessage
-    ? errorMessage
-    : computedAge !== null
-      ? `Idade: ${computedAge} anos`
-      : ' ';
+  const helperText = errorMessage ? errorMessage : '\u00A0';
 
   return (
     <TextFieldStyled
       id={id}
-      label={label}
+      label={computedLabel}
       placeholder={placeholder}
       value={formattedValue}
       typo={typo}
