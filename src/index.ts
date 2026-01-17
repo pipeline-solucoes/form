@@ -15,6 +15,7 @@ export { default as TextFieldValidate } from './components/TextFieldValidate';
 export { default as TextFieldPassword } from './components/TextFieldPassword';
 export { default as TextFieldNumberValidate } from './components/TextFieldNumberValidate';
 export { default as TextFieldBirthDateWithAge } from './components/TextFieldBirthDateWithAge';
+export { default as TextFieldCPFValidate } from './components/TextFieldCPFValidate';
 
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';

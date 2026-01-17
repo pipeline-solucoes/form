@@ -14,12 +14,15 @@ import {
   fbheigth,
   fbpadding,
 } from '../constant';
+import { formatCpf } from '@/utils/formatCpf';
+import { validateCpf } from '@/utils/validateCpf';
 
-interface TextFieldBirthDateWithAgeProps
+interface TextFieldCPFValidateProps
   extends
     Omit<ColorProps, 'backgroundHover' | 'colorHover'>,
     Omit<BorderProps, 'border'>,
     Pick<LayoutProps, 'height' | 'padding'> {
+
   id?: string;
   label?: string;
   placeholder?: string;
@@ -41,108 +44,20 @@ interface TextFieldBirthDateWithAgeProps
 
   validate?: (value: string) => string | null | undefined;
 
+  invalidCpfMessage?: string; // default: "CPF inválido"
+
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-
-  /**
-   * Callback disparado sempre que a idade puder ser calculada.
-   * Retorna `null` quando a data é inválida ou incompleta.
-   */
-  onAgeChange?: (age: number | null) => void;
 }
 
 const onlyNumbers = (raw: string) => (raw ?? '').replace(/[^\d]/g, '');
 
-const expandTwoDigitYearToFour = (yy: string) => {
-  // Regra solicitada: 78 -> 2078 (sempre prefixa 20)
-  // Também cobre 00..99 -> 2000..2099
-  if (yy.length !== 2) return yy;
-  return `20${yy}`;
-};
 
-/**
- * Expande ano de 2 dígitos SOMENTE quando o usuário digitou no formato com barra (dd/mm/yy).
- * Ex.: "25/11/78" -> "25/11/2078"
- */
-const formatBirthDate = (raw: string) => {
-  const v = raw ?? '';
-
-  // 1) Se o usuário estiver digitando com barras, aceita dd/mm/yy e expande para dd/mm/yyyy
-  // Ex.: 25/11/78 -> 25/11/2078
-  if (v.includes('/')) {
-    const digits = onlyNumbers(v).slice(0, 8); // ddmmyyyy (máx)
-
-    const dd = digits.slice(0, 2);
-    const mm = digits.slice(2, 4);
-    const year = digits.slice(4); // pode ser 0..4
-
-    if (digits.length <= 2) return dd;
-    if (digits.length <= 4) return `${dd}/${mm}`;
-
-    // se ano tem 1..2 dígitos -> expande prefixando 20 quando tiver exatamente 2
-    if (year.length <= 2) {
-      if (year.length === 2) return `${dd}/${mm}/20${year}`;
-      return `${dd}/${mm}/${year}`;
-    }
-
-    // ano completo (3..4)
-    return `${dd}/${mm}/${year}`;
-  }
-
-  // 2) Se o usuário digitar só números (ddmmyyyy), NÃO expande em 6 dígitos.
-  // Assim ele consegue digitar 1978 normalmente.
-  const digits = onlyNumbers(v).slice(0, 8);
-
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-};
-
-const isValidBirthDate = (formatted: string) => {
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(formatted)) return false;
-
-  const [ddStr, mmStr, yyyyStr] = formatted.split('/');
-  const dd = Number(ddStr);
-  const mm = Number(mmStr);
-  const yyyy = Number(yyyyStr);
-
-  if (!Number.isFinite(dd) || !Number.isFinite(mm) || !Number.isFinite(yyyy)) return false;
-  if (yyyy < 1900 || yyyy > 3000) return false;
-  if (mm < 1 || mm > 12) return false;
-  if (dd < 1 || dd > 31) return false;
-
-  const date = new Date(yyyy, mm - 1, dd);
-  if (Number.isNaN(date.getTime())) return false;
-
-  return (
-    date.getFullYear() === yyyy &&
-    date.getMonth() === mm - 1 &&
-    date.getDate() === dd
-  );
-};
-
-const calculateAgeFromFormatted = (formatted: string): number | null => {
-  if (!isValidBirthDate(formatted)) return null;
-
-  const [ddStr, mmStr, yyyyStr] = formatted.split('/');
-  const dd = Number(ddStr);
-  const mm = Number(mmStr);
-  const yyyy = Number(yyyyStr);
-
-  const birth = new Date(yyyy, mm - 1, dd);
-  const today = new Date();
-
-  const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  if (birth.getTime() > todayAtMidnight.getTime()) return null;
-
-  let age = today.getFullYear() - birth.getFullYear();
-  const monthDiff = today.getMonth() - birth.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
-  }
-
-  return age >= 0 ? age : null;
+const isValidCpfFormatted = (formatted: string) => {
+  // aceita com máscara completa
+  if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formatted)) return false;
+  const digits = onlyNumbers(formatted);
+  return validateCpf(digits);
 };
 
 const computeError = (
@@ -156,7 +71,7 @@ const computeError = (
     patternMessage,
     validate,
   }: Pick<
-    TextFieldBirthDateWithAgeProps,
+    TextFieldCPFValidateProps,
     'required' | 'requiredMessage' | 'minLength' | 'maxLength' | 'pattern' | 'patternMessage' | 'validate'
   >,
 ): string | null => {
@@ -180,45 +95,22 @@ const computeError = (
 };
 
 /**
- * Campo de data de nascimento com entrada somente numérica, máscara `dd/mm/yyyy`,
- * validações comuns (required, min/maxLength, pattern) + validação customizada,
- * e cálculo automático de idade exibido na label.
- *
- * Regra adicional:
- * - Se o usuário digitar ano com 2 dígitos (ex.: `25/11/78`), o componente converte para `25/11/2078`
- *   (sempre prefixando `20` no ano).
- *
- * @param {string} [id] Identificador do campo.
- * @param {string} [label] Rótulo exibido acima do campo.
- * @param {string} [placeholder='dd/mm/aaaa'] Placeholder do input.
- * @param {string} [value] Valor do campo (controlado).
- * @param {boolean} [disabled=false] Define se o campo está desabilitado.
- * @param {number} [minLength] Número mínimo de caracteres para validação (após máscara).
- * @param {number} [maxLength] Número máximo de caracteres para validação (após máscara).
- * @param {boolean} [required=false] Define se é obrigatório.
- * @param {string} [requiredMessage='Campo obrigatório'] Mensagem de obrigatório.
- * @param {RegExp | string} [pattern] Pattern para validação do valor formatado.
- * @param {string} [patternMessage='Formato inválido'] Mensagem do pattern.
- * @param {'change' | 'blur'} [showErrorOn='blur'] Momento de exibir o erro.
- * @param {(value: string) => string | null | undefined} [validate] Validação customizada do valor formatado.
- * @param {(age: number | null) => void} [onAgeChange] Callback com a idade calculada (ou null se inválido/incompleto).
- * @param {(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [onChange] Callback disparado ao alterar (já com valor formatado).
- * @param {(event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [onBlur] Callback disparado ao perder o foco.
+ * Campo de CPF com entrada somente numérica, máscara `000.000.000-00`,
+ * validações comuns (required, min/maxLength, pattern) + validação customizada.
  *
  * @example
  * ```tsx
- * <TextFieldBirthDateWithAge
- *   label="Data de nascimento"
- *   value={birthDate}
- *   onChange={(e) => setBirthDate(e.target.value)}
- *   onAgeChange={(age) => console.log(age)}
+ * <TextFieldCPFValidate
+ *   label="CPF"
+ *   value={cpf}
+ *   onChange={(e) => setCpf(e.target.value)} // recebe SEMPRE o valor formatado
  * />
  * ```
  */
-const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
+const TextFieldCPFValidate: React.FC<TextFieldCPFValidateProps> = ({
   id,
-  label,
-  placeholder = 'dd/mm/aaaa',
+  label = 'CPF',
+  placeholder = '000.000.000-00',
   value = '',
   textVariant,
 
@@ -247,22 +139,20 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
   validate,
   showErrorOn = 'blur',
 
+  invalidCpfMessage = 'CPF inválido',
+
   onChange,
   onBlur,
-  onAgeChange,
 }) => {
   const [touched, setTouched] = React.useState(false);
 
-  const formattedValue = React.useMemo(() => formatBirthDate(value), [value]);
+  const formattedValue = React.useMemo(() => formatCpf(value), [value]);
 
-  const computedAge = React.useMemo(() => {
-    if (formattedValue.length !== 10) return null;
-    return calculateAgeFromFormatted(formattedValue);
+  const cpfValid = React.useMemo(() => {
+    // só valida quando estiver completo (14 com máscara)
+    if (formattedValue.length !== 14) return null; // incompleto
+    return isValidCpfFormatted(formattedValue);
   }, [formattedValue]);
-
-  React.useEffect(() => {
-    onAgeChange?.(computedAge);
-  }, [computedAge, onAgeChange]);
 
   const errorMessage = React.useMemo(() => {
     const v = formattedValue;
@@ -276,7 +166,8 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
 
     if (baseError) return baseError;
 
-    if (v.length === 10 && computedAge === null) return 'Data inválida';
+    // valida CPF apenas quando completo
+    if (v.length === 14 && cpfValid === false) return invalidCpfMessage;
 
     return null;
   }, [
@@ -290,13 +181,9 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
     validate,
     showErrorOn,
     touched,
-    computedAge,
+    cpfValid,
+    invalidCpfMessage,
   ]);
-
-  const computedLabel =
-    computedAge !== null && !errorMessage
-      ? `${label ?? ''} (${computedAge} anos)`.trim()
-      : label;
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!touched) setTouched(true);
@@ -306,7 +193,7 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!onChange) return;
 
-    const next = formatBirthDate(event.target.value);
+    const next = formatCpf(event.target.value);
 
     const syntheticEvent = {
       ...event,
@@ -365,7 +252,7 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
   return (
     <TextFieldStyled
       id={id}
-      label={computedLabel}
+      label={label}
       placeholder={placeholder}
       value={formattedValue}
       typo={typo}
@@ -393,7 +280,7 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
           inputProps: {
             inputMode: 'numeric',
             pattern: '[0-9]*',
-            maxLength: 10,
+            maxLength: 14, // 000.000.000-00
           },
         },
       }}
@@ -401,6 +288,6 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
   );
 };
 
-TextFieldBirthDateWithAge.displayName = 'TextFieldBirthDateWithAge';
+TextFieldCPFValidate.displayName = 'TextFieldCPFValidate';
 
-export default TextFieldBirthDateWithAge;
+export default TextFieldCPFValidate;

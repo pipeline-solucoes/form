@@ -43,6 +43,10 @@ A biblioteca inclui os seguintes componentes:
    validações comuns (required, min/maxLength, pattern) + validação customizada,
    e cálculo automático de idade exibido na label.  
 
+- **TextFieldCPFValidate**  
+   Campo de CPF com entrada somente numérica, máscara `000.000.000-00`,
+   validações comuns (required, min/maxLength, pattern) + validação customizada.    
+
 - **NotificationSnackbar**
   Componente que exibe uma notificação no topo da tela utilizando o Snackbar e Alert do Material UI.  
 ---
