@@ -14,8 +14,8 @@ import {
   fbheigth,
   fbpadding,
 } from '../constant';
-import { formatCpf } from '@/utils/formatCpf';
-import { validateCpf } from '@/utils/validateCpf';
+import { formatCpf } from '../utils/formatCpf';
+import { validateCpf } from '../utils/validateCpf';
 
 interface TextFieldCPFValidateProps
   extends
