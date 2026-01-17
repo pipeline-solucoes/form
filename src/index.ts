@@ -18,3 +18,6 @@ export { default as TextFieldBirthDateWithAge } from './components/TextFieldBirt
 
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';
+export * from './utils/validateCpf';
+export * from './utils/formatCpf';
+export * from './utils/formatCEP';

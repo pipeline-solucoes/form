@@ -53,8 +53,25 @@ interface TextFieldBirthDateWithAgeProps
 
 const onlyNumbers = (raw: string) => (raw ?? '').replace(/[^\d]/g, '');
 
+const expandTwoDigitYearToFour = (yy: string) => {
+  // Regra solicitada: 78 -> 2078 (sempre prefixa 20)
+  // Também cobre 00..99 -> 2000..2099
+  if (yy.length !== 2) return yy;
+  return `20${yy}`;
+};
+
 const formatBirthDate = (raw: string) => {
-  const digits = onlyNumbers(raw).slice(0, 8);
+  // Suporta o usuário digitando com ou sem barras (ex.: 25/11/78 ou 251178)
+  const digits = onlyNumbers(raw).slice(0, 8); // ddmmyyyy (no máximo)
+
+  // Se o usuário digitar ddmmyy (6 dígitos), expande para ddmmyyyy com prefixo 20
+  if (digits.length === 6) {
+    const dd = digits.slice(0, 2);
+    const mm = digits.slice(2, 4);
+    const yy = digits.slice(4, 6);
+    const yyyy = expandTwoDigitYearToFour(yy);
+    return `${dd}/${mm}/${yyyy}`;
+  }
 
   if (digits.length <= 2) return digits;
   if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
@@ -77,7 +94,6 @@ const isValidBirthDate = (formatted: string) => {
   const date = new Date(yyyy, mm - 1, dd);
   if (Number.isNaN(date.getTime())) return false;
 
-  // garante que não "normalizou" (ex.: 31/02 vira 02/03)
   return (
     date.getFullYear() === yyyy &&
     date.getMonth() === mm - 1 &&
@@ -96,7 +112,6 @@ const calculateAgeFromFormatted = (formatted: string): number | null => {
   const birth = new Date(yyyy, mm - 1, dd);
   const today = new Date();
 
-  // Não permitir data no futuro
   const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   if (birth.getTime() > todayAtMidnight.getTime()) return null;
 
@@ -128,13 +143,8 @@ const computeError = (
   const v = value ?? '';
   if (required && v.trim().length === 0) return requiredMessage || 'Campo obrigatório';
 
-  if (typeof minLength === 'number' && v.length < minLength) {
-    return `Mínimo de ${minLength} caracteres`;
-  }
-
-  if (typeof maxLength === 'number' && v.length > maxLength) {
-    return `Máximo de ${maxLength} caracteres`;
-  }
+  if (typeof minLength === 'number' && v.length < minLength) return `Mínimo de ${minLength} caracteres`;
+  if (typeof maxLength === 'number' && v.length > maxLength) return `Máximo de ${maxLength} caracteres`;
 
   if (pattern) {
     const re = typeof pattern === 'string' ? new RegExp(pattern) : pattern;
@@ -154,53 +164,35 @@ const computeError = (
  * validações comuns (required, min/maxLength, pattern) + validação customizada,
  * e cálculo automático de idade exibido na label.
  *
- * Regras:
- * - O usuário digita apenas números.
- * - Ao digitar, o valor é formatado automaticamente como `dd/mm/yyyy`.
- * - Quando a data estiver completa e for válida, a idade é calculada e exibida na label.
- * - Erros sempre têm prioridade no helperText (a label não exibe idade quando há erro).
- *
- * Tokens de estilo (ordem de prioridade):
- * - props do componente
- * - `theme.pipelinesolucoes.forms.field`
- * - fallback interno (constantes `fb*`)
+ * Regra adicional:
+ * - Se o usuário digitar ano com 2 dígitos (ex.: `25/11/78`), o componente converte para `25/11/2078`
+ *   (sempre prefixando `20` no ano).
  *
  * @param {string} [id] Identificador do campo.
  * @param {string} [label] Rótulo exibido acima do campo.
  * @param {string} [placeholder='dd/mm/aaaa'] Placeholder do input.
  * @param {string} [value] Valor do campo (controlado).
  * @param {boolean} [disabled=false] Define se o campo está desabilitado.
- *
  * @param {number} [minLength] Número mínimo de caracteres para validação (após máscara).
  * @param {number} [maxLength] Número máximo de caracteres para validação (após máscara).
- *
  * @param {boolean} [required=false] Define se é obrigatório.
  * @param {string} [requiredMessage='Campo obrigatório'] Mensagem de obrigatório.
  * @param {RegExp | string} [pattern] Pattern para validação do valor formatado.
  * @param {string} [patternMessage='Formato inválido'] Mensagem do pattern.
  * @param {'change' | 'blur'} [showErrorOn='blur'] Momento de exibir o erro.
  * @param {(value: string) => string | null | undefined} [validate] Validação customizada do valor formatado.
- *
  * @param {(age: number | null) => void} [onAgeChange] Callback com a idade calculada (ou null se inválido/incompleto).
  * @param {(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [onChange] Callback disparado ao alterar (já com valor formatado).
  * @param {(event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void} [onBlur] Callback disparado ao perder o foco.
  *
  * @example
  * ```tsx
- * const Example = () => {
- *   const [birthDate, setBirthDate] = React.useState('');
- *
- *   return (
- *     <TextFieldBirthDateWithAge
- *       label="Data de nascimento"
- *       value={birthDate}
- *       required
- *       showErrorOn="blur"
- *       onChange={(e) => setBirthDate(e.target.value)}
- *       onAgeChange={(age) => console.log('idade', age)}
- *     />
- *   );
- * };
+ * <TextFieldBirthDateWithAge
+ *   label="Data de nascimento"
+ *   value={birthDate}
+ *   onChange={(e) => setBirthDate(e.target.value)}
+ *   onAgeChange={(age) => console.log(age)}
+ * />
  * ```
  */
 const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
@@ -264,8 +256,7 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
 
     if (baseError) return baseError;
 
-    if (v.length === 10 && !isValidBirthDate(v)) return 'Data inválida';
-    if (v.length === 10 && isValidBirthDate(v) && computedAge === null) return 'Data inválida';
+    if (v.length === 10 && computedAge === null) return 'Data inválida';
 
     return null;
   }, [
