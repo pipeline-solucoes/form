@@ -70,6 +70,12 @@ const normalizeTwoDigitYearToFourDigits = (yy: string) => {
   return `${century}${safeYY}`;
 };
 
+/**
+ * Máscara durante digitação:
+ * - Usuário digita só números (até 8)
+ * - Formata como dd/mm/yyyy conforme for completando
+ * - NÃO normaliza ano com 2 dígitos durante o change
+ */
 const formatBirthDate = (raw: string) => {
   const digits = onlyNumbers(raw).slice(0, 8);
 
@@ -78,15 +84,19 @@ const formatBirthDate = (raw: string) => {
 
   const dd = digits.slice(0, 2);
   const mm = digits.slice(2, 4);
-  const yearRaw = digits.slice(4); // 1..4 chars
+  const yyyy = digits.slice(4); // 1..4
 
-  // ✅ Garantir ano com 4 algarismos quando o usuário digitar 2 dígitos (ddmmyy)
-  if (yearRaw.length === 2) {
-    const yearNormalized = normalizeTwoDigitYearToFourDigits(yearRaw);
-    return `${dd}/${mm}/${yearNormalized}`;
-  }
+  return `${dd}/${mm}/${yyyy}`;
+};
 
-  return `${dd}/${mm}/${yearRaw}`;
+const normalizeBirthDateYearOnBlur = (formatted: string) => {
+  // Normaliza somente se estiver exatamente dd/mm/yy
+  if (!/^\d{2}\/\d{2}\/\d{2}$/.test(formatted)) return formatted;
+
+  const [dd, mm, yy] = formatted.split('/');
+  const yyyy = normalizeTwoDigitYearToFourDigits(yy);
+
+  return `${dd}/${mm}/${yyyy}`;
 };
 
 const isValidBirthDate = (formatted: string) => {
@@ -105,7 +115,6 @@ const isValidBirthDate = (formatted: string) => {
   const date = new Date(yyyy, mm - 1, dd);
   if (Number.isNaN(date.getTime())) return false;
 
-  // garante que não "normalizou" (ex.: 31/02 vira 02/03)
   return (
     date.getFullYear() === yyyy &&
     date.getMonth() === mm - 1 &&
@@ -124,7 +133,6 @@ const calculateAgeFromFormatted = (formatted: string): number | null => {
   const birth = new Date(yyyy, mm - 1, dd);
   const today = new Date();
 
-  // Não permitir data no futuro
   const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   if (birth.getTime() > todayAtMidnight.getTime()) return null;
 
@@ -184,8 +192,8 @@ const computeError = (
  *
  * Regras:
  * - O usuário digita apenas números.
- * - Ao digitar, o valor é formatado automaticamente como `dd/mm/yyyy`.
- * - Se o usuário digitar ano com 2 dígitos (`ddmmyy`), o componente normaliza para 4 dígitos.
+ * - Ao digitar, o valor é formatado automaticamente como `dd/mm/yyyy` (sem normalizar ano).
+ * - Ao perder o foco, se estiver em `dd/mm/yy`, o componente normaliza o ano para 4 dígitos.
  * - Quando a data estiver completa e for válida, a idade é calculada e exibida na label.
  * - Erros sempre têm prioridade no helperText (a label não exibe idade quando há erro).
  *
@@ -316,23 +324,41 @@ const TextFieldBirthDateWithAge: React.FC<TextFieldBirthDateWithAgeProps> = ({
       ? `${label ?? ''} (${computedAge} anos)`.trim()
       : label;
 
+  const emitSyntheticChange = (
+    baseEvent:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    nextValue: string,
+  ) => {
+    if (!onChange) return;
+
+    const syntheticEvent = {
+      ...baseEvent,
+      target: { ...baseEvent.target, value: nextValue },
+      currentTarget: { ...baseEvent.currentTarget, value: nextValue },
+    } as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
+    onChange(syntheticEvent);
+  };
+
   const handleBlur = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!touched) setTouched(true);
+
+    // ✅ Normaliza ano (dd/mm/yy -> dd/mm/yyyy) SOMENTE no blur
+    const normalizedOnBlur = normalizeBirthDateYearOnBlur(formattedValue);
+    if (normalizedOnBlur !== formattedValue) {
+      emitSyntheticChange(event, normalizedOnBlur);
+    }
+
     onBlur?.(event);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!onChange) return;
 
+    // ✅ Apenas máscara durante digitação (sem normalização do ano)
     const next = formatBirthDate(event.target.value);
-
-    const syntheticEvent = {
-      ...event,
-      target: { ...event.target, value: next },
-      currentTarget: { ...event.currentTarget, value: next },
-    } as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-
-    onChange(syntheticEvent);
+    emitSyntheticChange(event, next);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
