@@ -14,14 +14,9 @@ A biblioteca inclui os seguintes componentes:
   Componente de botão que redireciona o usuário para um endpoint externo (ex: autenticação com Google). 
   Durante o clique, o botão entra em estado de loading e, caso ocorra algum erro, exibe uma mensagem abaixo do botão.
 
-- **FormLogin**
-  Componente de formulário de login com suporte a autenticação via Google e login por email/senha.
-  Inclui validação básica de email, exibição de mensagens de erro/sucesso retornadas pelo handler `onClick` e 
-  customização visual via props (container, campos, botão e links).
-
-- **FormPasswordRecovery**
-  Componente de formulário para recuperação de senha via e-mail.
-  Faz a validação do e-mail, dispara um `onSubmit` assíncrono (obrigatório) e exibe a mensagem retornada.    
+- **FormMessage**
+  Componente de formulário para envio de mensagem.
+  Faz a validação do e-mail, telefone e exibe a mensagem retornada.    
 
 - **TextFieldPassword**
   Componente de campo de senha baseado no TextField do Material UI, com botão para alternar entre mostrar/ocultar a senha. 

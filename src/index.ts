@@ -1,10 +1,6 @@
-export { default as GoogleButton } from './components/login/GoogleButton';
+export { default as GoogleButton } from './components/GoogleButton';
 
-export { default as FormLogin} from './components/login/FormLogin';
-export { default as FormSignUp} from './components/login/FormSignUp';
-export { default as FormPasswordRecovery} from './components/login/FormPasswordRecovery';
-
-export { default as RecaptchaForm} from './components/recaptcha/RecaptchaForm';
+export { default as FormMessage} from './components/FormMessage';
 
 export { default as NotificationSnackbar } from './components/NotificationSnackbar';
 

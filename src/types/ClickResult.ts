@@ -1,7 +1,7 @@
 /**
  * Retorno do onClick/onSubmit do componente pai.
  * - success: define se a ação foi bem sucedida
- * - message: mensagem para exibir no próprio FormLogin
+ * - message: mensagem para exibir no próprio Form
  * - color: cor opcional para a mensagem (caso queira sobrescrever as cores padrão)
  */
 export interface ClickResult {

@@ -286,8 +286,8 @@ const RecaptchaForm: React.FC<RecaptchaFormProps> = ({
           id="mensagem"
           label="Mensagem"
           placeholder="Mensagem"  
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
+          value={mensagem}
+          onChange={(e) => setMensagem(e.target.value)}
           background={backgroundField}
           backgroundFocused={bgFocused}
           colorFocused={bdFocused}
