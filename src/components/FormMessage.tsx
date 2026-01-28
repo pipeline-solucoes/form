@@ -9,7 +9,7 @@ import { validateEmailMessage } from '../utils/validateEmail';
 import TextFieldValidate from './TextFieldValidate';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
 import { DivTitulo, FormContainer, StyledRoot } from './StyleForm';
-import { validateTelefoneMessage } from '@/utils/validateTelefone';
+import { validateTelefoneMessage } from '../utils/validateTelefone';
 import { ClickResult } from '../types/ClickResult';
 
 
@@ -33,101 +33,251 @@ export interface FormMessageProps extends
 }
 
 /**
- * Componente de formulário de mensagem, com suporte a:
- * validação básica de campos, exibição de mensagens de sucesso/erro
- * e customização visual via props ou tema.
+ * Componente de formulário para envio de mensagem (contato), com campos controlados internamente
+ * (**nome**, **email**, **telefone** e **mensagem**) e submissão via callback assíncrono (`onClick`).
  *
- * @param {React.ElementType<SvgIconProps>} [Icon] Ícone exibido no topo do formulário.
- * 
- * @param {() => React.ReactElement} [titulo] Função que retorna o título do formulário.
- * 
- * @param {string} [textButton='Enviar'] Texto exibido no botão principal de submit.
- * @param {TypographyVariant} [variantButton='body1'] Variante tipográfica usada nos textos do botão e links.
- *  
- * @param {React.ReactNode} [children] Conteúdo adicional renderizado abaixo do formulário.
- * 
- * @param {string} [background] Cor de fundo do container principal do formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.
+ * Funcionalidades principais:
+ * - Renderiza campos de texto com validação (via `TextFieldValidate`) e feedback de erro ao usuário.
+ * - Validação local mínima para **email** antes de disparar o `onClick`.
+ * - Exibe mensagem de retorno (sucesso/erro) após execução do `onClick`, com cor configurável.
+ * - Suporta cabeçalho opcional com ícone (`Icon`) e título customizado (`titulo`).
+ * - Permite conteúdo adicional via `children` abaixo do feedback do formulário.
  *
- * @param {string | number} [borderRadius] Raio da borda do container principal do formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.
+ * Tokens de estilo (ordem de prioridade):
+ * - Container do formulário (`StyledRoot`):
+ *   - `background` → `theme.pipelinesolucoes.forms.background` → `'transparent'`
+ *   - `borderRadius` → `theme.pipelinesolucoes.forms.borderRadius` → `'0'`
+ *   - `border` → `theme.pipelinesolucoes.forms.border` → `'0'`
+ *   - `boxShadow` → `theme.pipelinesolucoes.forms.boxShadow` → `'none'`
+ *   - `maxWidth` → *(sem token de theme neste componente)* → *(comportamento do styled component)*
+ * - Campos (`TextFieldValidate`), aplicados igualmente a todos os campos:
+ *   - `backgroundField` → `theme.pipelinesolucoes.forms.field.background` → `undefined`
+ *   - `colorField` → `theme.pipelinesolucoes.forms.field.color` → `undefined`
+ *   - `borderRadiusField` → `theme.pipelinesolucoes.forms.field.borderRadius` → `undefined`
+ *   - `boxShadowField` → `theme.pipelinesolucoes.forms.field.boxShadow` → `undefined`
+ *   - `borderColorField` → `theme.pipelinesolucoes.forms.field.borderColor` → `undefined`
+ *   - `paddingField` → `theme.pipelinesolucoes.forms.field.padding` → `undefined`
+ *   - `marginField` → `theme.pipelinesolucoes.forms.field.margin` → `undefined`
+ *   - `heightField` → `theme.pipelinesolucoes.forms.field.height` → `undefined`
+ * - Botão (`ButtonFormStyled`):
+ *   - `backgroundButton` → `theme.pipelinesolucoes.forms.button.background` → `undefined`
+ *   - `backgroundHoverButton` → `theme.pipelinesolucoes.forms.button.backgroundHover` → `undefined`
+ *   - `colorButton` → `theme.pipelinesolucoes.forms.button.color` → `undefined`
+ *   - `colorHoverButton` → `theme.pipelinesolucoes.forms.button.colorHover` → `undefined`
+ *   - `borderRadiusButton` → `theme.pipelinesolucoes.forms.button.borderRadius` → `undefined`
+ *   - `boxShadowButton` → `theme.pipelinesolucoes.forms.button.boxShadow` → `undefined`
+ *   - `paddingButton` → `theme.pipelinesolucoes.forms.button.padding` → `undefined`
+ *   - `borderButton` → *(prop do componente)* → `'none'`
+ *   - `widthButton` → *(prop do componente)* → `'auto'`
+ *   - `heightButton` → *(prop do componente)* → `'auto'`
+ *   - `marginButton` → *(prop do componente)* → `'0'`
  *
- * @param {string} [border] Borda do container principal do formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.
+ * Tipografia:
+ * - O texto do botão é renderizado com `Typography` do Material UI.
+ * - Ordem de prioridade:
+ *   - `variantButton` → *(fallback interno)* `'body1'`
+ * - Observação: `variantButton` aceita qualquer `TypographyVariant` compatível com o theme do Material UI.
  *
- * @param {string} [boxShadow] Sombra do container principal do formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.
- * 
- * @param {string} [maxWidth] Largura Máxima do container principal do formulário.
+ * @param {import('@mui/material/styles').TypographyVariant} [variantButton]
+ * Variante tipográfica do texto do botão (`Typography variant`).  
+ * Ordem: `variantButton` → `'body1'`.
  *
- * @param {string} [backgroundField] Cor de fundo dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {string} [textButton]
+ * Texto exibido no botão quando não está carregando.  
+ * Padrão: `'Enviar'`.
  *
- * @param {string} [colorField] Cor do texto dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {number} [rowsMessage]
+ * Número de linhas do campo **Mensagem** quando `multiline` está ativo.  
+ * Padrão: `5`.
  *
- * @param {string | number} [borderRadiusField] Raio da borda dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {React.ElementType<import('@mui/material').SvgIconProps>} [Icon]
+ * Componente de ícone (ex.: `EmailOutlined`, `ChatOutlined`) renderizado no cabeçalho do formulário.
+ * Renderizado apenas quando fornecido.
  *
- * @param {string} [boxShadowField] Sombra aplicada aos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {() => React.ReactElement} [titulo]
+ * Função que retorna o elemento React usado como título no cabeçalho do formulário.
+ * Renderizado apenas quando fornecido.
  *
- * @param {string} [borderColorField] Cor da borda dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {React.ReactNode} [children]
+ * Conteúdo adicional renderizado ao final do componente (abaixo da mensagem de feedback da API).
  *
- * @param {string | number} [paddingField] Espaçamento interno dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
+ * @param {(data: { nome: string; email: string; telefone: string; mensagem: string; }) => (Promise<import('../types/ClickResult').ClickResult> | import('../types/ClickResult').ClickResult)} [onClick]
+ * Callback acionado ao clicar no botão (submissão). Recebe os valores atuais dos campos do formulário.
+ * - Se ausente, o componente exibe a mensagem: **"Nenhuma ação foi configurada para o botão."**
+ * - Se retornar `{ success: true }`, exibe `message` com cor `color` (ou `theme.palette.success.main` como fallback).
+ * - Se retornar `{ success: false }`, exibe `message` com cor `color` (ou `theme.palette.error.main` como fallback).
+ * - Em exceção (`throw`), exibe: **"Erro inesperado ao processar a solicitação."** com `theme.palette.error.main`.
  *
- * @param {string | number} [marginField] Margem externa dos campos de formulário.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.field.
- * 
- * @param {string} [textButton='Enviar'] Texto exibido no botão principal do formulário.
+ * Estilo / Aparência:
+ * @param {import('@pipelinesolucoes/theme').ColorProps['background']} [background]
+ * Background do container do formulário.  
+ * Ordem: `background` → `theme.pipelinesolucoes.forms.background` → `'transparent'`.
  *
- * @param {TypographyVariant} [variantButton='body1'] Variante tipográfica utilizada no texto do botão e links.
+ * @param {import('@pipelinesolucoes/theme').BorderProps['borderRadius']} [borderRadius]
+ * Raio de borda do container do formulário.  
+ * Ordem: `borderRadius` → `theme.pipelinesolucoes.forms.borderRadius` → `'0'`.
  *
- * @param {string} [backgroundButton] Cor de fundo do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@pipelinesolucoes/theme').BorderProps['border']} [border]
+ * Borda do container do formulário.  
+ * Ordem: `border` → `theme.pipelinesolucoes.forms.border` → `'0'`.
  *
- * @param {string} [backgroundHoverButton] Cor de fundo do botão ao passar o mouse.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@pipelinesolucoes/theme').LayoutProps['boxShadow']} [boxShadow]
+ * Sombra do container do formulário.  
+ * Ordem: `boxShadow` → `theme.pipelinesolucoes.forms.boxShadow` → `'none'`.
  *
- * @param {string} [colorButton] Cor do texto do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@pipelinesolucoes/theme').LayoutProps['maxWidth']} [maxWidth]
+ * Largura máxima do container do formulário. *(Sem token de theme aplicado diretamente neste componente.)*
  *
- * @param {string} [colorHoverButton] Cor do texto do botão ao passar o mouse.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['backgroundField']} [backgroundField]
+ * Background aplicado aos campos (`TextFieldValidate`).  
+ * Ordem: `backgroundField` → `theme.pipelinesolucoes.forms.field.background` → `undefined`.
  *
- * @param {string | number} [borderRadiusButton] Raio da borda do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['colorField']} [colorField]
+ * Cor do texto aplicada aos campos (`TextFieldValidate`).  
+ * Ordem: `colorField` → `theme.pipelinesolucoes.forms.field.color` → `undefined`.
  *
- * @param {string} [borderButton='none'] Borda do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['borderRadiusField']} [borderRadiusField]
+ * Raio de borda aplicado aos campos (`TextFieldValidate`).  
+ * Ordem: `borderRadiusField` → `theme.pipelinesolucoes.forms.field.borderRadius` → `undefined`.
  *
- * @param {string} [boxShadowButton] Sombra aplicada ao botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['boxShadowField']} [boxShadowField]
+ * Sombra aplicada aos campos (`TextFieldValidate`).  
+ * Ordem: `boxShadowField` → `theme.pipelinesolucoes.forms.field.boxShadow` → `undefined`.
  *
- * @param {string | number} [widthButton='auto'] Largura do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['borderColorField']} [borderColorField]
+ * Cor da borda aplicada aos campos (`TextFieldValidate`).  
+ * Ordem: `borderColorField` → `theme.pipelinesolucoes.forms.field.borderColor` → `undefined`.
  *
- * @param {string | number} [heightButton='auto'] Altura do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['paddingField']} [paddingField]
+ * Padding aplicado aos campos (`TextFieldValidate`).  
+ * Ordem: `paddingField` → `theme.pipelinesolucoes.forms.field.padding` → `undefined`.
  *
- * @param {string | number} [paddingButton] Espaçamento interno do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
+ * @param {import('@/types/FieldProps').FieldProps['marginField']} [marginField]
+ * Margem aplicada aos campos (`TextFieldValidate`).  
+ * Ordem: `marginField` → `theme.pipelinesolucoes.forms.field.margin` → `undefined`.
  *
- * @param {string | number} [marginButton='0'] Margem externa do botão.
- * Opcional. Caso não seja informado, será utilizada a configuração definida no theme.pipelinesolucoes.forms.button.
-
-
+ * @param {import('@/types/FieldProps').FieldProps['heightField']} [heightField]
+ * Altura aplicada aos campos (`TextFieldValidate`).  
+ * Ordem: `heightField` → `theme.pipelinesolucoes.forms.field.height` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['backgroundButton']} [backgroundButton]
+ * Background do botão.  
+ * Ordem: `backgroundButton` → `theme.pipelinesolucoes.forms.button.background` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['backgroundHoverButton']} [backgroundHoverButton]
+ * Background do botão em hover.  
+ * Ordem: `backgroundHoverButton` → `theme.pipelinesolucoes.forms.button.backgroundHover` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['colorButton']} [colorButton]
+ * Cor do texto do botão.  
+ * Ordem: `colorButton` → `theme.pipelinesolucoes.forms.button.color` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['colorHoverButton']} [colorHoverButton]
+ * Cor do texto do botão em hover.  
+ * Ordem: `colorHoverButton` → `theme.pipelinesolucoes.forms.button.colorHover` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['borderRadiusButton']} [borderRadiusButton]
+ * Raio de borda do botão.  
+ * Ordem: `borderRadiusButton` → `theme.pipelinesolucoes.forms.button.borderRadius` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['borderButton']} [borderButton]
+ * Borda do botão.  
+ * Ordem: `borderButton` → `'none'`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['boxShadowButton']} [boxShadowButton]
+ * Sombra do botão.  
+ * Ordem: `boxShadowButton` → `theme.pipelinesolucoes.forms.button.boxShadow` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['widthButton']} [widthButton]
+ * Largura do botão.  
+ * Ordem: `widthButton` → `'auto'`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['heightButton']} [heightButton]
+ * Altura do botão.  
+ * Ordem: `heightButton` → `'auto'`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['paddingButton']} [paddingButton]
+ * Padding do botão.  
+ * Ordem: `paddingButton` → `theme.pipelinesolucoes.forms.button.padding` → `undefined`.
+ *
+ * @param {import('../types/ButtonProps').ButtonProps['marginButton']} [marginButton]
+ * Margem do botão.  
+ * Ordem: `marginButton` → `'0'`.
+ *
+ * Validação:
+ * - Email: validação local por regex simples (`/\S+@\S+\.\S+/`) antes de executar `onClick`.
+ * - Campos: cada `TextFieldValidate` recebe `required` e `showErrorOn="blur"`, além de validações específicas:
+ *   - `validateEmailMessage` para email.
+ *   - `validateTelefoneMessage` para telefone.
+ *
+ * Eventos:
+ * - Clique no botão: dispara `handleClick`, que:
+ *   - Prevê `preventDefault()` no evento de formulário.
+ *   - Bloqueia envio se email inválido e exibe mensagem padrão de erro.
+ *   - Desabilita o botão enquanto `isLoading` estiver `true`, exibindo "Enviando...".
+ *
  * @example
  * ```tsx
- * const Example = () => {
+ * import FormMessage from './FormMessage';
+ * import EmailOutlined from '@mui/icons-material/EmailOutlined';
+ *
+ * export function Contato() {
  *   return (
- *     <FormBrevo/>
+ *     <FormMessage
+ *       Icon={EmailOutlined}
+ *       titulo={() => <strong>Fale conosco</strong>}
+ *       textButton="Enviar mensagem"
+ *       variantButton="body2"
+ *       rowsMessage={6}
+ *       onClick={async ({ nome, email, telefone, mensagem }) => {
+ *         // Exemplo: chamada de API
+ *         const ok = Boolean(nome && email && telefone && mensagem);
+ *         return ok
+ *           ? { success: true, message: 'Mensagem enviada com sucesso!' }
+ *           : { success: false, message: 'Não foi possível enviar a mensagem.' };
+ *       }}
+ *     >
+ *       <small>Responderemos em até 1 dia útil.</small>
+ *     </FormMessage>
  *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Exemplo de configuração no theme (Pipeline)
+ * const theme = {
+ *   pipelinesolucoes: {
+ *     forms: {
+ *       background: 'transparent',
+ *       borderRadius: '8px',
+ *       border: '1px solid rgba(0,0,0,0.12)',
+ *       boxShadow: 'none',
+ *       field: {
+ *         background: '#fff',
+ *         color: '#111',
+ *         borderRadius: '8px',
+ *         borderColor: 'rgba(0,0,0,0.23)',
+ *         boxShadow: 'none',
+ *         padding: '12px',
+ *         margin: '0 0 12px 0',
+ *         height: '48px',
+ *       },
+ *       button: {
+ *         background: '#111',
+ *         backgroundHover: '#222',
+ *         color: '#fff',
+ *         colorHover: '#fff',
+ *         borderRadius: '8px',
+ *         boxShadow: 'none',
+ *         padding: '12px 16px',
+ *       },
+ *     },
+ *   },
  * };
  * ```
  */
+
 
 const FormMessage: React.FC<FormMessageProps> = ({
     
