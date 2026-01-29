@@ -3,7 +3,7 @@ import { Box, styled } from "@mui/material";
 export const FormContainer = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
+  gap: '8px',
   width: '100%',
   margin: 'auto',
   padding: '0px',
