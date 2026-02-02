@@ -92,6 +92,13 @@ export const TextFieldStyled = styled(TextField, {
         ...(padding ? { padding } : {}),
         ...(typo ?? {}),
 
+        // ✅ deixa multiline (rows=1) com o mesmo "feeling" do input
+        boxSizing: "border-box",
+        display: "block",
+        overflow: "hidden",
+        resize: "none",
+        lineHeight: (typo as any)?.lineHeight ?? "inherit",
+
         // (opcional) caso algum ambiente aplique autofill em textarea
         "&:-webkit-autofill": {
           WebkitBoxShadow: `0 0 0 1000px ${background ?? "transparent"} inset`,
