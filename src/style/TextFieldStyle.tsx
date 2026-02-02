@@ -5,7 +5,7 @@ import { PipelineSolucoesTypographyTokens } from "@pipelinesolucoes/theme";
 export const TextFieldStyled = styled(TextField, {
   shouldForwardProp: (prop) =>
     ![
-      "background",      
+      "background",
       "backgroundDisabled",
       "colorText",
       "backgroundFocused",
@@ -47,7 +47,7 @@ export const TextFieldStyled = styled(TextField, {
     padding,
     typo,
     height,
-    marginField
+    marginField,
   }) => ({
     borderRadius,
     boxShadow,
@@ -60,18 +60,51 @@ export const TextFieldStyled = styled(TextField, {
       background,
       borderRadius,
       boxShadow,
-      height,      
+      height,
 
-      "& .MuiInputBase-input": { 
-        margin: marginField, 
-        ...(padding ? { padding } : {}),           
+      "& .MuiInputBase-input": {
+        margin: marginField,
+        ...(padding ? { padding } : {}),
         ...(typo ?? {}),
+
+        // ✅ Autofill (Chrome/Edge): mantém exatamente o background e a cor definidos por props
+        "&:-webkit-autofill": {
+          WebkitBoxShadow: `0 0 0 1000px ${background ?? "transparent"} inset`,
+          WebkitTextFillColor: colorText ?? "inherit",
+          caretColor: colorText ?? "inherit",
+        },
+        "&:-webkit-autofill:hover": {
+          WebkitBoxShadow: `0 0 0 1000px ${background ?? "transparent"} inset`,
+          WebkitTextFillColor: colorText ?? "inherit",
+          caretColor: colorText ?? "inherit",
+        },
+        "&:-webkit-autofill:focus": {
+          WebkitBoxShadow: `0 0 0 1000px ${
+            (backgroundFocused ?? background) ?? "transparent"
+          } inset`,
+          WebkitTextFillColor: (colorFocused ?? colorText) ?? "inherit",
+          caretColor: (colorFocused ?? colorText) ?? "inherit",
+        },
       },
 
       "& textarea.MuiInputBase-input": {
-        margin: marginField, 
-        ...(padding ? { padding } : {}),        
+        margin: marginField,
+        ...(padding ? { padding } : {}),
         ...(typo ?? {}),
+
+        // (opcional) caso algum ambiente aplique autofill em textarea
+        "&:-webkit-autofill": {
+          WebkitBoxShadow: `0 0 0 1000px ${background ?? "transparent"} inset`,
+          WebkitTextFillColor: colorText ?? "inherit",
+          caretColor: colorText ?? "inherit",
+        },
+        "&:-webkit-autofill:focus": {
+          WebkitBoxShadow: `0 0 0 1000px ${
+            (backgroundFocused ?? background) ?? "transparent"
+          } inset`,
+          WebkitTextFillColor: (colorFocused ?? colorText) ?? "inherit",
+          caretColor: (colorFocused ?? colorText) ?? "inherit",
+        },
       },
 
       "& .MuiOutlinedInput-notchedOutline": {
