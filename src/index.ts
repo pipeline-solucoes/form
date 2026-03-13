@@ -19,3 +19,4 @@ export * from './utils/validateCpf';
 export * from './utils/formatCpf';
 export * from './utils/formatCEP';
 export * from './services/SendFormBrevo';
+export * from './types/OptionEstadosBrasil';

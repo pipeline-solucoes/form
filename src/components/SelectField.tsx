@@ -1,23 +1,40 @@
 'use client';
 
 import React from 'react';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, FormHelperText, Typography } from '@mui/material';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  FormHelperText,
+  Typography,
+  Divider,
+} from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { TypographyProps } from '@mui/material/Typography';
 import { BorderProps, ColorProps, LayoutProps } from '@pipelinesolucoes/theme';
-import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbcolorFocused, fbheigth, fbpadding } from '../constant';
+import {
+  fbbackground,
+  fbborderColor,
+  fbborderRadius,
+  fbboxShadow,
+  fbcolor,
+  fbcolorFocused,
+  fbheigth,
+  fbpadding,
+} from '../constant';
 
 export interface SelectFieldOption {
   value: string | number;
   label: string;
 }
 
-interface SelectFieldProps 
+interface SelectFieldProps
   extends
-    Omit<ColorProps, 'backgroundHover' | 'colorHover'>, 
-    Omit<BorderProps, 'border' >, 
+    Omit<ColorProps, 'backgroundHover' | 'colorHover'>,
+    Omit<BorderProps, 'border'>,
     Pick<LayoutProps, 'height' | 'padding' | 'width' | 'margin'> {
-
   id?: string;
   label?: string;
   placeholder?: string;
@@ -29,21 +46,31 @@ interface SelectFieldProps
   helperText?: string;
   helperTextColor?: string;
 
-  options: SelectFieldOption[];  
+  options: SelectFieldOption[];
   onChange: (value: string | number) => void;
+
+  menuMaxHeight?: string | number;
+  menuWidth?: string | number;
+  menuItemHeight?: string | number;
+  showClearAction?: boolean;
+  clearLabel?: string;
+  onClear?: () => void;
 }
 
 const StyledWrapper = styled('div', {
   shouldForwardProp: (prop) => !['width', 'margin'].includes(prop as string),
-})<{width: string; margin: string}>(({ width, margin }) => ({
-
-  width: width,
-  margin: margin,
+})<{
+  width: string | number;
+  margin: string | number;
+}>(({ width, margin }) => ({
+  width,
+  margin,
 }));
 
 const StyledFormControl = styled(FormControl, {
   shouldForwardProp: (prop) =>
-    !['height',
+    ![
+      'height',
       'padding',
       'background',
       'borderRadius',
@@ -52,18 +79,18 @@ const StyledFormControl = styled(FormControl, {
       'colorText',
     ].includes(prop as string),
 })<{
-    height: string; 
-    padding: string; 
-    background: string; 
-    borderRadius: string; 
-    boxShadow: string; 
-    borderColor: string; 
-    colorText: string;
+  height: string | number;
+  padding: string | number;
+  background: string;
+  borderRadius: string | number;
+  boxShadow: string;
+  borderColor: string;
+  colorText: string;
 }>(({ height, padding, background, borderRadius, boxShadow, borderColor, colorText }) => ({
   width: '100%',
 
   '& .MuiOutlinedInput-root': {
-    height: height,
+    height,
     background: background ?? fbbackground,
     borderRadius: borderRadius ?? fbborderRadius,
     boxShadow: boxShadow ?? fbboxShadow,
@@ -94,56 +121,86 @@ const StyledFormControl = styled(FormControl, {
   },
 }));
 
+const StyledMenuItem = styled(MenuItem, {
+  shouldForwardProp: (prop) => !['menuItemHeight', 'colorText'].includes(prop as string),
+})<{
+  menuItemHeight: string | number;
+  colorText: string;
+}>(({ menuItemHeight, colorText }) => ({
+  minHeight: menuItemHeight,
+  height: menuItemHeight,
+  color: colorText,
+
+  '& .MuiTypography-root': {
+    color: colorText,
+    width: '100%',
+  },
+}));
+
 /**
- * ComboBox baseado no Material UI, sem validação e sem máscaras,
- * permitindo customização visual e controle completo do valor selecionado.
+ * Componente de seleção baseado no Material UI, com suporte a customização visual,
+ * controle do valor selecionado, limite de altura do menu com scroll automático
+ * e ação opcional para limpar a opção selecionada.
  *
- * @param {string} [id] Identificador único do campo (usado para acessibilidade).
- * @param {ComboBoxOption[]} options Lista de opções exibidas no ComboBox.
- * @param {string | number} value Valor selecionado.
- * @param {(value: string | number) => void} onChange Callback disparado ao selecionar uma opção.
+ * @param {string} [id] Identificador único do campo para acessibilidade.
  * @param {string} [label] Texto do rótulo do campo.
- * @param {string} [placeholder] Texto exibido quando nenhum valor está selecionado.
+ * @param {string} [placeholder] Texto exibido quando nenhuma opção estiver selecionada.
+ * @param {string | number} [value] Valor atualmente selecionado.
+ * @param {boolean} [disabled=false] Define se o campo estará desabilitado.
+ * @param {TypographyProps['variant']} [variant='body1'] Variante tipográfica aplicada ao label, valor, opções e helperText.
  * @param {string} [helperText] Texto auxiliar exibido abaixo do campo.
- * @param {string} [helperTextColor] Cor do helperText. Se não for informada, usa a cor de erro do theme.
- * @param {TypographyProps['variant']} [variant='body1'] Variante da tipografia aplicada ao label, valor, opções e helperText.
+ * @param {string} [helperTextColor] Cor do texto auxiliar.
+ * @param {SelectFieldOption[]} options Lista de opções exibidas no menu.
+ * @param {(value: string | number) => void} onChange Callback disparado ao selecionar uma opção.
  * @param {string | number} [width='100%'] Largura do componente.
- * @param {string | number} [height='auto'] Altura do campo.
- * @param {string | number} [containerMargin=0] Margem externa do container.
- * @param {string | number} [padding=0] Padding interno do texto selecionado.
- * @param {string} [background='transparent'] Cor de fundo do campo e do menu aberto.
- * @param {string} [colorText='#000'] Cor do texto (label, valor selecionado e itens).
- * @param {string | number} [borderRadius=4] Raio da borda.
- * @param {string} [boxShadow='none'] Sombra do campo.
- * @param {string} [borderColor='#c4c4c4'] Cor da borda.
- * @param {boolean} [disabled=false] Desabilita o campo.
+ * @param {string | number} [height] Altura do campo.
+ * @param {string | number} [padding] Espaçamento interno do valor selecionado.
+ * @param {string | number} [margin='0'] Margem externa do componente.
+ * @param {string} [background] Cor de fundo do campo e do menu.
+ * @param {string} [color] Cor do texto do campo e das opções.
+ * @param {string} [colorFocused] Cor aplicada ao estado focado da borda.
+ * @param {string} [colorDisabled] Cor de texto no estado desabilitado.
+ * @param {string} [backgroundDisabled] Cor de fundo no estado desabilitado.
+ * @param {string | number} [borderRadius] Raio da borda do campo.
+ * @param {string} [boxShadow] Sombra aplicada ao campo.
+ * @param {string} [borderColor] Cor da borda do campo.
+ * @param {string | number} [menuMaxHeight=240] Altura máxima da caixa de opções. Quando excedida, o scroll vertical é exibido automaticamente.
+ * @param {string | number} [menuWidth='auto'] Largura da caixa de opções.
+ * @param {string | number} [menuItemHeight=40] Altura de cada item da lista de opções.
+ * @param {boolean} [showClearAction=false] Define se deve exibir a ação para limpar a opção selecionada.
+ * @param {string} [clearLabel='Limpar seleção'] Texto exibido na ação de limpar seleção.
+ * @param {() => void} [onClear] Callback disparado ao limpar a opção selecionada.
  *
  * @example
  * ```tsx
- * import { ComboBox } from '@/components/ComboBox';
+ * import { SelectField } from '@/components/SelectField';
  *
- * const Example = () => (
- *   <ComboBox
- *     id="category"
- *     label="Categoria"
- *     placeholder="Selecione uma opção"
- *     helperText="Campo obrigatório"
- *     helperTextColor="warning.main"
- *     variant="body2"
- *     background="#111"
- *     colorText="#fff"
- *     options={[
- *       { value: 1, label: 'Frontend' },
- *       { value: 2, label: 'Backend' },
- *     ]}
- *     value={1}
- *     onChange={(v) => console.log(v)}
- *     width={320}
- *     containerMargin="16px 0"
- *     padding="12px"
- *     borderRadius={12}
- *   />
- * );
+ * const Example = () => {
+ *   const [value, setValue] = React.useState<string | number>('');
+ *
+ *   return (
+ *     <SelectField
+ *       id="category"
+ *       label="Categoria"
+ *       placeholder="Selecione uma opção"
+ *       value={value}
+ *       onChange={setValue}
+ *       options={[
+ *         { value: 1, label: 'Frontend' },
+ *         { value: 2, label: 'Backend' },
+ *         { value: 3, label: 'DevOps' },
+ *         { value: 4, label: 'Product' },
+ *       ]}
+ *       width={320}
+ *       menuWidth={320}
+ *       menuMaxHeight={220}
+ *       menuItemHeight={44}
+ *       showClearAction
+ *       clearLabel="Remover seleção"
+ *       onClear={() => setValue('')}
+ *     />
+ *   );
+ * };
  * ```
  */
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -161,10 +218,10 @@ const SelectField: React.FC<SelectFieldProps> = ({
   boxShadow,
   borderColor,
 
-  width="100%",
+  width = '100%',
   height,
   padding,
-  margin='0',
+  margin = '0',
 
   disabled = false,
   variant = 'body1',
@@ -173,57 +230,68 @@ const SelectField: React.FC<SelectFieldProps> = ({
   helperTextColor,
   options,
   onChange,
-  
-  
+
+  menuMaxHeight = 240,
+  menuWidth = 'auto',
+  menuItemHeight = 40,
+  showClearAction = false,
+  clearLabel = 'Limpar seleção',
+  onClear,
 }) => {
-
-
   const labelId = id ? `${id}-label` : undefined;
   const shouldShrinkLabel = Boolean(value) || Boolean(placeholder);
 
-  const handleChange = (event: SelectChangeEvent<string>, _child: React.ReactNode) => {
+  const handleChange = (event: SelectChangeEvent<string>) => {
     const raw = event.target.value;
     const matched = options.find((opt) => String(opt.value) === raw);
+
     onChange(matched ? matched.value : raw);
   };
 
-  const theme = useTheme(); 
+  const handleClearSelection = () => {
+    onChange('');
+    if (onClear) {
+      onClear();
+    }
+  };
+
+  const theme = useTheme();
   const field = theme.pipelinesolucoes?.forms?.field;
 
   const bg = background ?? field?.background ?? '#fff';
   const txt = color ?? field?.color ?? '#000';
 
-  const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? "#E5E7EB";
-  const txtDisabled = colorDisabled ?? field?.colorDisabled ?? "#9CA3AF";
+  const bgDisabled = backgroundDisabled ?? field?.backgroundDisabled ?? '#E5E7EB';
+  const txtDisabled = colorDisabled ?? field?.colorDisabled ?? '#9CA3AF';
   const bdFocused = colorFocused ?? field?.colorFocused ?? '#1976d2';
 
-  const br = borderRadius ?? field?.borderRadius ?? "0";
-  const sh = boxShadow ?? field?.boxShadow ?? "none";
+  const br = borderRadius ?? field?.borderRadius ?? '0';
+  const sh = boxShadow ?? field?.boxShadow ?? 'none';
   const bd = borderColor ?? field?.borderColor ?? '#ccc';
 
   const pad = padding ?? field?.padding ?? '4px 8px';
-  const mg = margin ?? field?.margin ?? '0'; 
+  const mg = margin ?? field?.margin ?? '0';
   const hg = height ?? field?.height ?? fbheigth;
+
+  const hasSelectedValue = value !== undefined && value !== null && String(value) !== '';
 
   return (
     <StyledWrapper width={width} margin={mg}>
-
-      <StyledFormControl        
+      <StyledFormControl
         id={id}
         disabled={disabled}
-        variant="outlined"                     
-        background={bg} 
+        variant="outlined"
+        background={disabled ? bgDisabled : bg}
         borderRadius={br}
         boxShadow={sh}
-        borderColor={bd}
-        colorText={txt}
-        height={hg} 
+        borderColor={bdFocused ? bd : bd}
+        colorText={disabled ? txtDisabled : txt}
+        height={hg}
         padding={pad}
       >
-
         {label && (
           <InputLabel id={labelId} htmlFor={id} shrink={shouldShrinkLabel}>
-            <Typography variant={variant} sx={{ color: txt }}>
+            <Typography variant={variant} sx={{ color: disabled ? txtDisabled : txt }}>
               {label}
             </Typography>
           </InputLabel>
@@ -240,6 +308,16 @@ const SelectField: React.FC<SelectFieldProps> = ({
             PaperProps: {
               sx: {
                 backgroundColor: bg,
+                width: menuWidth,
+                maxHeight: menuMaxHeight,
+                overflowY: 'auto',
+              },
+            },
+            MenuListProps: {
+              sx: {
+                padding: 0,
+                maxHeight: menuMaxHeight,
+                overflowY: 'auto',
               },
             },
           }}
@@ -254,15 +332,48 @@ const SelectField: React.FC<SelectFieldProps> = ({
 
             const option = options.find((opt) => String(opt.value) === selected);
 
-            return <Typography variant={variant}>{option?.label ?? ''}</Typography>;
+            return (
+              <Typography variant={variant} sx={{ color: disabled ? txtDisabled : txt }}>
+                {option?.label ?? ''}
+              </Typography>
+            );
+          }}
+          sx={{
+            '& .MuiSelect-icon': {
+              color: disabled ? txtDisabled : txt,
+            },
+            '&.Mui-disabled': {
+              backgroundColor: bgDisabled,
+              color: txtDisabled,
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: bdFocused,
+            },
           }}
         >
+          {showClearAction && hasSelectedValue && (
+            <div>
+              <StyledMenuItem
+                onClick={handleClearSelection}
+                value=""
+                menuItemHeight={menuItemHeight}
+                colorText={txt}
+              >
+                <Typography variant={variant}>{clearLabel}</Typography>
+              </StyledMenuItem>
+              <Divider />
+            </div>
+          )}
+
           {options.map((option) => (
-            <MenuItem key={option.value} value={String(option.value)}>
-              <Typography variant={variant} sx={{ color: txt }}>
-                {option.label}
-              </Typography>
-            </MenuItem>
+            <StyledMenuItem
+              key={option.value}
+              value={String(option.value)}
+              menuItemHeight={menuItemHeight}
+              colorText={txt}
+            >
+              <Typography variant={variant}>{option.label}</Typography>
+            </StyledMenuItem>
           ))}
         </Select>
 
@@ -273,7 +384,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
             </Typography>
           </FormHelperText>
         )}
-
       </StyledFormControl>
     </StyledWrapper>
   );
