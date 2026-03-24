@@ -393,6 +393,11 @@ const FormMessage: React.FC<FormMessageProps> = ({
       if (result?.success) {
         setCorMensagemApi(result.color ?? color_message_sucess);
         setMensagemApi(result.message);
+
+        setNome('');
+        setTelefone('');
+        setEmail('');
+        setMensagem('');
       } else {
         setCorMensagemApi(result.color ?? color_message_erro);
         setMensagemApi(result?.message ?? 'Falha ao realizar a operação.');
