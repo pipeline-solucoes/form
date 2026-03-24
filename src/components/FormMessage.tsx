@@ -358,6 +358,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
+  const [formKey, setFormKey] = useState(0);
 
   const handleClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -392,12 +393,13 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
       if (result?.success) {
         setCorMensagemApi(result.color ?? color_message_sucess);
-        setMensagemApi(result.message);
-
+        setMensagemApi(result.message);        
         setNome('');
         setTelefone('');
         setEmail('');
         setMensagem('');
+        setErrors({});
+        setFormKey(prev => prev + 1);
       } else {
         setCorMensagemApi(result.color ?? color_message_erro);
         setMensagemApi(result?.message ?? 'Falha ao realizar a operação.');
@@ -405,7 +407,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
     } catch (err) {
       setCorMensagemApi(color_message_erro);
       setMensagemApi('Erro inesperado ao processar a solicitação.');
-    } finally {
+    } finally {      
       setIsLoading(false);
     }
   };
@@ -419,7 +421,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         </DivTitulo>
       )}
 
-      <FormContainer>
+      <FormContainer key={formKey}>
         
         <TextFieldValidate
             id="nome"
