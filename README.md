@@ -44,6 +44,9 @@ A biblioteca inclui os seguintes componentes:
 
 - **NotificationSnackbar**
   Componente que exibe uma notificação no topo da tela utilizando o Snackbar e Alert do Material UI.  
+
+- **Field**
+  Componente que exibe label e valor apenas para leitura.
 ---
 
 ## ✨ Características

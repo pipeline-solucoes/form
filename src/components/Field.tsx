@@ -13,7 +13,7 @@ export interface FieldProps extends
 
   label: string;
   textVariantLabel?: TypographyVariant;
-  colorLabel: string;
+  colorLabel?: string;
 
   value?: string | number | null;
   textVariantField?: TypographyVariant;
@@ -78,7 +78,7 @@ const LabelStyle = styled(Box, {
 
 const Field: React.FC<FieldProps> = ({ 
   label, 
-  textVariantLabel,
+  textVariantLabel = 'caption',
   colorLabel,
 
   value, 
@@ -87,7 +87,7 @@ const Field: React.FC<FieldProps> = ({
   borderRadius,
   boxShadow,
   borderColor,    
-  textVariantField,
+  textVariantField = 'body1',
 
   padding,
   height,
@@ -118,7 +118,7 @@ const Field: React.FC<FieldProps> = ({
   const typoLabel =
     (textVariantLabel && theme.typography[textVariantLabel]) ??
     labelTheme?.typography ??
-    theme.typography.body1;
+    theme.typography.caption;
   const color_label = colorLabel ?? labelTheme?.color ?? fbcolor;
     
   return (
