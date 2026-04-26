@@ -6,13 +6,13 @@ export { default as NotificationSnackbar } from './components/NotificationSnackb
 
 export { default as SelectField } from './components/SelectField';
 export { default as ChipList } from './components/ChipList';
+export { default as Field } from './components/Field';
 
 export { default as TextFieldValidate } from './components/TextFieldValidate';
 export { default as TextFieldPassword } from './components/TextFieldPassword';
 export { default as TextFieldNumberValidate } from './components/TextFieldNumberValidate';
 export { default as TextFieldBirthDateWithAge } from './components/TextFieldBirthDateWithAge';
 export { default as TextFieldCPFValidate } from './components/TextFieldCPFValidate';
-export { default as Field } from './components/Field';
 
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';

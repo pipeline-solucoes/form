@@ -20,7 +20,10 @@ export const formThemeOptions: ThemeOptions = {
         boxShadow: "none",
         borderColor: "#ccc",
         padding: "4px 8px",
-      },                  
+      },  
+      label:{
+        color: "#000",
+      },                
       button: {
         background: "#216fed",
         backgroundHover: "#005ce3",

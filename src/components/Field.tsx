@@ -6,7 +6,7 @@ import { CSSObject, styled, TypographyVariant, useTheme } from '@mui/material/st
 import { BorderProps, ColorProps, LayoutProps, PipelineSolucoesTypographyTokens } from '@pipelinesolucoes/theme';
 import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbheigth, fbmargin, fbpadding } from '@/constant';
 
-interface FieldProps extends 
+export interface FieldProps extends 
       Omit<ColorProps, 'backgroundHover' | 'backgroundFocused' | 'backgroundDisabled'  | 'colorHover' | 'colorDisabled' | 'colorFocused'>, 
       Omit<BorderProps, 'border' >, 
       Pick<LayoutProps, 'height' | 'padding' | 'margin' | "maxWidth"> {
@@ -19,7 +19,7 @@ interface FieldProps extends
   textVariantField?: TypographyVariant;
 }
 
-export const StyledContainer = styled(Box, {
+const StyledContainer = styled(Box, {
   shouldForwardProp: (prop) =>
     ![
       'maxWidth',
@@ -63,7 +63,7 @@ export const StyledContainer = styled(Box, {
   })
 );
 
-export const LabelStyle = styled(Box, {
+const LabelStyle = styled(Box, {
   shouldForwardProp: (prop) =>
     !['color','typo',].includes(prop as string),
 })<{color?: string; 
@@ -133,6 +133,6 @@ const Field: React.FC<FieldProps> = ({
   );
 };
 
-Field.displayName = 'Field';
 
+Field.displayName = 'Field';
 export default Field;
