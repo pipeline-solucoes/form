@@ -3,13 +3,12 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { CSSObject, styled, TypographyVariant, useTheme } from '@mui/material/styles';
-import { BorderProps, ColorProps, LayoutProps, PipelineSolucoesTypographyTokens } from '@pipelinesolucoes/theme';
-import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbheigth, fbmargin, fbpadding } from '../constant';
+import { ColorProps, LayoutProps, PipelineSolucoesTypographyTokens } from '@pipelinesolucoes/theme';
+import { fbbackground, fbcolor } from '../constant';
 
 export interface FieldProps extends 
-      Omit<ColorProps, 'backgroundHover' | 'backgroundFocused' | 'backgroundDisabled'  | 'colorHover' | 'colorDisabled' | 'colorFocused'>, 
-      Omit<BorderProps, 'border' >, 
-      Pick<LayoutProps, 'width' | 'height' | 'padding' | 'margin' | "maxWidth"> {
+      Pick<ColorProps, 'background' | 'color'>, 
+      Pick<LayoutProps, 'width' | "maxWidth"> {
 
   label: string;
   textVariantLabel?: TypographyVariant;
@@ -22,19 +21,12 @@ export interface FieldProps extends
 
 const StyledContainer = styled(Box, {
   shouldForwardProp: (prop) =>
-    ![
-      'maxWidth', 'background', 'backgroundFocused', 'backgroundDisabled', 'color',
-      'borderRadius', 'boxShadow', 'borderColor', 'padding',
-      'height', 'width', 'margin',      
-    ].includes(prop as string),
-})<{maxWidth?: string; background?: string; color?: string; 
-  borderRadius?: string | number; boxShadow?: string; borderColor?: string;
-  padding?: string | number; margin?: string | number; 
-  height?: string | number; width?: string | number;
+    !['maxWidth', 'background', 'color', 'width'].includes(prop as string),
+})<{background?: string; color?: string; 
+  maxWidth?: string; width?: string | number;
   typo?: CSSObject | PipelineSolucoesTypographyTokens;
 }>(
-  ({maxWidth, background, color, borderRadius, boxShadow, borderColor,
-    padding, height, width, margin, typo, theme, }) => ({
+  ({maxWidth, background, color, width, typo, theme, }) => ({
 
     display: 'flex',
     flexDirection: 'column',  
@@ -43,12 +35,8 @@ const StyledContainer = styled(Box, {
     maxWidth: maxWidth || '100%',
     background: background || 'transparent',
     color: color || theme.palette.text.primary,
-    borderRadius: borderRadius ?? theme.shape.borderRadius,
-    boxShadow: boxShadow ?? 'none',
-    border: borderColor ? `1px solid ${borderColor}` : 'none',
-    padding: padding ?? theme.spacing(1),
-    height: height ?? 'auto',
-    margin: margin ?? 0,
+    height:'auto',
+    margin: 0,
     ...(typo ?? {}),
   })
 );
@@ -74,14 +62,8 @@ const Field: React.FC<FieldProps> = ({
   value, 
   background,
   color,
-  borderRadius,
-  boxShadow,
-  borderColor,    
   textVariantField = 'body1',
 
-  padding,
-  height,
-  margin,
   width='auto',
   maxWidth = '100%' }) => {
 
@@ -92,12 +74,6 @@ const Field: React.FC<FieldProps> = ({
   const field = theme.pipelinesolucoes?.forms?.field;
   const bg = background ?? field?.background ?? fbbackground;
   const txt = color ?? field?.color ?? fbcolor;
-  const br = borderRadius ?? field?.borderRadius ?? fbborderRadius;
-  const sh = boxShadow ?? field?.boxShadow ?? fbboxShadow;
-  const bd = borderColor ?? field?.borderColor ?? fbborderColor;
-  const pad = padding ?? field?.padding ?? fbpadding;
-  const mg = margin ?? field?.margin ?? fbmargin;  
-  const hg = height ?? field?.height ?? fbheigth; 
   
   const typoField =
     (textVariantField && theme.typography[textVariantField]) ??
@@ -113,12 +89,9 @@ const Field: React.FC<FieldProps> = ({
     
   return (
     <StyledContainer maxWidth={maxWidth} background={bg} 
-    color={txt} borderRadius={br} boxShadow={sh} borderColor={bd}
-    padding={pad} height={hg} margin={mg} typo={typoField} width={width}>
-    
+      color={txt} typo={typoField} width={width}>
       <LabelStyle typo={typoLabel} color={color_label}>{label}</LabelStyle>
       <div>{value ?? '-'}</div>
-
     </StyledContainer>
   );
 };
