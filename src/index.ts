@@ -12,6 +12,7 @@ export { default as TextFieldPassword } from './components/TextFieldPassword';
 export { default as TextFieldNumberValidate } from './components/TextFieldNumberValidate';
 export { default as TextFieldBirthDateWithAge } from './components/TextFieldBirthDateWithAge';
 export { default as TextFieldCPFValidate } from './components/TextFieldCPFValidate';
+export { default as Field } from './components/Field';
 
 export * from './utils/validateTelefone';
 export * from './utils/validateEmail';
