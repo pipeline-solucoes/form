@@ -4,12 +4,12 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { CSSObject, styled, TypographyVariant, useTheme } from '@mui/material/styles';
 import { BorderProps, ColorProps, LayoutProps, PipelineSolucoesTypographyTokens } from '@pipelinesolucoes/theme';
-import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbheigth, fbmargin, fbpadding } from '@/constant';
+import { fbbackground, fbborderColor, fbborderRadius, fbboxShadow, fbcolor, fbheigth, fbmargin, fbpadding } from '../constant';
 
 export interface FieldProps extends 
       Omit<ColorProps, 'backgroundHover' | 'backgroundFocused' | 'backgroundDisabled'  | 'colorHover' | 'colorDisabled' | 'colorFocused'>, 
       Omit<BorderProps, 'border' >, 
-      Pick<LayoutProps, 'height' | 'padding' | 'margin' | "maxWidth"> {
+      Pick<LayoutProps, 'width' | 'height' | 'padding' | 'margin' | "maxWidth"> {
 
   label: string;
   textVariantLabel?: TypographyVariant;
@@ -17,38 +17,28 @@ export interface FieldProps extends
 
   value?: string | number | null;
   textVariantField?: TypographyVariant;
+  width?: string;
 }
 
 const StyledContainer = styled(Box, {
   shouldForwardProp: (prop) =>
     ![
-      'maxWidth',
-      'background',
-      'backgroundFocused',
-      'backgroundDisabled',
-      'color',
-      'colorFocused',
-      'colorDisabled',
-      'borderRadius',
-      'boxShadow',
-      'borderColor',
-      'textVariant',
-      'padding',
-      'height',
-      'margin',
-      'disabled',
-      'focused',
+      'maxWidth', 'background', 'backgroundFocused', 'backgroundDisabled', 'color',
+      'borderRadius', 'boxShadow', 'borderColor', 'padding',
+      'height', 'width', 'margin',      
     ].includes(prop as string),
 })<{maxWidth?: string; background?: string; color?: string; 
   borderRadius?: string | number; boxShadow?: string; borderColor?: string;
-  textVariant?: string; padding?: string | number; height?: string | number; margin?: string | number;
+  padding?: string | number; margin?: string | number; 
+  height?: string | number; width?: string | number;
   typo?: CSSObject | PipelineSolucoesTypographyTokens;
 }>(
   ({maxWidth, background, color, borderRadius, boxShadow, borderColor,
-    padding, height, margin, typo, theme, }) => ({
+    padding, height, width, margin, typo, theme, }) => ({
 
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column',  
+    width: width,  
     minWidth: 150,
     maxWidth: maxWidth || '100%',
     background: background || 'transparent',
@@ -92,7 +82,7 @@ const Field: React.FC<FieldProps> = ({
   padding,
   height,
   margin,
-
+  width='auto',
   maxWidth = '100%' }) => {
 
 
@@ -124,7 +114,7 @@ const Field: React.FC<FieldProps> = ({
   return (
     <StyledContainer maxWidth={maxWidth} background={bg} 
     color={txt} borderRadius={br} boxShadow={sh} borderColor={bd}
-    padding={pad} height={hg} margin={mg} typo={typoField}>
+    padding={pad} height={hg} margin={mg} typo={typoField} width={width}>
     
       <LabelStyle typo={typoLabel} color={color_label}>{label}</LabelStyle>
       <div>{value ?? '-'}</div>
