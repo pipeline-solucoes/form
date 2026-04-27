@@ -49,7 +49,8 @@ const StyledContainerIcon = styled(Box)(() => ({
     width: '100%',      
     height:'auto',
     alignItems: 'center',
-    margin: 0,    
+    margin: 0,  
+    gap: "16px",  
   })
 );
 
