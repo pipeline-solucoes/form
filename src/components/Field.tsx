@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Box } from '@mui/material';
+import React, { ReactElement } from 'react';
+import { Box, SvgIconProps } from '@mui/material';
 import { CSSObject, styled, TypographyVariant, useTheme } from '@mui/material/styles';
 import { ColorProps, LayoutProps, PipelineSolucoesTypographyTokens } from '@pipelinesolucoes/theme';
 import { fbbackground, fbcolor } from '../constant';
@@ -9,6 +9,8 @@ import { fbbackground, fbcolor } from '../constant';
 export interface FieldProps extends 
       Pick<ColorProps, 'background' | 'color'>, 
       Pick<LayoutProps, 'width' | "maxWidth"> {
+  
+  icon?: () => ReactElement<HTMLImageElement> | ReactElement<SvgIconProps>;    
 
   label: string;
   textVariantLabel?: TypographyVariant;
@@ -41,6 +43,16 @@ const StyledContainer = styled(Box, {
   })
 );
 
+const StyledContainerIcon = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',      
+    height:'auto',
+    alignItems: 'center',
+    margin: 0,    
+  })
+);
+
 const LabelStyle = styled(Box, {
   shouldForwardProp: (prop) =>
     !['color','typo',].includes(prop as string),
@@ -55,6 +67,8 @@ const LabelStyle = styled(Box, {
 
 
 const Field: React.FC<FieldProps> = ({ 
+  icon,
+  
   label, 
   textVariantLabel = 'caption',
   colorLabel,
@@ -86,14 +100,27 @@ const Field: React.FC<FieldProps> = ({
     labelTheme?.typography ??
     theme.typography.caption;
   const color_label = colorLabel ?? labelTheme?.color ?? fbcolor;
-    
-  return (
-    <StyledContainer maxWidth={maxWidth} background={bg} 
-      color={txt} typo={typoField} width={width}>
-      <LabelStyle typo={typoLabel} color={color_label}>{label}</LabelStyle>
-      <div>{value ?? '-'}</div>
-    </StyledContainer>
-  );
+  
+  if (!icon)
+    return (
+      <StyledContainer maxWidth={maxWidth} background={bg} 
+        color={txt} typo={typoField} width={width}>
+        <LabelStyle typo={typoLabel} color={color_label}>{label}</LabelStyle>
+        <div>{value ?? '-'}</div>
+      </StyledContainer>
+    );
+
+  else
+    return (
+      <StyledContainerIcon>
+        { icon() }
+        <StyledContainer maxWidth={maxWidth} background={bg} 
+          color={txt} typo={typoField} width={width}>
+          <LabelStyle typo={typoLabel} color={color_label}>{label}</LabelStyle>
+          <div>{value ?? '-'}</div>
+        </StyledContainer>
+      </StyledContainerIcon>  
+    )  
 };
 
 
